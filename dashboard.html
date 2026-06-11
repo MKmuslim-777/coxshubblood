@@ -1,198 +1,291 @@
 <!DOCTYPE html>
-<html lang="bn" data-theme="light">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard — Cox's Hub Blood</title>
 <meta name="robots" content="noindex, nofollow">
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600&display=swap" rel="stylesheet">
 <script>
 tailwind.config = {
-    theme: { extend: {
-        colors: { 'blood': '#e63946', 'blood-dark': '#c1121f' },
-        fontFamily: { poppins: ['Poppins','Noto Sans Bengali','sans-serif'] }
-    }}
+  darkMode: 'class',
+  theme: { extend: {
+    colors: { blood: '#e63946', 'blood-dark': '#c1121f' },
+    fontFamily: { sans: ['Poppins','Noto Sans Bengali','sans-serif'] }
+  }}
 }
 </script>
 <style>
-    body { font-family: 'Poppins','Noto Sans Bengali',sans-serif; }
-    .sidebar-link { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer; }
-    .sidebar-link:hover { @apply bg-red-50 text-blood; }
-    .sidebar-link.active { @apply bg-blood text-white shadow-md; }
-    [data-theme="dark"] .sidebar-link:hover { @apply bg-red-950 text-red-300; }
-    [data-theme="dark"] .sidebar-link.active { @apply bg-blood text-white; }
-    .blood-badge { @apply inline-block bg-blood text-white text-xs font-bold px-2.5 py-0.5 rounded-full; }
-    .table-row { @apply border-b border-gray-100 hover:bg-red-50/40 transition-colors; }
-    [data-theme="dark"] .table-row { @apply border-gray-800 hover:bg-red-950/20; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner { animation: spin 0.8s linear infinite; }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-    .fade-in { animation: fadeIn 0.3s ease; }
-    .modal-backdrop { @apply fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4; }
-    .modal-box { @apply bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-lg p-6; }
-    .form-input { @apply w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl text-sm bg-white dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:border-blood focus:ring-2 focus:ring-red-100 dark:focus:ring-red-900 transition; }
-    .form-label { @apply block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5; }
-    .btn-blood { @apply bg-blood hover:bg-blood-dark text-white font-semibold px-4 py-2 rounded-xl transition shadow-sm text-sm; }
-    .btn-ghost-blood { @apply border border-blood text-blood hover:bg-blood hover:text-white font-semibold px-4 py-2 rounded-xl transition text-sm; }
-    .badge-info    { @apply bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-0.5 rounded-full; }
-    .badge-warning { @apply bg-yellow-100 text-yellow-700 text-xs font-bold px-2.5 py-0.5 rounded-full; }
-    .badge-danger  { @apply bg-red-100 text-red-700 text-xs font-bold px-2.5 py-0.5 rounded-full; }
-    .badge-success { @apply bg-green-100 text-green-700 text-xs font-bold px-2.5 py-0.5 rounded-full; }
-    .notice-card-info    { @apply border-l-4 border-blue-400 bg-blue-50 dark:bg-blue-950/30; }
-    .notice-card-warning { @apply border-l-4 border-yellow-400 bg-yellow-50 dark:bg-yellow-950/30; }
-    .notice-card-danger  { @apply border-l-4 border-red-400 bg-red-50 dark:bg-red-950/30; }
-    .notice-card-success { @apply border-l-4 border-green-400 bg-green-50 dark:bg-green-950/30; }
+  * { font-family: 'Poppins','Noto Sans Bengali',sans-serif; }
+
+  /* Sidebar links */
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 12px;
+    font-size: 13.5px; font-weight: 600; cursor: pointer;
+    color: rgba(255,255,255,0.75);
+    transition: all 0.18s ease; text-decoration: none;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.12); color: #fff; }
+  .nav-item.active { background: #fff; color: #e63946; box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+  .nav-item .nav-icon { font-size: 16px; }
+
+  /* Cards */
+  .card { background: #fff; border-radius: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .dark .card { background: #1e2130; }
+
+  /* Form inputs */
+  .inp {
+    width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb;
+    border-radius: 10px; font-size: 13.5px; background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s; outline: none;
+  }
+  .inp:focus { border-color: #e63946; box-shadow: 0 0 0 3px rgba(230,57,70,0.1); }
+  .dark .inp { background: #262d40; border-color: #374151; color: #f1f5f9; }
+  .dark .inp:focus { border-color: #e63946; box-shadow: 0 0 0 3px rgba(230,57,70,0.2); }
+  .lbl { display: block; font-size: 11.5px; font-weight: 700; color: #6b7280; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .dark .lbl { color: #9ca3af; }
+
+  /* Buttons */
+  .btn-red { background: #e63946; color: #fff; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: background 0.15s, transform 0.1s, box-shadow 0.15s; box-shadow: 0 3px 10px rgba(230,57,70,0.3); }
+  .btn-red:hover { background: #c1121f; transform: translateY(-1px); box-shadow: 0 5px 15px rgba(230,57,70,0.4); }
+  .btn-outline { background: transparent; color: #e63946; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; border: 1.5px solid #e63946; transition: all 0.15s; }
+  .btn-outline:hover { background: #e63946; color: #fff; }
+  .btn-ghost { background: transparent; color: #6b7280; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid #e5e7eb; transition: all 0.15s; }
+  .btn-ghost:hover { border-color: #e63946; color: #e63946; }
+
+  /* Table */
+  .tbl-head { background: linear-gradient(90deg, #e63946, #c1121f); color: #fff; }
+  .tbl-head th { padding: 12px 16px; text-align: left; font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; white-space: nowrap; }
+  .tbl-row td { padding: 12px 16px; font-size: 13px; border-bottom: 1px solid #f3f4f6; }
+  .dark .tbl-row td { border-color: #2d3548; }
+  .tbl-row:hover td { background: #fff5f5; }
+  .dark .tbl-row:hover td { background: rgba(230,57,70,0.06); }
+
+  /* Badges */
+  .badge { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+  .badge-blood { background: #e63946; color: #fff; }
+  .badge-green { background: #dcfce7; color: #16a34a; }
+  .badge-yellow { background: #fef9c3; color: #a16207; }
+  .badge-blue { background: #dbeafe; color: #1d4ed8; }
+  .badge-red { background: #fee2e2; color: #dc2626; }
+  .badge-gray { background: #f3f4f6; color: #4b5563; }
+  .badge-admin { background: linear-gradient(90deg,#e63946,#f97316); color: #fff; }
+
+  /* Notice cards */
+  .notice-info    { border-left: 4px solid #60a5fa; background: #eff6ff; }
+  .notice-warning { border-left: 4px solid #facc15; background: #fefce8; }
+  .notice-danger  { border-left: 4px solid #e63946; background: #fff1f2; }
+  .notice-success { border-left: 4px solid #4ade80; background: #f0fdf4; }
+  .dark .notice-info    { background: rgba(59,130,246,0.08); }
+  .dark .notice-warning { background: rgba(234,179,8,0.08); }
+  .dark .notice-danger  { background: rgba(230,57,70,0.08); }
+  .dark .notice-success { background: rgba(74,222,128,0.08); }
+
+  /* Modal */
+  .modal-wrap { position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(3px); z-index: 60; display: none; align-items: center; justify-content: center; padding: 16px; }
+  .modal-wrap.open { display: flex; }
+  .modal-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); width: 100%; max-width: 520px; padding: 28px; animation: fadeUp 0.22s ease; }
+  .dark .modal-box { background: #1e2130; }
+
+  /* Spinner */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spin { display: inline-block; width: 28px; height: 28px; border: 3px solid #fecaca; border-top-color: #e63946; border-radius: 50%; animation: spin 0.75s linear infinite; }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp 0.25s ease; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+
+  /* Tab content */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Stats card hover */
+  .stat-card { transition: transform 0.15s, box-shadow 0.15s; }
+  .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+
+  /* Topbar user avatar */
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#e63946,#f97316); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 14px; }
 </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 min-h-screen">
+<body class="bg-gray-50 text-gray-800 min-h-screen" id="appBody">
 
-<!-- ══════════════════════════════════════════
+<!-- ═══════════════════════════════════════
      LOGIN PAGE
-══════════════════════════════════════════ -->
-<div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-700 to-pink-700 p-4 relative overflow-hidden">
-  <div class="backdrop-blur-xl bg-white/95 dark:bg-gray-900/90 rounded-3xl shadow-2xl w-full max-w-md p-8 border border-white/20 fade-in">
-    <!-- Logo -->
-    <div class="flex items-center justify-center gap-2 mb-6">
-      <svg class="w-9 h-9 fill-blood drop-shadow" viewBox="0 0 32 29.6">
-        <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
-      </svg>
-      <h1 class="text-xl font-bold text-gray-800 dark:text-white">Cox's Hub <span class="text-blood">Blood</span></h1>
+═══════════════════════════════════════ -->
+<div id="loginPage" class="min-h-screen flex items-center justify-center relative overflow-hidden" style="background: linear-gradient(135deg,#7f1d1d 0%,#b91c1c 45%,#be185d 100%);">
+  <!-- bg blobs -->
+  <div style="position:absolute;width:380px;height:380px;background:rgba(255,255,255,0.05);border-radius:50%;top:-80px;right:-80px;"></div>
+  <div style="position:absolute;width:260px;height:260px;background:rgba(255,255,255,0.05);border-radius:50%;bottom:-60px;left:-60px;"></div>
+
+  <div class="relative z-10 w-full max-w-md mx-4 fade-up" style="background:rgba(255,255,255,0.97);border-radius:24px;padding:40px;box-shadow:0 24px 64px rgba(0,0,0,0.25);">
+    <div class="flex flex-col items-center mb-8">
+      <div style="width:60px;height:60px;background:linear-gradient(135deg,#e63946,#c1121f);border-radius:18px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 8px 24px rgba(230,57,70,0.4);">
+        <svg width="30" height="27" viewBox="0 0 32 29.6" fill="white"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+      </div>
+      <h1 style="font-size:22px;font-weight:800;color:#1f2937;">Cox's Hub <span style="color:#e63946;">Blood</span></h1>
+      <p style="font-size:12px;color:#9ca3af;margin-top:4px;letter-spacing:0.08em;text-transform:uppercase;">Admin Dashboard</p>
     </div>
-    <p class="text-center text-xs text-gray-400 mb-8 tracking-wide uppercase">Admin Dashboard — Secure Login</p>
 
-    <div id="loginError" class="hidden mb-4 px-4 py-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium"></div>
+    <div id="loginError" class="hidden mb-4" style="background:#fff1f2;border:1px solid #fecdd3;color:#e63946;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;"></div>
 
-    <form id="loginForm" class="space-y-4">
-      <div>
-        <label class="form-label">Username</label>
-        <input id="loginUser" type="text" class="form-input" placeholder="Admin username" autocomplete="username" required>
+    <form id="loginForm">
+      <div class="mb-4">
+        <label class="lbl">Username</label>
+        <input id="loginUser" type="text" class="inp" placeholder="Admin username" autocomplete="username" required>
       </div>
-      <div>
-        <label class="form-label">Password</label>
-        <input id="loginPass" type="password" class="form-input" placeholder="••••••••" autocomplete="current-password" required>
+      <div class="mb-6">
+        <label class="lbl">Password</label>
+        <input id="loginPass" type="password" class="inp" placeholder="••••••••" autocomplete="current-password" required>
       </div>
-      <button type="submit" id="loginBtn" class="w-full py-3 bg-gradient-to-r from-blood to-blood-dark text-white font-bold rounded-xl shadow-lg hover:shadow-red-200 hover:-translate-y-0.5 transition-all duration-200 mt-2">
+      <button type="submit" id="loginBtn" class="btn-red w-full" style="padding:12px;font-size:15px;">
         <span id="loginBtnTxt">লগইন করুন 🔐</span>
       </button>
     </form>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
+<!-- ═══════════════════════════════════════
      DASHBOARD
-══════════════════════════════════════════ -->
-<div id="dashboard" class="hidden min-h-screen flex">
+═══════════════════════════════════════ -->
+<div id="dashboard" class="hidden" style="min-height:100vh;display:flex;">
 
-  <!-- Sidebar -->
-  <aside id="sidebar" class="w-64 shrink-0 bg-gradient-to-b from-red-700 to-red-950 text-white flex flex-col fixed top-0 left-0 h-full z-30 transition-transform duration-300 shadow-2xl">
+  <!-- ── Sidebar ── -->
+  <aside id="sidebar" style="width:260px;min-width:260px;background:linear-gradient(170deg,#c1121f 0%,#7f1d1d 100%);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100%;z-index:40;box-shadow:4px 0 20px rgba(0,0,0,0.2);transition:transform 0.3s ease;">
     <!-- Logo -->
-    <div class="flex items-center gap-2 px-5 py-5 border-b border-gray-100 dark:border-gray-800">
-      <svg class="w-7 h-7 fill-blood" viewBox="0 0 32 29.6">
-        <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
-      </svg>
-      <span class="font-bold text-gray-800 dark:text-white text-sm">Cox's Hub <span class="text-blood">Blood</span></span>
+    <div style="padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.12);">
+      <div class="flex items-center gap-3">
+        <div style="width:38px;height:38px;background:rgba(255,255,255,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <svg width="20" height="18" viewBox="0 0 32 29.6" fill="white"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+        </div>
+        <div>
+          <div style="color:#fff;font-weight:800;font-size:15px;line-height:1.2;">Cox's Hub</div>
+          <div style="color:rgba(255,255,255,0.6);font-size:11px;font-weight:500;">Blood Admin</div>
+        </div>
+      </div>
     </div>
+
     <!-- Nav -->
-    <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
-      <div class="text-[10px] font-bold text-gray-400 uppercase px-3 py-2 tracking-widest">Main</div>
-      <div class="sidebar-link active" data-tab="donors" onclick="switchTab('donors')">
-        <span>🩸</span> ডোনার ম্যানেজমেন্ট
+    <nav style="flex:1;padding:16px 12px;overflow-y:auto;">
+      <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.4);letter-spacing:0.12em;text-transform:uppercase;padding:0 6px 10px;">ম্যানেজমেন্ট</div>
+
+      <div class="nav-item active" id="nav-donors" onclick="switchTab('donors')">
+        <span class="nav-icon">🩸</span> ডোনার ম্যানেজমেন্ট
       </div>
-      <div class="sidebar-link" data-tab="notices" onclick="switchTab('notices')">
-        <span>📢</span> নোটিশ ম্যানেজমেন্ট
+      <div class="nav-item" id="nav-notices" onclick="switchTab('notices')">
+        <span class="nav-icon">📢</span> নোটিশ ম্যানেজমেন্ট
       </div>
-      <div class="sidebar-link" data-tab="users" onclick="switchTab('users')">
-        <span>👥</span> ইউজার ম্যানেজমেন্ট
+      <div class="nav-item" id="nav-users" onclick="switchTab('users')">
+        <span class="nav-icon">👥</span> ইউজার ম্যানেজমেন্ট
       </div>
-      <div class="text-[10px] font-bold text-gray-400 uppercase px-3 py-2 tracking-widest mt-3">Site</div>
-      <a href="/" target="_blank" class="sidebar-link">
-        <span>🌐</span> মেইন সাইট দেখুন
+
+      <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.4);letter-spacing:0.12em;text-transform:uppercase;padding:16px 6px 10px;">সাইট</div>
+      <a href="/" target="_blank" class="nav-item">
+        <span class="nav-icon">🌐</span> মেইন সাইট
       </a>
     </nav>
+
     <!-- User info -->
-    <div class="p-4 border-t border-gray-100 dark:border-gray-800">
+    <div style="padding:16px;border-top:1px solid rgba(255,255,255,0.12);">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-full bg-blood/10 flex items-center justify-center text-blood font-bold text-sm">A</div>
-        <div class="flex-1 min-w-0">
-          <div id="sidebarUsername" class="text-sm font-semibold text-gray-800 dark:text-white truncate">—</div>
-          <div class="text-xs text-blood font-medium">Admin</div>
+        <div class="avatar" id="sidebarAvatar">A</div>
+        <div style="flex:1;min-width:0;">
+          <div id="sidebarUsername" style="color:#fff;font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
+          <div style="color:rgba(255,255,255,0.55);font-size:11px;">Administrator</div>
         </div>
-        <button onclick="doLogout()" title="লগআউট" class="text-gray-400 hover:text-blood transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        <button onclick="doLogout()" title="লগআউট" style="color:rgba(255,255,255,0.5);cursor:pointer;background:none;border:none;padding:4px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
         </button>
       </div>
     </div>
   </aside>
 
-  <!-- Main -->
-  <div class="flex-1 ml-64 flex flex-col min-h-screen">
+  <!-- ── Main Content ── -->
+  <div style="flex:1;margin-left:260px;display:flex;flex-direction:column;min-height:100vh;">
 
     <!-- Topbar -->
-    <header class="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-6 py-3 flex items-center justify-between shadow-sm">
+    <header style="position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid #f3f4f6;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 8px rgba(0,0,0,0.06);">
       <div class="flex items-center gap-3">
-        <button id="sidebarToggle" class="lg:hidden text-gray-500 hover:text-blood" onclick="toggleSidebar()">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <button id="sidebarToggle" onclick="toggleSidebar()" style="display:none;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='none'">
+          <svg width="20" height="20" fill="none" stroke="#e63946" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
-        <h2 id="pageTitle" class="font-bold text-gray-800 dark:text-white text-base">ডোনার ম্যানেজমেন্ট</h2>
+        <div>
+          <h2 id="pageTitle" style="font-weight:800;font-size:17px;color:#1f2937;">ডোনার ম্যানেজমেন্ট</h2>
+          <p id="pageSubtitle" style="font-size:11.5px;color:#9ca3af;margin-top:1px;">রক্তদাতাদের তথ্য পরিচালনা করুন</p>
+        </div>
       </div>
-      <div class="flex items-center gap-2">
-        <button onclick="toggleTheme()" id="themeBtn" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-base hover:scale-110 transition">🌙</button>
-        <button onclick="doLogout()" class="text-xs font-semibold text-gray-500 hover:text-blood border border-gray-200 dark:border-gray-700 px-3 py-1.5 rounded-lg transition">↩ Logout</button>
+      <div class="flex items-center gap-3">
+        <button onclick="toggleDark()" id="darkBtn" style="width:36px;height:36px;border-radius:50%;background:#f9fafb;border:1.5px solid #e5e7eb;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;" title="Dark mode">🌙</button>
+        <button onclick="doLogout()" style="font-size:12px;font-weight:700;color:#6b7280;border:1.5px solid #e5e7eb;padding:7px 14px;border-radius:8px;background:none;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='#e63946';this.style.color='#e63946'" onmouseout="this.style.borderColor='#e5e7eb';this.style.color='#6b7280'">↩ লগআউট</button>
       </div>
     </header>
 
-    <!-- Content -->
-    <main class="flex-1 p-6 space-y-6">
+    <!-- Page Content -->
+    <main style="flex:1;padding:24px;background:#f8fafc;">
 
-      <!-- ── DONORS TAB ── -->
-      <div id="tab-donors" class="tab-content fade-in space-y-5">
-        
-<div class="rounded-3xl p-6 bg-gradient-to-r from-red-600 to-pink-600 text-white shadow-xl">
-<div class="flex items-center justify-between flex-wrap gap-4">
-<div>
-<h2 class="text-2xl font-bold">👋 Welcome Back Admin</h2>
-<p class="opacity-90">Cox's Hub Blood Management Dashboard</p>
-</div>
-<div class="flex gap-4 text-center">
-<div><div class="text-2xl font-bold">+12</div><div class="text-xs">New Donors</div></div>
-<div><div class="text-2xl font-bold">+4</div><div class="text-xs">Requests</div></div>
-<div><div class="text-2xl font-bold">+2</div><div class="text-xs">Emergency</div></div>
-</div>
-</div>
-</div>
+      <!-- ══ DONORS TAB ══ -->
+      <div id="tab-donors" class="tab-panel active fade-up">
 
-<!-- Stats row -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border-l-4 border-blood flex items-center gap-3">
-            <span class="text-2xl">🫂</span>
-            <div><strong id="statTotal" class="block text-2xl font-bold text-blood-dark">—</strong><span class="text-xs text-gray-400 font-semibold">মোট ডোনার</span></div>
+        <!-- Welcome banner -->
+        <div style="background:linear-gradient(120deg,#e63946 0%,#f97316 100%);border-radius:20px;padding:24px 28px;color:#fff;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;box-shadow:0 8px 24px rgba(230,57,70,0.3);">
+          <div>
+            <h3 style="font-size:20px;font-weight:800;margin-bottom:4px;">👋 স্বাগতম, Admin</h3>
+            <p style="opacity:0.85;font-size:13.5px;">Cox's Hub Blood Management System</p>
           </div>
-          <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border-l-4 border-green-500 flex items-center gap-3">
-            <span class="text-2xl">✅</span>
-            <div><strong id="statEligible" class="block text-2xl font-bold text-green-600">—</strong><span class="text-xs text-gray-400 font-semibold">উপযুক্ত</span></div>
+          <div class="flex gap-5">
+            <div style="text-align:center;">
+              <div style="font-size:24px;font-weight:800;" id="bannerTotal">—</div>
+              <div style="font-size:11px;opacity:0.8;margin-top:2px;">মোট ডোনার</div>
+            </div>
+            <div style="width:1px;background:rgba(255,255,255,0.25);"></div>
+            <div style="text-align:center;">
+              <div style="font-size:24px;font-weight:800;" id="bannerEligible">—</div>
+              <div style="font-size:11px;opacity:0.8;margin-top:2px;">উপযুক্ত</div>
+            </div>
+            <div style="width:1px;background:rgba(255,255,255,0.25);"></div>
+            <div style="text-align:center;">
+              <div style="font-size:24px;font-weight:800;" id="bannerToday">—</div>
+              <div style="font-size:11px;opacity:0.8;margin-top:2px;">আজকের</div>
+            </div>
           </div>
-          <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border-l-4 border-orange-400 flex items-center gap-3">
-            <span class="text-2xl">🩸</span>
-            <div><strong id="statOPlus" class="block text-2xl font-bold text-orange-500">—</strong><span class="text-xs text-gray-400 font-semibold">O+ ডোনার</span></div>
+        </div>
+
+        <!-- Stats -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+          <div class="card stat-card" style="padding:20px;display:flex;align-items:center;gap:14px;border-left:4px solid #e63946;">
+            <div style="width:46px;height:46px;background:#fff1f2;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🫂</div>
+            <div><div id="statTotal" style="font-size:26px;font-weight:800;color:#e63946;line-height:1;">—</div><div style="font-size:11.5px;color:#9ca3af;font-weight:600;margin-top:2px;">মোট ডোনার</div></div>
           </div>
-          <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border-l-4 border-blue-400 flex items-center gap-3">
-            <span class="text-2xl">📅</span>
-            <div><strong id="statToday" class="block text-2xl font-bold text-blue-500">—</strong><span class="text-xs text-gray-400 font-semibold">আজকের রেজি.</span></div>
+          <div class="card stat-card" style="padding:20px;display:flex;align-items:center;gap:14px;border-left:4px solid #22c55e;">
+            <div style="width:46px;height:46px;background:#f0fdf4;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">✅</div>
+            <div><div id="statEligible" style="font-size:26px;font-weight:800;color:#16a34a;line-height:1;">—</div><div style="font-size:11.5px;color:#9ca3af;font-weight:600;margin-top:2px;">দান উপযুক্ত</div></div>
+          </div>
+          <div class="card stat-card" style="padding:20px;display:flex;align-items:center;gap:14px;border-left:4px solid #f97316;">
+            <div style="width:46px;height:46px;background:#fff7ed;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🩸</div>
+            <div><div id="statOPlus" style="font-size:26px;font-weight:800;color:#ea580c;line-height:1;">—</div><div style="font-size:11.5px;color:#9ca3af;font-weight:600;margin-top:2px;">O+ গ্রুপ</div></div>
+          </div>
+          <div class="card stat-card" style="padding:20px;display:flex;align-items:center;gap:14px;border-left:4px solid #3b82f6;">
+            <div style="width:46px;height:46px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">📅</div>
+            <div><div id="statToday" style="font-size:26px;font-weight:800;color:#2563eb;line-height:1;">—</div><div style="font-size:11.5px;color:#9ca3af;font-weight:600;margin-top:2px;">আজকের রেজি.</div></div>
           </div>
         </div>
 
         <!-- Toolbar -->
-        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-4 flex flex-wrap items-center gap-3">
-          <select id="filterBlood" class="form-input !w-auto text-sm">
-            <option value="">সব গ্রুপ</option>
+        <div class="card" style="padding:16px 20px;margin-bottom:20px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;">
+          <select id="filterBlood" class="inp" style="width:auto;min-width:120px;">
+            <option value="">🩸 সব গ্রুপ</option>
             <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
             <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
           </select>
-          <select id="filterArea" class="form-input !w-auto text-sm">
-            <option value="">সব এলাকা</option>
+          <select id="filterArea" class="inp" style="width:auto;min-width:160px;">
+            <option value="">📍 সব এলাকা</option>
             <option value="sadar">কক্সবাজার সদর</option>
             <option value="teknaf">টেকনাফ</option>
             <option value="ukhia">উখিয়া</option>
@@ -202,75 +295,86 @@ tailwind.config = {
             <option value="moheshkhali">মহেশখালী</option>
             <option value="kutubdia">কুতুবদিয়া</option>
           </select>
-          <button onclick="loadDonors(1)" class="btn-blood">🔍 ফিল্টার</button>
-          <button onclick="loadDonors(currentPage)" class="btn-ghost-blood">↻ রিফ্রেশ</button>
-          <div class="flex-1"></div>
-          <span id="donorTotalBadge" class="text-xs font-bold text-blood bg-red-50 border border-red-100 px-3 py-1.5 rounded-full">—</span>
-          <button onclick="exportCSV()" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-xl text-sm transition">📥 CSV</button>
-          <button onclick="openDonorModal()" class="btn-blood">+ নতুন ডোনার</button>
+          <button onclick="loadDonors(1)" class="btn-red">🔍 ফিল্টার</button>
+          <button onclick="loadDonors(currentPage)" class="btn-outline">↻ রিফ্রেশ</button>
+          <div style="flex:1;"></div>
+          <span id="donorTotalBadge" class="badge badge-blood">লোড হচ্ছে...</span>
+          <button onclick="exportCSV()" style="background:#16a34a;color:#fff;padding:9px 16px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:background 0.15s;" onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">📥 CSV</button>
+          <button onclick="openDonorModal()" class="btn-red">+ নতুন ডোনার</button>
         </div>
 
         <!-- Table -->
-        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-              <thead class="bg-gradient-to-r from-blood to-blood-dark text-white">
+        <div class="card" style="overflow:hidden;">
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;">
+              <thead class="tbl-head">
                 <tr>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">#</th>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">নাম</th>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">রক্তের গ্রুপ</th>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">এলাকা</th>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">ফোন</th>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">শেষ দান</th>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">উপযুক্ততা</th>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">Action</th>
+                  <th>#</th>
+                  <th>নাম</th>
+                  <th>রক্তের গ্রুপ</th>
+                  <th>এলাকা</th>
+                  <th>ফোন</th>
+                  <th>শেষ দান</th>
+                  <th>উপযুক্ততা</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody id="donorTableBody">
-                <tr><td colspan="8" class="py-16 text-center text-gray-400"><div class="inline-block w-8 h-8 border-4 border-red-100 border-t-blood rounded-full spinner"></div></td></tr>
+                <tr><td colspan="8" style="padding:48px;text-align:center;color:#9ca3af;"><div class="spin"></div></td></tr>
               </tbody>
             </table>
           </div>
-          <!-- Pagination -->
-          <div class="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-gray-800 flex-wrap gap-2">
-            <span id="donorPageInfo" class="text-xs text-gray-400">—</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid #f3f4f6;flex-wrap:wrap;gap:8px;">
+            <span id="donorPageInfo" style="font-size:12px;color:#9ca3af;font-weight:600;">—</span>
             <div id="donorPageBtns" class="flex gap-1"></div>
           </div>
         </div>
       </div>
 
-      <!-- ── NOTICES TAB ── -->
-      <div id="tab-notices" class="tab-content hidden fade-in space-y-5">
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-gray-500">সাইটের homepage-এ দেখানো নোটিশ ম্যানেজ করুন।</p>
-          <button onclick="openNoticeModal()" class="btn-blood">+ নতুন নোটিশ</button>
+      <!-- ══ NOTICES TAB ══ -->
+      <div id="tab-notices" class="tab-panel fade-up">
+
+        <!-- Header -->
+        <div class="card" style="padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h3 style="font-weight:800;font-size:16px;color:#1f2937;">📢 নোটিশ তালিকা</h3>
+            <p style="font-size:12.5px;color:#9ca3af;margin-top:3px;">সাইটের homepage-এ দেখানো নোটিশ ম্যানেজ করুন</p>
+          </div>
+          <button onclick="openNoticeModal()" class="btn-red">+ নতুন নোটিশ</button>
         </div>
-        <div id="noticesContainer" class="space-y-3">
-          <div class="py-12 text-center text-gray-400"><div class="inline-block w-8 h-8 border-4 border-red-100 border-t-blood rounded-full spinner"></div></div>
+
+        <div id="noticesContainer">
+          <div style="padding:48px;text-align:center;"><div class="spin"></div></div>
         </div>
       </div>
 
-      <!-- ── USERS TAB ── -->
-      <div id="tab-users" class="tab-content hidden fade-in space-y-5">
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-gray-500">সব users দেখুন ও manage করুন। শুধু admin role-এর user dashboard access পাবে।</p>
-          <button onclick="openUserModal()" class="btn-blood">+ নতুন User</button>
+      <!-- ══ USERS TAB ══ -->
+      <div id="tab-users" class="tab-panel fade-up">
+
+        <!-- Header -->
+        <div class="card" style="padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h3 style="font-weight:800;font-size:16px;color:#1f2937;">👥 ইউজার তালিকা</h3>
+            <p style="font-size:12.5px;color:#9ca3af;margin-top:3px;">Admin role-এর user-রাই শুধু dashboard access পাবে</p>
+          </div>
+          <button onclick="openUserModal()" class="btn-red">+ নতুন User</button>
         </div>
-        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-              <thead class="bg-gradient-to-r from-blood to-blood-dark text-white">
+
+        <div class="card" style="overflow:hidden;">
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;">
+              <thead class="tbl-head">
                 <tr>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">#</th>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">Username</th>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">নাম</th>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">Role</th>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">যোগ দিয়েছেন</th>
-                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">Action</th>
+                  <th>#</th>
+                  <th>Username</th>
+                  <th>নাম</th>
+                  <th>Role</th>
+                  <th>যোগ দিয়েছেন</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody id="usersTableBody">
-                <tr><td colspan="6" class="py-16 text-center text-gray-400"><div class="inline-block w-8 h-8 border-4 border-red-100 border-t-blood rounded-full spinner"></div></td></tr>
+                <tr><td colspan="6" style="padding:48px;text-align:center;color:#9ca3af;"><div class="spin"></div></td></tr>
               </tbody>
             </table>
           </div>
@@ -281,35 +385,38 @@ tailwind.config = {
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
+<!-- ═══════════════════════════════════════
      MODALS
-══════════════════════════════════════════ -->
+═══════════════════════════════════════ -->
 
 <!-- Donor Modal -->
-<div id="donorModal" class="modal-backdrop hidden">
-  <div class="modal-box fade-in">
-    <div class="flex items-center justify-between mb-5">
-      <h3 id="donorModalTitle" class="font-bold text-lg">নতুন ডোনার</h3>
-      <button onclick="closeModal('donorModal')" class="text-gray-400 hover:text-blood text-xl leading-none">✕</button>
+<div id="donorModal" class="modal-wrap">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
+      <div>
+        <h3 id="donorModalTitle" style="font-size:18px;font-weight:800;color:#1f2937;">নতুন ডোনার</h3>
+        <p style="font-size:12px;color:#9ca3af;margin-top:2px;">সকল * চিহ্নিত ঘর পূরণ করুন</p>
+      </div>
+      <button onclick="closeModal('donorModal')" style="width:32px;height:32px;border-radius:50%;background:#f3f4f6;border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#f3f4f6'">✕</button>
     </div>
-    <form id="donorForm" class="space-y-3">
+    <form id="donorForm">
       <input type="hidden" id="donorId">
-      <div class="grid grid-cols-2 gap-3">
-        <div class="col-span-2">
-          <label class="form-label">পূর্ণ নাম *</label>
-          <input id="dName" type="text" class="form-input" placeholder="নাম লিখুন" required>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div style="grid-column:1/-1;">
+          <label class="lbl">পূর্ণ নাম *</label>
+          <input id="dName" type="text" class="inp" placeholder="ডোনারের পূর্ণ নাম" required>
         </div>
         <div>
-          <label class="form-label">রক্তের গ্রুপ *</label>
-          <select id="dBlood" class="form-input" required>
+          <label class="lbl">রক্তের গ্রুপ *</label>
+          <select id="dBlood" class="inp" required>
             <option value="">নির্বাচন করুন</option>
             <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
             <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
           </select>
         </div>
         <div>
-          <label class="form-label">এলাকা</label>
-          <select id="dArea" class="form-input">
+          <label class="lbl">এলাকা</label>
+          <select id="dArea" class="inp">
             <option value="sadar">কক্সবাজার সদর</option>
             <option value="teknaf">টেকনাফ</option>
             <option value="ukhia">উখিয়া</option>
@@ -321,513 +428,553 @@ tailwind.config = {
           </select>
         </div>
         <div>
-          <label class="form-label">ফোন নম্বর *</label>
-          <input id="dPhone" type="tel" class="form-input" placeholder="01XXXXXXXXX" required>
+          <label class="lbl">ফোন নম্বর *</label>
+          <input id="dPhone" type="tel" class="inp" placeholder="01XXXXXXXXX" required>
         </div>
         <div>
-          <label class="form-label">শেষ রক্তদান</label>
-          <input id="dLastDonation" type="date" class="form-input">
+          <label class="lbl">শেষ রক্তদান</label>
+          <input id="dLastDonation" type="date" class="inp">
         </div>
-        <div class="col-span-2">
-          <label class="form-label">বর্তমান ঠিকানা</label>
-          <input id="dCurrentAddr" type="text" class="form-input" placeholder="বর্তমান ঠিকানা">
+        <div style="grid-column:1/-1;">
+          <label class="lbl">বর্তমান ঠিকানা</label>
+          <input id="dCurrentAddr" type="text" class="inp" placeholder="বর্তমান ঠিকানা লিখুন">
         </div>
-        <div class="col-span-2">
-          <label class="form-label">শারীরিক সমস্যা (যদি থাকে)</label>
-          <textarea id="dHealth" class="form-input" rows="2" placeholder="কোনো সমস্যা থাকলে লিখুন"></textarea>
+        <div style="grid-column:1/-1;">
+          <label class="lbl">শারীরিক সমস্যা</label>
+          <textarea id="dHealth" class="inp" rows="2" placeholder="কোনো সমস্যা থাকলে লিখুন (না থাকলে খালি রাখুন)" style="resize:none;"></textarea>
         </div>
       </div>
-      <div id="donorFormError" class="hidden text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg"></div>
-      <div class="flex gap-2 pt-2">
-        <button type="submit" class="btn-blood flex-1">💾 সেভ করুন</button>
-        <button type="button" onclick="closeModal('donorModal')" class="flex-1 border border-gray-200 dark:border-gray-700 text-gray-500 font-semibold px-4 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition">বাতিল</button>
+      <div id="donorFormError" class="hidden" style="background:#fff1f2;border:1px solid #fecdd3;color:#e63946;padding:10px 14px;border-radius:8px;font-size:12.5px;font-weight:600;margin-top:12px;"></div>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button type="submit" class="btn-red" style="flex:1;padding:11px;">💾 সেভ করুন</button>
+        <button type="button" onclick="closeModal('donorModal')" class="btn-ghost" style="flex:1;padding:11px;">বাতিল</button>
       </div>
     </form>
   </div>
 </div>
 
 <!-- Notice Modal -->
-<div id="noticeModal" class="modal-backdrop hidden">
-  <div class="modal-box fade-in">
-    <div class="flex items-center justify-between mb-5">
-      <h3 id="noticeModalTitle" class="font-bold text-lg">নতুন নোটিশ</h3>
-      <button onclick="closeModal('noticeModal')" class="text-gray-400 hover:text-blood text-xl leading-none">✕</button>
+<div id="noticeModal" class="modal-wrap">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
+      <div>
+        <h3 id="noticeModalTitle" style="font-size:18px;font-weight:800;color:#1f2937;">নতুন নোটিশ</h3>
+        <p style="font-size:12px;color:#9ca3af;margin-top:2px;">সাইটে প্রকাশিত হবে</p>
+      </div>
+      <button onclick="closeModal('noticeModal')" style="width:32px;height:32px;border-radius:50%;background:#f3f4f6;border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#f3f4f6'">✕</button>
     </div>
-    <form id="noticeForm" class="space-y-3">
+    <form id="noticeForm">
       <input type="hidden" id="noticeId">
-      <div>
-        <label class="form-label">শিরোনাম *</label>
-        <input id="nTitle" type="text" class="form-input" placeholder="নোটিশের শিরোনাম" required>
-      </div>
-      <div>
-        <label class="form-label">বার্তা *</label>
-        <textarea id="nMessage" class="form-input" rows="3" placeholder="নোটিশের বিস্তারিত বার্তা" required></textarea>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
+      <div style="display:flex;flex-direction:column;gap:14px;">
         <div>
-          <label class="form-label">ধরন</label>
-          <select id="nType" class="form-input">
-            <option value="info">ℹ️ তথ্য (নীল)</option>
-            <option value="warning">⚠️ সতর্কতা (হলুদ)</option>
-            <option value="danger">🚨 জরুরি (লাল)</option>
-            <option value="success">✅ সফল (সবুজ)</option>
-          </select>
+          <label class="lbl">শিরোনাম *</label>
+          <input id="nTitle" type="text" class="inp" placeholder="নোটিশের শিরোনাম" required>
         </div>
         <div>
-          <label class="form-label">অবস্থা</label>
-          <select id="nActive" class="form-input">
-            <option value="true">✅ সক্রিয়</option>
-            <option value="false">❌ নিষ্ক্রিয়</option>
-          </select>
+          <label class="lbl">বার্তা *</label>
+          <textarea id="nMessage" class="inp" rows="3" placeholder="নোটিশের বিস্তারিত বার্তা" required style="resize:none;"></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div>
+            <label class="lbl">ধরন</label>
+            <select id="nType" class="inp">
+              <option value="info">ℹ️ তথ্য (নীল)</option>
+              <option value="warning">⚠️ সতর্কতা (হলুদ)</option>
+              <option value="danger">🚨 জরুরি (লাল)</option>
+              <option value="success">✅ সফল (সবুজ)</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl">অবস্থা</label>
+            <select id="nActive" class="inp">
+              <option value="true">✅ সক্রিয়</option>
+              <option value="false">❌ নিষ্ক্রিয়</option>
+            </select>
+          </div>
         </div>
       </div>
-      <div id="noticeFormError" class="hidden text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg"></div>
-      <div class="flex gap-2 pt-2">
-        <button type="submit" class="btn-blood flex-1">💾 সেভ করুন</button>
-        <button type="button" onclick="closeModal('noticeModal')" class="flex-1 border border-gray-200 dark:border-gray-700 text-gray-500 font-semibold px-4 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition">বাতিল</button>
+      <div id="noticeFormError" class="hidden" style="background:#fff1f2;border:1px solid #fecdd3;color:#e63946;padding:10px 14px;border-radius:8px;font-size:12.5px;font-weight:600;margin-top:12px;"></div>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button type="submit" class="btn-red" style="flex:1;padding:11px;">💾 সেভ করুন</button>
+        <button type="button" onclick="closeModal('noticeModal')" class="btn-ghost" style="flex:1;padding:11px;">বাতিল</button>
       </div>
     </form>
   </div>
 </div>
 
 <!-- User Modal -->
-<div id="userModal" class="modal-backdrop hidden">
-  <div class="modal-box fade-in">
-    <div class="flex items-center justify-between mb-5">
-      <h3 id="userModalTitle" class="font-bold text-lg">নতুন User</h3>
-      <button onclick="closeModal('userModal')" class="text-gray-400 hover:text-blood text-xl leading-none">✕</button>
+<div id="userModal" class="modal-wrap">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
+      <div>
+        <h3 id="userModalTitle" style="font-size:18px;font-weight:800;color:#1f2937;">নতুন User</h3>
+        <p style="font-size:12px;color:#9ca3af;margin-top:2px;">নতুন অ্যাডমিন বা ইউজার তৈরি করুন</p>
+      </div>
+      <button onclick="closeModal('userModal')" style="width:32px;height:32px;border-radius:50%;background:#f3f4f6;border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#f3f4f6'">✕</button>
     </div>
-    <form id="userForm" class="space-y-3">
+    <form id="userForm">
       <input type="hidden" id="userId">
-      <div class="grid grid-cols-2 gap-3">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
         <div>
-          <label class="form-label">Username *</label>
-          <input id="uUsername" type="text" class="form-input" placeholder="username" autocomplete="off">
+          <label class="lbl">Username *</label>
+          <input id="uUsername" type="text" class="inp" placeholder="username" autocomplete="off">
         </div>
         <div>
-          <label class="form-label">নাম</label>
-          <input id="uName" type="text" class="form-input" placeholder="পূর্ণ নাম">
+          <label class="lbl">পূর্ণ নাম</label>
+          <input id="uName" type="text" class="inp" placeholder="নাম লিখুন">
         </div>
         <div>
-          <label class="form-label" id="uPassLabel">Password *</label>
-          <input id="uPassword" type="password" class="form-input" placeholder="••••••••" autocomplete="new-password">
+          <label class="lbl" id="uPassLabel">Password *</label>
+          <input id="uPassword" type="password" class="inp" placeholder="••••••••" autocomplete="new-password">
         </div>
         <div>
-          <label class="form-label">Role</label>
-          <select id="uRole" class="form-input">
+          <label class="lbl">Role</label>
+          <select id="uRole" class="inp">
             <option value="admin">👑 Admin</option>
             <option value="user">👤 User</option>
           </select>
         </div>
       </div>
-      <div id="userFormError" class="hidden text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg"></div>
-      <div class="flex gap-2 pt-2">
-        <button type="submit" class="btn-blood flex-1">💾 সেভ করুন</button>
-        <button type="button" onclick="closeModal('userModal')" class="flex-1 border border-gray-200 dark:border-gray-700 text-gray-500 font-semibold px-4 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition">বাতিল</button>
+      <div id="userFormError" class="hidden" style="background:#fff1f2;border:1px solid #fecdd3;color:#e63946;padding:10px 14px;border-radius:8px;font-size:12.5px;font-weight:600;margin-top:12px;"></div>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button type="submit" class="btn-red" style="flex:1;padding:11px;">💾 সেভ করুন</button>
+        <button type="button" onclick="closeModal('userModal')" class="btn-ghost" style="flex:1;padding:11px;">বাতিল</button>
       </div>
     </form>
   </div>
 </div>
 
 <!-- Toast -->
-<div id="toastBox" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+<div id="toastBox" style="position:fixed;bottom:20px;right:20px;z-index:100;display:flex;flex-direction:column;gap:8px;pointer-events:none;"></div>
 
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════ -->
 <script>
-// ══════════════════════
-//  CONFIG
-// ══════════════════════
 const API = '/api';
-let token = null, currentPage = 1, allDonors = [];
+let token = null, currentPage = 1, allDonors = [], isDark = false;
+
 const areaMap = {
-    sadar:'কক্সবাজার সদর', teknaf:'টেকনাফ', ukhia:'উখিয়া',
-    ramu:'রামু', chakaria:'চকরিয়া', pekua:'পেকুয়া',
-    moheshkhali:'মহেশখালী', kutubdia:'কুতুবদিয়া',
+  sadar:'কক্সবাজার সদর', teknaf:'টেকনাফ', ukhia:'উখিয়া',
+  ramu:'রামু', chakaria:'চকরিয়া', pekua:'পেকুয়া',
+  moheshkhali:'মহেশখালী', kutubdia:'কুতুবদিয়া',
 };
 
-// ══════════════════════
-//  HELPERS
-// ══════════════════════
 const $ = id => document.getElementById(id);
 const isEligible = d => d && (Date.now() - new Date(d).getTime()) / 86400000 >= 120;
 const fmtDate = s => s ? new Date(s).toLocaleDateString('bn-BD',{year:'numeric',month:'short',day:'numeric'}) : '—';
 
+// ── Toast ──
 function toast(msg, type='success') {
-    const el = document.createElement('div');
-    el.className = `pointer-events-auto px-4 py-3 rounded-xl text-white text-sm font-semibold shadow-lg
-        ${type==='success'?'bg-green-600':type==='error'?'bg-blood':'bg-blue-600'}
-        animate-[fadeIn_.3s_ease]`;
-    el.textContent = msg;
-    $('toastBox').appendChild(el);
-    setTimeout(() => el.remove(), 3500);
+  const colors = { success:'#16a34a', error:'#e63946', info:'#2563eb' };
+  const el = document.createElement('div');
+  el.style.cssText = `pointer-events:auto;padding:12px 18px;border-radius:12px;background:${colors[type]||colors.info};color:#fff;font-size:13px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,0.2);animation:fadeUp 0.25s ease;min-width:200px;`;
+  el.textContent = msg;
+  $('toastBox').appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity 0.3s'; setTimeout(()=>el.remove(),300); }, 3000);
 }
 
-function closeModal(id) { $(id).classList.add('hidden'); }
-function openModal(id)  { $(id).classList.remove('hidden'); }
+// ── Modal ──
+function closeModal(id) { $(id).classList.remove('open'); }
+function openModal(id)  { $(id).classList.add('open'); }
 
-// ══════════════════════
-//  THEME
-// ══════════════════════
-function toggleTheme() {
-    const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', t);
-    $('themeBtn').textContent = t==='dark' ? '☀️' : '🌙';
-    localStorage.setItem('dashTheme', t);
+// ── Dark mode ──
+function toggleDark() {
+  isDark = !isDark;
+  document.documentElement.classList.toggle('dark', isDark);
+  document.body.style.background = isDark ? '#0f1117' : '#f8fafc';
+  document.body.style.color = isDark ? '#f1f5f9' : '#1f2937';
+  $('darkBtn').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('chDark', isDark);
 }
 (function(){
-    const t = localStorage.getItem('dashTheme');
-    if(t){ document.documentElement.setAttribute('data-theme',t); }
-    if(document.documentElement.getAttribute('data-theme')==='dark') $('themeBtn').textContent='☀️';
+  if(localStorage.getItem('chDark') === 'true') toggleDark();
 })();
 
-// ══════════════════════
-//  SIDEBAR
-// ══════════════════════
+// ── Sidebar ──
 function toggleSidebar() {
-    $('sidebar').classList.toggle('-translate-x-full');
-}
-function switchTab(tab) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
-    $(`tab-${tab}`).classList.remove('hidden');
-    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-    const titles = { donors:'ডোনার ম্যানেজমেন্ট', notices:'নোটিশ ম্যানেজমেন্ট', users:'ইউজার ম্যানেজমেন্ট' };
-    $('pageTitle').textContent = titles[tab];
-    if(tab==='donors')  loadDonors(1);
-    if(tab==='notices') loadNotices();
-    if(tab==='users')   loadUsers();
+  const s = $('sidebar');
+  s.style.transform = s.style.transform === 'translateX(-100%)' ? 'translateX(0)' : 'translateX(-100%)';
 }
 
-// ══════════════════════
-//  AUTH
-// ══════════════════════
+// ── Tab switching ──
+function switchTab(tab) {
+  // Hide all panels
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  // Remove active from all nav items
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  // Show selected panel
+  const panel = $('tab-' + tab);
+  if (panel) { panel.classList.add('active'); }
+
+  // Activate nav item
+  const navEl = $('nav-' + tab);
+  if (navEl) navEl.classList.add('active');
+
+  // Update topbar
+  const titles = {
+    donors:  { title:'ডোনার ম্যানেজমেন্ট',  sub:'রক্তদাতাদের তথ্য পরিচালনা করুন' },
+    notices: { title:'নোটিশ ম্যানেজমেন্ট', sub:'সাইটের নোটিশ তৈরি ও পরিচালনা করুন' },
+    users:   { title:'ইউজার ম্যানেজমেন্ট',  sub:'Admin ও User অ্যাকাউন্ট পরিচালনা করুন' },
+  };
+  if (titles[tab]) {
+    $('pageTitle').textContent    = titles[tab].title;
+    $('pageSubtitle').textContent = titles[tab].sub;
+  }
+
+  // Load data
+  if (tab === 'donors')  loadDonors(1);
+  if (tab === 'notices') loadNotices();
+  if (tab === 'users')   loadUsers();
+}
+
+// ── Auth ──
 window.addEventListener('DOMContentLoaded', () => {
-    const saved = sessionStorage.getItem('chblood_token');
-    if(saved){ token=saved; showDashboard(); loadDonors(1); }
+  const saved = sessionStorage.getItem('chblood_token');
+  if (saved) { token = saved; showDashboard(); loadDonors(1); }
 });
 
 $('loginForm').addEventListener('submit', async e => {
-    e.preventDefault();
-    const btn = $('loginBtn'), errEl = $('loginError');
-    btn.disabled = true;
-    $('loginBtnTxt').textContent = 'যাচাই হচ্ছে...';
-    errEl.classList.add('hidden');
-    try {
-        const r = await fetch(`${API}/login`, {
-            method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({ username: $('loginUser').value.trim(), password: $('loginPass').value })
-        });
-        const d = await r.json();
-        if(!d.success) throw new Error(d.message);
-        token = d.token;
-        sessionStorage.setItem('chblood_token', token);
-        if(d.user) $('sidebarUsername').textContent = d.user.name || d.user.username;
-        showDashboard();
-        loadDonors(1);
-    } catch(err) {
-        errEl.textContent = '❌ ' + err.message;
-        errEl.classList.remove('hidden');
-    } finally {
-        btn.disabled = false;
-        $('loginBtnTxt').textContent = 'লগইন করুন 🔐';
+  e.preventDefault();
+  const btn = $('loginBtn'), errEl = $('loginError');
+  btn.disabled = true;
+  $('loginBtnTxt').textContent = 'যাচাই হচ্ছে...';
+  errEl.classList.add('hidden');
+  try {
+    const r = await fetch(`${API}/login`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ username:$('loginUser').value.trim(), password:$('loginPass').value })
+    });
+    const d = await r.json();
+    if (!d.success) throw new Error(d.message);
+    token = d.token;
+    sessionStorage.setItem('chblood_token', token);
+    if (d.user) {
+      const name = d.user.name || d.user.username;
+      $('sidebarUsername').textContent = name;
+      $('sidebarAvatar').textContent   = name.charAt(0).toUpperCase();
     }
+    showDashboard();
+    loadDonors(1);
+  } catch(err) {
+    errEl.textContent = '❌ ' + err.message;
+    errEl.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+    $('loginBtnTxt').textContent = 'লগইন করুন 🔐';
+  }
 });
 
 function showDashboard() {
-    $('loginPage').classList.add('hidden');
-    $('dashboard').classList.remove('hidden');
+  $('loginPage').style.display = 'none';
+  $('dashboard').style.display = 'flex';
 }
 function doLogout() {
-    sessionStorage.removeItem('chblood_token');
-    token = null;
-    $('dashboard').classList.add('hidden');
-    $('loginPage').classList.remove('hidden');
+  sessionStorage.removeItem('chblood_token');
+  token = null;
+  $('dashboard').style.display = 'none';
+  $('loginPage').style.display = '';
 }
 
 async function apiFetch(path, opts={}) {
-    const res = await fetch(`${API}${path}`, {
-        ...opts,
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type':'application/json', ...(opts.headers||{}) }
-    });
-    if(res.status===401){ doLogout(); throw new Error('Session expired'); }
-    return res.json();
+  const res = await fetch(`${API}${path}`, {
+    ...opts,
+    headers:{ 'Authorization':`Bearer ${token}`, 'Content-Type':'application/json', ...(opts.headers||{}) }
+  });
+  if (res.status === 401) { doLogout(); throw new Error('Session expired'); }
+  return res.json();
 }
 
 // ══════════════════════
 //  DONORS
 // ══════════════════════
 async function loadDonors(page=1) {
-    currentPage = page;
-    const blood = $('filterBlood').value, area = $('filterArea').value;
-    $('donorTableBody').innerHTML = `<tr><td colspan="8" class="py-16 text-center text-gray-400"><div class="inline-block w-8 h-8 border-4 border-red-100 border-t-blood rounded-full spinner"></div></td></tr>`;
-    try {
-        const params = new URLSearchParams({ col:'donors', page, limit:50 });
-        if(blood) params.set('blood',blood);
-        if(area)  params.set('area',area);
-        const d = await apiFetch(`/admin?${params}`);
-        if(!d.success) throw new Error(d.message);
-        allDonors = d.donors;
-        renderDonors(d.donors);
-        renderPagination('donor', d.page, d.totalPages, d.total);
-        $('donorTotalBadge').textContent = `মোট: ${d.total} জন`;
-        $('statTotal').textContent   = d.total;
-        $('statEligible').textContent = d.donors.filter(x=>isEligible(x.lastDonation)).length;
-        $('statOPlus').textContent   = d.donors.filter(x=>x.blood==='O+').length;
-        const tod = new Date().toDateString();
-        $('statToday').textContent   = d.donors.filter(x=>x.createdAt && new Date(x.createdAt).toDateString()===tod).length;
-    } catch(err) {
-        $('donorTableBody').innerHTML = `<tr><td colspan="8" class="py-10 text-center text-red-400 text-sm">⚠️ ${err.message}</td></tr>`;
-    }
+  currentPage = page;
+  const blood = $('filterBlood').value, area = $('filterArea').value;
+  $('donorTableBody').innerHTML = `<tr><td colspan="8" style="padding:48px;text-align:center;"><div class="spin"></div></td></tr>`;
+  try {
+    const p = new URLSearchParams({ col:'donors', page, limit:50 });
+    if (blood) p.set('blood', blood);
+    if (area)  p.set('area', area);
+    const d = await apiFetch(`/admin?${p}`);
+    if (!d.success) throw new Error(d.message);
+    allDonors = d.donors;
+    renderDonors(d.donors);
+    renderPagination(d.page, d.totalPages, d.total);
+    $('donorTotalBadge').textContent = `মোট: ${d.total} জন`;
+    $('statTotal').textContent    = d.total;
+    $('bannerTotal').textContent  = d.total;
+    const eligible = d.donors.filter(x=>isEligible(x.lastDonation)).length;
+    $('statEligible').textContent   = eligible;
+    $('bannerEligible').textContent = eligible;
+    $('statOPlus').textContent    = d.donors.filter(x=>x.blood==='O+').length;
+    const tod = new Date().toDateString();
+    const todayCount = d.donors.filter(x=>x.createdAt && new Date(x.createdAt).toDateString()===tod).length;
+    $('statToday').textContent    = todayCount;
+    $('bannerToday').textContent  = todayCount;
+  } catch(err) {
+    $('donorTableBody').innerHTML = `<tr><td colspan="8" style="padding:40px;text-align:center;color:#e63946;font-size:13px;">⚠️ ${err.message}</td></tr>`;
+  }
 }
 
 function renderDonors(donors) {
-    if(!donors.length) {
-        $('donorTableBody').innerHTML = `<tr><td colspan="8" class="py-10 text-center text-gray-400 text-sm">কোনো ডোনার পাওয়া যায়নি।</td></tr>`;
-        return;
-    }
-    const off = (currentPage-1)*50;
-    $('donorTableBody').innerHTML = donors.map((d,i) => `
-    <tr class="table-row">
-      <td class="px-4 py-3 text-gray-400 text-xs">${off+i+1}</td>
-      <td class="px-4 py-3 font-semibold text-gray-800 dark:text-gray-100">${d.name||'—'}</td>
-      <td class="px-4 py-3"><span class="blood-badge">${d.blood||'—'}</span></td>
-      <td class="px-4 py-3 text-xs text-gray-500">${areaMap[d.area]||d.area||'—'}</td>
-      <td class="px-4 py-3 font-mono text-xs text-gray-600 dark:text-gray-300">${d.phone||'—'}</td>
-      <td class="px-4 py-3 text-xs text-gray-500">${fmtDate(d.lastDonation)}</td>
-      <td class="px-4 py-3">
-        <span class="${isEligible(d.lastDonation)?'badge-success':'badge-warning'}">
-          ${isEligible(d.lastDonation)?'✅ উপযুক্ত':'⏳ অপেক্ষমান'}
-        </span>
-      </td>
-      <td class="px-4 py-3">
-        <div class="flex gap-1">
-          <button onclick='editDonor(${JSON.stringify(d)})' class="text-xs bg-blue-50 text-blue-600 border border-blue-100 px-2.5 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition font-semibold">✏️</button>
-          <button onclick="deleteDonor('${d._id}')" class="text-xs bg-red-50 text-red-500 border border-red-100 px-2.5 py-1 rounded-lg hover:bg-blood hover:text-white transition font-semibold">🗑</button>
-        </div>
-      </td>
-    </tr>`).join('');
+  if (!donors.length) {
+    $('donorTableBody').innerHTML = `<tr><td colspan="8" style="padding:40px;text-align:center;color:#9ca3af;font-size:13px;">কোনো ডোনার পাওয়া যায়নি।</td></tr>`;
+    return;
+  }
+  const off = (currentPage-1)*50;
+  $('donorTableBody').innerHTML = donors.map((d,i) => `
+  <tr class="tbl-row">
+    <td style="color:#9ca3af;font-size:12px;">${off+i+1}</td>
+    <td style="font-weight:700;color:#1f2937;">${d.name||'—'}</td>
+    <td><span class="badge badge-blood">${d.blood||'—'}</span></td>
+    <td style="color:#6b7280;font-size:12.5px;">${areaMap[d.area]||d.area||'—'}</td>
+    <td style="font-family:monospace;font-size:12.5px;color:#374151;">${d.phone||'—'}</td>
+    <td style="color:#6b7280;font-size:12px;">${fmtDate(d.lastDonation)}</td>
+    <td><span class="badge ${isEligible(d.lastDonation)?'badge-green':'badge-yellow'}">${isEligible(d.lastDonation)?'✅ উপযুক্ত':'⏳ অপেক্ষমান'}</span></td>
+    <td>
+      <div style="display:flex;gap:6px;">
+        <button onclick='editDonor(${JSON.stringify(d)})' style="background:#eff6ff;color:#2563eb;border:1px solid #dbeafe;padding:5px 10px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.12s;" onmouseover="this.style.background='#2563eb';this.style.color='#fff'" onmouseout="this.style.background='#eff6ff';this.style.color='#2563eb'">✏️ এডিট</button>
+        <button onclick="deleteDonor('${d._id}')" style="background:#fff1f2;color:#e63946;border:1px solid #fecdd3;padding:5px 10px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.12s;" onmouseover="this.style.background='#e63946';this.style.color='#fff'" onmouseout="this.style.background='#fff1f2';this.style.color='#e63946'">🗑 মুছুন</button>
+      </div>
+    </td>
+  </tr>`).join('');
 }
 
-function renderPagination(prefix, page, totalPages, total) {
-    const info = $(`${prefix}PageInfo`), btns = $(`${prefix}PageBtns`);
-    info.textContent = `পেজ ${page}/${totalPages} • মোট ${total}`;
-    btns.innerHTML = '';
-    const prev = document.createElement('button');
-    prev.className = 'page-btn text-xs px-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg disabled:opacity-40 hover:border-blood hover:text-blood transition font-semibold';
-    prev.textContent = '←'; prev.disabled = page<=1;
-    prev.onclick = () => loadDonors(page-1);
-    btns.appendChild(prev);
-    const s=Math.max(1,page-2), e=Math.min(totalPages,s+4);
-    for(let p=s;p<=e;p++){
-        const b=document.createElement('button');
-        b.className=`text-xs px-3 py-1.5 border rounded-lg font-semibold transition ${p===page?'bg-blood text-white border-blood':'border-gray-200 dark:border-gray-700 hover:border-blood hover:text-blood'}`;
-        b.textContent=p; b.onclick=()=>loadDonors(p);
-        btns.appendChild(b);
-    }
-    const next=document.createElement('button');
-    next.className='text-xs px-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg disabled:opacity-40 hover:border-blood hover:text-blood transition font-semibold';
-    next.textContent='→'; next.disabled=page>=totalPages;
-    next.onclick=()=>loadDonors(page+1);
-    btns.appendChild(next);
+function renderPagination(page, totalPages, total) {
+  $('donorPageInfo').textContent = `পেজ ${page} / ${totalPages} • মোট ${total} জন`;
+  const btns = $('donorPageBtns');
+  btns.innerHTML = '';
+
+  const mkBtn = (label, pg, active=false, disabled=false) => {
+    const b = document.createElement('button');
+    b.textContent = label;
+    b.disabled = disabled;
+    b.style.cssText = `padding:5px 11px;border-radius:7px;font-size:12px;font-weight:700;cursor:${disabled?'not-allowed':'pointer'};border:1.5px solid ${active?'#e63946':'#e5e7eb'};background:${active?'#e63946':'#fff'};color:${active?'#fff':'#374151'};opacity:${disabled?0.4:1};transition:all 0.12s;`;
+    if (!disabled && !active) { b.onmouseover = ()=>{b.style.borderColor='#e63946';b.style.color='#e63946';}; b.onmouseout = ()=>{b.style.borderColor='#e5e7eb';b.style.color='#374151';}; }
+    b.onclick = () => { if(!disabled) loadDonors(pg); };
+    btns.appendChild(b);
+  };
+
+  mkBtn('←', page-1, false, page<=1);
+  const s = Math.max(1,page-2), e = Math.min(totalPages,s+4);
+  for(let p=s;p<=e;p++) mkBtn(p, p, p===page);
+  mkBtn('→', page+1, false, page>=totalPages);
 }
 
-// Donor Modal — Add
 function openDonorModal() {
-    $('donorModalTitle').textContent = 'নতুন ডোনার যোগ করুন';
-    $('donorId').value=''; $('dName').value=''; $('dBlood').value='';
-    $('dArea').value='sadar'; $('dPhone').value=''; $('dLastDonation').value='';
-    $('dCurrentAddr').value=''; $('dHealth').value='';
-    $('donorFormError').classList.add('hidden');
-    openModal('donorModal');
+  $('donorModalTitle').textContent = 'নতুন ডোনার যোগ করুন';
+  $('donorId').value=''; $('dName').value=''; $('dBlood').value='';
+  $('dArea').value='sadar'; $('dPhone').value=''; $('dLastDonation').value='';
+  $('dCurrentAddr').value=''; $('dHealth').value='';
+  $('donorFormError').classList.add('hidden');
+  openModal('donorModal');
 }
-// Donor Modal — Edit
 function editDonor(d) {
-    $('donorModalTitle').textContent = 'ডোনার আপডেট করুন';
-    $('donorId').value = d._id;
-    $('dName').value   = d.name||'';
-    $('dBlood').value  = d.blood||'';
-    $('dArea').value   = d.area||'sadar';
-    $('dPhone').value  = d.phone||'';
-    $('dLastDonation').value = d.lastDonation ? d.lastDonation.split('T')[0] : '';
-    $('dCurrentAddr').value  = d.currentAddress||'';
-    $('dHealth').value       = d.healthIssues||'';
-    $('donorFormError').classList.add('hidden');
-    openModal('donorModal');
+  $('donorModalTitle').textContent = 'ডোনার তথ্য আপডেট করুন';
+  $('donorId').value = d._id;
+  $('dName').value   = d.name||'';
+  $('dBlood').value  = d.blood||'';
+  $('dArea').value   = d.area||'sadar';
+  $('dPhone').value  = d.phone||'';
+  $('dLastDonation').value = d.lastDonation ? d.lastDonation.split('T')[0] : '';
+  $('dCurrentAddr').value  = d.currentAddress||'';
+  $('dHealth').value       = d.healthIssues||'';
+  $('donorFormError').classList.add('hidden');
+  openModal('donorModal');
 }
 $('donorForm').addEventListener('submit', async e => {
-    e.preventDefault();
-    const id = $('donorId').value;
-    const body = { name:$('dName').value, blood:$('dBlood').value, area:$('dArea').value,
-        phone:$('dPhone').value, lastDonation:$('dLastDonation').value||null,
-        currentAddress:$('dCurrentAddr').value, healthIssues:$('dHealth').value };
-    try {
-        const d = id
-            ? await apiFetch(`/admin?col=donors&id=${id}`, {method:'PUT',  body:JSON.stringify(body)})
-            : await apiFetch(`/admin?col=donors`,          {method:'POST', body:JSON.stringify(body)});
-        if(!d.success) throw new Error(d.message);
-        toast(id ? 'ডোনার আপডেট হয়েছে ✅' : 'নতুন ডোনার যোগ হয়েছে ✅');
-        closeModal('donorModal'); loadDonors(currentPage);
-    } catch(err) { $('donorFormError').textContent=err.message; $('donorFormError').classList.remove('hidden'); }
+  e.preventDefault();
+  const id = $('donorId').value;
+  const body = { name:$('dName').value, blood:$('dBlood').value, area:$('dArea').value,
+    phone:$('dPhone').value, lastDonation:$('dLastDonation').value||null,
+    currentAddress:$('dCurrentAddr').value, healthIssues:$('dHealth').value };
+  try {
+    const d = id
+      ? await apiFetch(`/admin?col=donors&id=${id}`, {method:'PUT',  body:JSON.stringify(body)})
+      : await apiFetch(`/admin?col=donors`,           {method:'POST', body:JSON.stringify(body)});
+    if (!d.success) throw new Error(d.message);
+    toast(id ? '✅ ডোনার আপডেট হয়েছে' : '✅ নতুন ডোনার যোগ হয়েছে');
+    closeModal('donorModal'); loadDonors(currentPage);
+  } catch(err) { $('donorFormError').textContent=err.message; $('donorFormError').classList.remove('hidden'); }
 });
-
 async function deleteDonor(id) {
-    if(!confirm('এই ডোনারকে মুছে ফেলবেন?')) return;
-    try {
-        const d = await apiFetch(`/admin?col=donors&id=${id}`, {method:'DELETE'});
-        if(!d.success) throw new Error(d.message);
-        toast('ডোনার মুছে ফেলা হয়েছে।');
-        loadDonors(currentPage);
-    } catch(err) { toast(err.message,'error'); }
+  if (!confirm('এই ডোনারকে মুছে ফেলবেন?')) return;
+  try {
+    const d = await apiFetch(`/admin?col=donors&id=${id}`, {method:'DELETE'});
+    if (!d.success) throw new Error(d.message);
+    toast('ডোনার মুছে ফেলা হয়েছে।');
+    loadDonors(currentPage);
+  } catch(err) { toast(err.message,'error'); }
 }
 
-// CSV Export
 function exportCSV() {
-    if(!allDonors.length){ toast('কোনো ডেটা নেই','error'); return; }
-    const h=['#','নাম','রক্তের গ্রুপ','এলাকা','ফোন','শেষ দান','উপযুক্ততা','রেজিস্ট্রেশন'];
-    const r=allDonors.map((d,i)=>[i+1,d.name,d.blood,areaMap[d.area]||d.area,d.phone,
-        d.lastDonation||'', isEligible(d.lastDonation)?'উপযুক্ত':'অপেক্ষমান',
-        d.createdAt?new Date(d.createdAt).toLocaleDateString('en-GB'):'']);
-    const csv=[h,...r].map(row=>row.map(c=>`"${c}"`).join(',')).join('\n');
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
-    a.download=`CHBlood_Donors_${new Date().toISOString().split('T')[0]}.csv`;
-    a.click(); toast('CSV export সফল 📥');
+  if (!allDonors.length) { toast('কোনো ডেটা নেই','error'); return; }
+  const h = ['#','নাম','রক্তের গ্রুপ','এলাকা','ফোন','শেষ দান','উপযুক্ততা','রেজিস্ট্রেশন'];
+  const rows = allDonors.map((d,i)=>[i+1,d.name,d.blood,areaMap[d.area]||d.area,d.phone,
+    d.lastDonation||'', isEligible(d.lastDonation)?'উপযুক্ত':'অপেক্ষমান',
+    d.createdAt?new Date(d.createdAt).toLocaleDateString('en-GB'):'']);
+  const csv = [h,...rows].map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
+  a.download = `CHBlood_Donors_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  toast('📥 CSV export সফল');
 }
 
 // ══════════════════════
 //  NOTICES
 // ══════════════════════
 async function loadNotices() {
-    $('noticesContainer').innerHTML = `<div class="py-12 text-center text-gray-400"><div class="inline-block w-8 h-8 border-4 border-red-100 border-t-blood rounded-full spinner"></div></div>`;
-    try {
-        const d = await apiFetch('/admin?col=notices&limit=20');
-        if(!d.success) throw new Error(d.message);
-        if(!d.notices.length){ $('noticesContainer').innerHTML=`<p class="text-center text-gray-400 py-10 text-sm">কোনো নোটিশ নেই।</p>`; return; }
-        $('noticesContainer').innerHTML = d.notices.map(n=>`
-        <div class="notice-card-${n.type} rounded-xl p-4 flex items-start justify-between gap-3">
-          <div class="flex-1">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="badge-${n.type}">${{info:'ℹ️ তথ্য',warning:'⚠️ সতর্কতা',danger:'🚨 জরুরি',success:'✅ সফল'}[n.type]}</span>
-              <span class="font-bold text-sm text-gray-800 dark:text-gray-100">${n.title}</span>
-              ${!n.active?'<span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-semibold">নিষ্ক্রিয়</span>':''}
-            </div>
-            <p class="text-sm text-gray-600 dark:text-gray-300">${n.message}</p>
-            <p class="text-xs text-gray-400 mt-1">${fmtDate(n.createdAt)}</p>
-          </div>
-          <div class="flex gap-1 shrink-0">
-            <button onclick='editNotice(${JSON.stringify(n)})' class="text-xs bg-blue-50 text-blue-600 border border-blue-100 px-2.5 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition font-semibold">✏️</button>
-            <button onclick="deleteNotice('${n._id}')" class="text-xs bg-red-50 text-red-500 border border-red-100 px-2.5 py-1 rounded-lg hover:bg-blood hover:text-white transition font-semibold">🗑</button>
-          </div>
-        </div>`).join('');
-    } catch(err){ $('noticesContainer').innerHTML=`<p class="text-center text-red-400 text-sm py-8">⚠️ ${err.message}</p>`; }
+  $('noticesContainer').innerHTML = `<div style="padding:48px;text-align:center;"><div class="spin"></div></div>`;
+  try {
+    const d = await apiFetch('/admin?col=notices&limit=20');
+    if (!d.success) throw new Error(d.message);
+    if (!d.notices.length) {
+      $('noticesContainer').innerHTML = `<div class="card" style="padding:48px;text-align:center;color:#9ca3af;font-size:13px;">কোনো নোটিশ নেই। উপরে "নতুন নোটিশ" বাটনে ক্লিক করুন।</div>`;
+      return;
+    }
+    const typeLabel = { info:'ℹ️ তথ্য', warning:'⚠️ সতর্কতা', danger:'🚨 জরুরি', success:'✅ সফল' };
+    $('noticesContainer').innerHTML = d.notices.map(n => `
+    <div class="notice-${n.type}" style="border-radius:14px;padding:18px 20px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;">
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+          <span class="badge badge-${n.type==='info'?'blue':n.type==='warning'?'yellow':n.type==='success'?'green':'red'}">${typeLabel[n.type]||n.type}</span>
+          <span style="font-weight:800;font-size:14px;color:#1f2937;">${n.title}</span>
+          ${!n.active?'<span class="badge badge-gray">নিষ্ক্রিয়</span>':''}
+        </div>
+        <p style="font-size:13px;color:#374151;margin-bottom:4px;">${n.message}</p>
+        <p style="font-size:11px;color:#9ca3af;">${fmtDate(n.createdAt)}</p>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0;">
+        <button onclick='editNotice(${JSON.stringify(n)})' style="background:#eff6ff;color:#2563eb;border:1px solid #dbeafe;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='#2563eb';this.style.color='#fff'" onmouseout="this.style.background='#eff6ff';this.style.color='#2563eb'">✏️</button>
+        <button onclick="deleteNotice('${n._id}')" style="background:#fff1f2;color:#e63946;border:1px solid #fecdd3;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='#e63946';this.style.color='#fff'" onmouseout="this.style.background='#fff1f2';this.style.color='#e63946'">🗑</button>
+      </div>
+    </div>`).join('');
+  } catch(err) {
+    $('noticesContainer').innerHTML = `<div class="card" style="padding:32px;text-align:center;color:#e63946;font-size:13px;">⚠️ ${err.message}</div>`;
+  }
 }
 
 function openNoticeModal() {
-    $('noticeModalTitle').textContent='নতুন নোটিশ যোগ করুন';
-    $('noticeId').value=''; $('nTitle').value=''; $('nMessage').value='';
-    $('nType').value='info'; $('nActive').value='true';
-    $('noticeFormError').classList.add('hidden');
-    openModal('noticeModal');
+  $('noticeModalTitle').textContent = 'নতুন নোটিশ যোগ করুন';
+  $('noticeId').value=''; $('nTitle').value=''; $('nMessage').value='';
+  $('nType').value='info'; $('nActive').value='true';
+  $('noticeFormError').classList.add('hidden');
+  openModal('noticeModal');
 }
 function editNotice(n) {
-    $('noticeModalTitle').textContent='নোটিশ আপডেট করুন';
-    $('noticeId').value=n._id; $('nTitle').value=n.title;
-    $('nMessage').value=n.message; $('nType').value=n.type;
-    $('nActive').value=String(n.active);
-    $('noticeFormError').classList.add('hidden');
-    openModal('noticeModal');
+  $('noticeModalTitle').textContent = 'নোটিশ আপডেট করুন';
+  $('noticeId').value=n._id; $('nTitle').value=n.title;
+  $('nMessage').value=n.message; $('nType').value=n.type;
+  $('nActive').value=String(n.active);
+  $('noticeFormError').classList.add('hidden');
+  openModal('noticeModal');
 }
 $('noticeForm').addEventListener('submit', async e => {
-    e.preventDefault();
-    const id=$('noticeId').value;
-    const body={title:$('nTitle').value,message:$('nMessage').value,type:$('nType').value,active:$('nActive').value==='true'};
-    try {
-        const d=id ? await apiFetch(`/admin?col=notices&id=${id}`,{method:'PUT',body:JSON.stringify(body)})
-                   : await apiFetch('/admin?col=notices',{method:'POST',body:JSON.stringify(body)});
-        if(!d.success) throw new Error(d.message);
-        toast(id?'নোটিশ আপডেট হয়েছে ✅':'নোটিশ যোগ হয়েছে ✅');
-        closeModal('noticeModal'); loadNotices();
-    } catch(err){ $('noticeFormError').textContent=err.message; $('noticeFormError').classList.remove('hidden'); }
+  e.preventDefault();
+  const id = $('noticeId').value;
+  const body = { title:$('nTitle').value, message:$('nMessage').value, type:$('nType').value, active:$('nActive').value==='true' };
+  try {
+    const d = id
+      ? await apiFetch(`/admin?col=notices&id=${id}`, {method:'PUT',  body:JSON.stringify(body)})
+      : await apiFetch(`/admin?col=notices`,           {method:'POST', body:JSON.stringify(body)});
+    if (!d.success) throw new Error(d.message);
+    toast(id ? '✅ নোটিশ আপডেট হয়েছে' : '✅ নোটিশ যোগ হয়েছে');
+    closeModal('noticeModal'); loadNotices();
+  } catch(err) { $('noticeFormError').textContent=err.message; $('noticeFormError').classList.remove('hidden'); }
 });
 async function deleteNotice(id) {
-    if(!confirm('নোটিশটি মুছে ফেলবেন?')) return;
-    try {
-        const d=await apiFetch(`/admin?col=notices&id=${id}`,{method:'DELETE'});
-        if(!d.success) throw new Error(d.message);
-        toast('নোটিশ মুছে ফেলা হয়েছে।'); loadNotices();
-    } catch(err){ toast(err.message,'error'); }
+  if (!confirm('নোটিশটি মুছে ফেলবেন?')) return;
+  try {
+    const d = await apiFetch(`/admin?col=notices&id=${id}`, {method:'DELETE'});
+    if (!d.success) throw new Error(d.message);
+    toast('নোটিশ মুছে ফেলা হয়েছে।'); loadNotices();
+  } catch(err) { toast(err.message,'error'); }
 }
 
 // ══════════════════════
 //  USERS
 // ══════════════════════
 async function loadUsers() {
-    $('usersTableBody').innerHTML=`<tr><td colspan="6" class="py-16 text-center text-gray-400"><div class="inline-block w-8 h-8 border-4 border-red-100 border-t-blood rounded-full spinner"></div></td></tr>`;
-    try {
-        const d=await apiFetch('/admin?col=users&limit=50');
-        if(!d.success) throw new Error(d.message);
-        if(!d.users.length){ $('usersTableBody').innerHTML=`<tr><td colspan="6" class="py-10 text-center text-gray-400 text-sm">কোনো user নেই।</td></tr>`; return; }
-        $('usersTableBody').innerHTML=d.users.map((u,i)=>`
-        <tr class="table-row">
-          <td class="px-4 py-3 text-gray-400 text-xs">${i+1}</td>
-          <td class="px-4 py-3 font-mono font-semibold text-sm text-gray-800 dark:text-gray-100">${u.username}</td>
-          <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">${u.name||'—'}</td>
-          <td class="px-4 py-3"><span class="${u.role==='admin'?'blood-badge':'badge-info'}">${u.role==='admin'?'👑 Admin':'👤 User'}</span></td>
-          <td class="px-4 py-3 text-xs text-gray-400">${fmtDate(u.createdAt)}</td>
-          <td class="px-4 py-3">
-            <div class="flex gap-1">
-              <button onclick='editUser(${JSON.stringify(u)})' class="text-xs bg-blue-50 text-blue-600 border border-blue-100 px-2.5 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition font-semibold">✏️</button>
-              <button onclick="deleteUser('${u._id}')" class="text-xs bg-red-50 text-red-500 border border-red-100 px-2.5 py-1 rounded-lg hover:bg-blood hover:text-white transition font-semibold">🗑</button>
-            </div>
-          </td>
-        </tr>`).join('');
-    } catch(err){ $('usersTableBody').innerHTML=`<tr><td colspan="6" class="py-8 text-center text-red-400 text-sm">⚠️ ${err.message}</td></tr>`; }
+  $('usersTableBody').innerHTML = `<tr><td colspan="6" style="padding:48px;text-align:center;"><div class="spin"></div></td></tr>`;
+  try {
+    const d = await apiFetch('/admin?col=users&limit=50');
+    if (!d.success) throw new Error(d.message);
+    if (!d.users.length) {
+      $('usersTableBody').innerHTML = `<tr><td colspan="6" style="padding:40px;text-align:center;color:#9ca3af;font-size:13px;">কোনো user নেই।</td></tr>`;
+      return;
+    }
+    $('usersTableBody').innerHTML = d.users.map((u,i) => `
+    <tr class="tbl-row">
+      <td style="color:#9ca3af;font-size:12px;">${i+1}</td>
+      <td style="font-family:monospace;font-weight:700;font-size:13px;color:#1f2937;">@${u.username}</td>
+      <td style="font-size:13px;color:#374151;">${u.name||'—'}</td>
+      <td><span class="badge ${u.role==='admin'?'badge-admin':'badge-blue'}">${u.role==='admin'?'👑 Admin':'👤 User'}</span></td>
+      <td style="font-size:12px;color:#9ca3af;">${fmtDate(u.createdAt)}</td>
+      <td>
+        <div style="display:flex;gap:6px;">
+          <button onclick='editUser(${JSON.stringify(u)})' style="background:#eff6ff;color:#2563eb;border:1px solid #dbeafe;padding:5px 10px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='#2563eb';this.style.color='#fff'" onmouseout="this.style.background='#eff6ff';this.style.color='#2563eb'">✏️ এডিট</button>
+          <button onclick="deleteUser('${u._id}')" style="background:#fff1f2;color:#e63946;border:1px solid #fecdd3;padding:5px 10px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='#e63946';this.style.color='#fff'" onmouseout="this.style.background='#fff1f2';this.style.color='#e63946'">🗑 মুছুন</button>
+        </div>
+      </td>
+    </tr>`).join('');
+  } catch(err) {
+    $('usersTableBody').innerHTML = `<tr><td colspan="6" style="padding:32px;text-align:center;color:#e63946;font-size:13px;">⚠️ ${err.message}</td></tr>`;
+  }
 }
 
 function openUserModal() {
-    $('userModalTitle').textContent='নতুন User যোগ করুন';
-    $('userId').value=''; $('uUsername').value=''; $('uName').value='';
-    $('uPassword').value=''; $('uRole').value='user';
-    $('uUsername').disabled=false;
-    $('uPassLabel').textContent='Password *';
-    $('userFormError').classList.add('hidden');
-    openModal('userModal');
+  $('userModalTitle').textContent = 'নতুন User যোগ করুন';
+  $('userId').value=''; $('uUsername').value=''; $('uName').value='';
+  $('uPassword').value=''; $('uRole').value='user';
+  $('uUsername').disabled = false;
+  $('uPassLabel').textContent = 'Password *';
+  $('userFormError').classList.add('hidden');
+  openModal('userModal');
 }
 function editUser(u) {
-    $('userModalTitle').textContent='User আপডেট করুন';
-    $('userId').value=u._id; $('uUsername').value=u.username;
-    $('uName').value=u.name||''; $('uPassword').value='';
-    $('uRole').value=u.role||'user';
-    $('uUsername').disabled=true;
-    $('uPassLabel').textContent='নতুন Password (খালি রাখলে পরিবর্তন হবে না)';
-    $('userFormError').classList.add('hidden');
-    openModal('userModal');
+  $('userModalTitle').textContent = 'User তথ্য আপডেট করুন';
+  $('userId').value=u._id; $('uUsername').value=u.username;
+  $('uName').value=u.name||''; $('uPassword').value='';
+  $('uRole').value=u.role||'user';
+  $('uUsername').disabled = true;
+  $('uPassLabel').textContent = 'নতুন Password (খালি = পরিবর্তন নেই)';
+  $('userFormError').classList.add('hidden');
+  openModal('userModal');
 }
 $('userForm').addEventListener('submit', async e => {
-    e.preventDefault();
-    const id=$('userId').value;
-    const body={username:$('uUsername').value,name:$('uName').value,role:$('uRole').value};
-    if($('uPassword').value) body.password=$('uPassword').value;
-    if(!id && !$('uPassword').value){ $('userFormError').textContent='নতুন user-এর জন্য password দিতে হবে।'; $('userFormError').classList.remove('hidden'); return; }
-    try {
-        const d=id ? await apiFetch(`/admin?col=users&id=${id}`,{method:'PUT',body:JSON.stringify(body)})
-                   : await apiFetch('/admin?col=users',{method:'POST',body:JSON.stringify(body)});
-        if(!d.success) throw new Error(d.message);
-        toast(id?'User আপডেট হয়েছে ✅':'নতুন User যোগ হয়েছে ✅');
-        closeModal('userModal'); loadUsers();
-    } catch(err){ $('userFormError').textContent=err.message; $('userFormError').classList.remove('hidden'); }
+  e.preventDefault();
+  const id = $('userId').value;
+  const body = { username:$('uUsername').value, name:$('uName').value, role:$('uRole').value };
+  if ($('uPassword').value) body.password = $('uPassword').value;
+  if (!id && !$('uPassword').value) {
+    $('userFormError').textContent = 'নতুন user-এর জন্য password দিতে হবে।';
+    $('userFormError').classList.remove('hidden');
+    return;
+  }
+  try {
+    const d = id
+      ? await apiFetch(`/admin?col=users&id=${id}`, {method:'PUT',  body:JSON.stringify(body)})
+      : await apiFetch(`/admin?col=users`,           {method:'POST', body:JSON.stringify(body)});
+    if (!d.success) throw new Error(d.message);
+    toast(id ? '✅ User আপডেট হয়েছে' : '✅ নতুন User যোগ হয়েছে');
+    closeModal('userModal'); loadUsers();
+  } catch(err) { $('userFormError').textContent=err.message; $('userFormError').classList.remove('hidden'); }
 });
 async function deleteUser(id) {
-    if(!confirm('এই User-কে মুছে ফেলবেন?')) return;
-    try {
-        const d=await apiFetch(`/admin?col=users&id=${id}`,{method:'DELETE'});
-        if(!d.success) throw new Error(d.message);
-        toast('User মুছে ফেলা হয়েছে।'); loadUsers();
-    } catch(err){ toast(err.message,'error'); }
+  if (!confirm('এই User-কে মুছে ফেলবেন?')) return;
+  try {
+    const d = await apiFetch(`/admin?col=users&id=${id}`, {method:'DELETE'});
+    if (!d.success) throw new Error(d.message);
+    toast('User মুছে ফেলা হয়েছে।'); loadUsers();
+  } catch(err) { toast(err.message,'error'); }
 }
 
-// Close modal on backdrop click
-document.querySelectorAll('.modal-backdrop').forEach(m => {
-    m.addEventListener('click', e => { if(e.target===m) m.classList.add('hidden'); });
+// ── Close modal on backdrop click ──
+document.querySelectorAll('.modal-wrap').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
 });
 </script>
 </body>
