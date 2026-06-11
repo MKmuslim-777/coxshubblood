@@ -1,888 +1,819 @@
 <!DOCTYPE html>
 <html lang="bn" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard — Cox's Hub Blood</title>
-    <meta name="robots" content="noindex, nofollow">
-
-    <!-- Tailwind + DaisyUI -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: { extend: {
-                colors: { 'blood-red': '#e63946', 'dark-red': '#c1121f' }
-            }}
-        }
-    </script>
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;500&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --blood-red: #e63946;
-            --dark-red:  #c1121f;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
-            background: #f4f6fb;
-            color: #212529;
-            min-height: 100vh;
-        }
-        [data-theme="dark"] body { background: #0f0f1e; color: #e0e0e0; }
-
-        /* ── Login Page ── */
-        .login-page {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #fff0f0 0%, #fce8e8 100%);
-            padding: 20px;
-        }
-        [data-theme="dark"] .login-page { background: linear-gradient(135deg,#1a1a2e,#16213e); }
-
-        .login-card {
-            background: white;
-            border-radius: 20px;
-            padding: 44px 40px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 20px 60px rgba(230,57,70,0.12);
-            border-top: 5px solid var(--blood-red);
-        }
-        [data-theme="dark"] .login-card { background: #1a1a2e; }
-
-        .login-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 28px;
-        }
-        .login-heart {
-            width: 36px; height: 36px;
-            fill: var(--blood-red);
-            filter: drop-shadow(0 3px 8px rgba(230,57,70,0.4));
-        }
-        .login-logo h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #212529;
-        }
-        [data-theme="dark"] .login-logo h1 { color: #e0e0e0; }
-        .login-logo h1 span { color: var(--blood-red); }
-        .login-subtitle {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #adb5bd;
-            margin-bottom: 30px;
-            letter-spacing: 0.3px;
-        }
-        .form-group { margin-bottom: 20px; }
-        .form-group label {
-            display: block;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 6px;
-        }
-        [data-theme="dark"] .form-group label { color: #bbb; }
-        .form-group input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1.5px solid #dee2e6;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-family: 'Poppins', sans-serif;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            background: white;
-            color: #212529;
-        }
-        [data-theme="dark"] .form-group input { background: #16213e; border-color: #333; color: #e0e0e0; }
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--blood-red);
-            box-shadow: 0 0 0 3px rgba(230,57,70,0.15);
-        }
-        .login-btn {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(45deg, var(--blood-red), var(--dark-red));
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 18px rgba(230,57,70,0.35);
-            margin-top: 8px;
-            position: relative;
-        }
-        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(230,57,70,0.45); }
-        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .login-error {
-            background: rgba(230,57,70,0.08);
-            border: 1px solid rgba(230,57,70,0.25);
-            color: var(--dark-red);
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-            display: none;
-        }
-        .login-error.show { display: block; }
-
-        /* ── Dashboard ── */
-        .dashboard { display: none; min-height: 100vh; }
-        .dashboard.show { display: flex; flex-direction: column; }
-
-        /* Topbar */
-        .topbar {
-            background: white;
-            border-bottom: 1px solid #eee;
-            padding: 0 24px;
-            height: 62px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-        [data-theme="dark"] .topbar { background: #1a1a2e; border-color: #2a2a4a; }
-        .topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .topbar-heart {
-            width: 28px; height: 28px;
-            fill: var(--blood-red);
-        }
-        .topbar-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #212529;
-        }
-        [data-theme="dark"] .topbar-title { color: #e0e0e0; }
-        .topbar-title span { color: var(--blood-red); }
-        .topbar-right { display: flex; align-items: center; gap: 12px; }
-        .admin-badge {
-            background: rgba(230,57,70,0.1);
-            color: var(--dark-red);
-            border: 1px solid rgba(230,57,70,0.2);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 700;
-        }
-        .logout-btn {
-            background: none;
-            border: 1.5px solid #dee2e6;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            color: #6c757d;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.2s;
-        }
-        .logout-btn:hover { border-color: var(--blood-red); color: var(--blood-red); }
-        .theme-btn {
-            background: #f4f6fb;
-            border: 1px solid #dee2e6;
-            width: 34px; height: 34px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1rem;
-            display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s;
-        }
-        .theme-btn:hover { transform: scale(1.1); }
-
-        /* Main content */
-        .dash-main {
-            flex: 1;
-            padding: 28px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* Stats cards */
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 18px;
-            margin-bottom: 28px;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 14px;
-            padding: 22px 20px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-            border-left: 5px solid var(--blood-red);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        [data-theme="dark"] .stat-card { background: #1a1a2e; }
-        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(230,57,70,0.1); }
-        .stat-icon { font-size: 2rem; flex-shrink: 0; }
-        .stat-info strong {
-            display: block;
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--dark-red);
-            line-height: 1;
-        }
-        .stat-info span {
-            font-size: 0.78rem;
-            color: #adb5bd;
-            font-weight: 600;
-            margin-top: 4px;
-            display: block;
-        }
-
-        /* Toolbar */
-        .toolbar {
-            background: white;
-            border-radius: 14px;
-            padding: 18px 20px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        [data-theme="dark"] .toolbar { background: #1a1a2e; }
-        .toolbar select, .toolbar input {
-            padding: 9px 14px;
-            border: 1.5px solid #dee2e6;
-            border-radius: 8px;
-            font-size: 0.88rem;
-            font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
-            background: white;
-            color: #212529;
-            cursor: pointer;
-            min-width: 140px;
-        }
-        [data-theme="dark"] .toolbar select,
-        [data-theme="dark"] .toolbar input { background: #16213e; border-color: #333; color: #e0e0e0; }
-        .toolbar select:focus, .toolbar input:focus {
-            outline: none;
-            border-color: var(--blood-red);
-            box-shadow: 0 0 0 3px rgba(230,57,70,0.12);
-        }
-        .toolbar-btn {
-            padding: 9px 18px;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-primary { background: var(--blood-red); color: white; box-shadow: 0 3px 10px rgba(230,57,70,0.3); }
-        .btn-primary:hover { background: var(--dark-red); transform: translateY(-1px); }
-        .btn-export { background: #198754; color: white; }
-        .btn-export:hover { background: #146c43; transform: translateY(-1px); }
-        .btn-refresh { background: #f4f6fb; color: #495057; border: 1.5px solid #dee2e6; }
-        .btn-refresh:hover { background: #e9ecef; }
-        .toolbar-spacer { flex: 1; min-width: 10px; }
-        .total-badge {
-            background: rgba(230,57,70,0.08);
-            color: var(--dark-red);
-            border: 1px solid rgba(230,57,70,0.2);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.82rem;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        /* Table */
-        .table-wrap {
-            background: white;
-            border-radius: 14px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-            overflow: hidden;
-        }
-        [data-theme="dark"] .table-wrap { background: #1a1a2e; }
-        .table-wrap table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.88rem;
-        }
-        .table-wrap thead {
-            background: linear-gradient(90deg, var(--blood-red), var(--dark-red));
-            color: white;
-        }
-        .table-wrap thead th {
-            padding: 14px 16px;
-            text-align: left;
-            font-weight: 700;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-        .table-wrap tbody tr {
-            border-bottom: 1px solid #f1f3f5;
-            transition: background 0.15s;
-        }
-        [data-theme="dark"] .table-wrap tbody tr { border-color: #2a2a4a; }
-        .table-wrap tbody tr:hover { background: rgba(230,57,70,0.04); }
-        .table-wrap tbody td {
-            padding: 13px 16px;
-            color: #495057;
-            vertical-align: middle;
-        }
-        [data-theme="dark"] .table-wrap tbody td { color: #ccc; }
-        .blood-badge {
-            background: var(--blood-red);
-            color: white;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            font-family: 'Poppins', sans-serif;
-        }
-        .eligible-badge {
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-        .eligible-yes { background: rgba(25,135,84,0.1); color: #146c43; }
-        .eligible-no  { background: rgba(255,193,7,0.15); color: #997404; }
-        .del-btn {
-            background: rgba(220,53,69,0.1);
-            color: #dc3545;
-            border: 1px solid rgba(220,53,69,0.2);
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Poppins', sans-serif;
-        }
-        .del-btn:hover { background: #dc3545; color: white; }
-
-        /* Empty / loading states */
-        .table-empty {
-            text-align: center;
-            padding: 60px 20px;
-            color: #adb5bd;
-        }
-        .table-spinner {
-            text-align: center;
-            padding: 60px 20px;
-        }
-        .spinner-ring {
-            display: inline-block;
-            width: 36px; height: 36px;
-            border: 4px solid rgba(230,57,70,0.2);
-            border-top-color: var(--blood-red);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Pagination */
-        .pagination {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px;
-            border-top: 1px solid #f1f3f5;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        [data-theme="dark"] .pagination { border-color: #2a2a4a; }
-        .page-info { font-size: 0.82rem; color: #adb5bd; }
-        .page-btns { display: flex; gap: 6px; }
-        .page-btn {
-            padding: 6px 12px;
-            border: 1.5px solid #dee2e6;
-            border-radius: 6px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            background: white;
-            color: #495057;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.2s;
-        }
-        [data-theme="dark"] .page-btn { background: #16213e; border-color: #333; color: #ccc; }
-        .page-btn:hover:not(:disabled) { border-color: var(--blood-red); color: var(--blood-red); }
-        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-        .page-btn.active { background: var(--blood-red); color: white; border-color: var(--blood-red); }
-
-        /* Toast */
-        .toast-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .toast {
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: white;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-            animation: toastIn 0.3s ease;
-            min-width: 220px;
-        }
-        .toast-success { background: #198754; }
-        .toast-error   { background: #dc3545; }
-        @keyframes toastIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .dash-main { padding: 16px 12px; }
-            .topbar { padding: 0 14px; }
-            .table-wrap { overflow-x: auto; }
-            .table-wrap table { min-width: 700px; }
-            .stats-row { grid-template-columns: 1fr 1fr; }
-            .admin-badge { display: none; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Cox's Hub Blood</title>
+<meta name="robots" content="noindex, nofollow">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+    theme: { extend: {
+        colors: { 'blood': '#e63946', 'blood-dark': '#c1121f' },
+        fontFamily: { poppins: ['Poppins','Noto Sans Bengali','sans-serif'] }
+    }}
+}
+</script>
+<style>
+    body { font-family: 'Poppins','Noto Sans Bengali',sans-serif; }
+    .sidebar-link { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer; }
+    .sidebar-link:hover { @apply bg-red-50 text-blood; }
+    .sidebar-link.active { @apply bg-blood text-white shadow-md; }
+    [data-theme="dark"] .sidebar-link:hover { @apply bg-red-950 text-red-300; }
+    [data-theme="dark"] .sidebar-link.active { @apply bg-blood text-white; }
+    .blood-badge { @apply inline-block bg-blood text-white text-xs font-bold px-2.5 py-0.5 rounded-full; }
+    .table-row { @apply border-b border-gray-100 hover:bg-red-50/40 transition-colors; }
+    [data-theme="dark"] .table-row { @apply border-gray-800 hover:bg-red-950/20; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { animation: spin 0.8s linear infinite; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .fade-in { animation: fadeIn 0.3s ease; }
+    .modal-backdrop { @apply fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4; }
+    .modal-box { @apply bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-lg p-6; }
+    .form-input { @apply w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl text-sm bg-white dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:border-blood focus:ring-2 focus:ring-red-100 dark:focus:ring-red-900 transition; }
+    .form-label { @apply block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5; }
+    .btn-blood { @apply bg-blood hover:bg-blood-dark text-white font-semibold px-4 py-2 rounded-xl transition shadow-sm text-sm; }
+    .btn-ghost-blood { @apply border border-blood text-blood hover:bg-blood hover:text-white font-semibold px-4 py-2 rounded-xl transition text-sm; }
+    .badge-info    { @apply bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-0.5 rounded-full; }
+    .badge-warning { @apply bg-yellow-100 text-yellow-700 text-xs font-bold px-2.5 py-0.5 rounded-full; }
+    .badge-danger  { @apply bg-red-100 text-red-700 text-xs font-bold px-2.5 py-0.5 rounded-full; }
+    .badge-success { @apply bg-green-100 text-green-700 text-xs font-bold px-2.5 py-0.5 rounded-full; }
+    .notice-card-info    { @apply border-l-4 border-blue-400 bg-blue-50 dark:bg-blue-950/30; }
+    .notice-card-warning { @apply border-l-4 border-yellow-400 bg-yellow-50 dark:bg-yellow-950/30; }
+    .notice-card-danger  { @apply border-l-4 border-red-400 bg-red-50 dark:bg-red-950/30; }
+    .notice-card-success { @apply border-l-4 border-green-400 bg-green-50 dark:bg-green-950/30; }
+</style>
 </head>
-<body>
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 min-h-screen">
 
-<!-- ============ LOGIN PAGE ============ -->
-<div class="login-page" id="loginPage">
-    <div class="login-card">
-        <div class="login-logo">
-            <svg class="login-heart" viewBox="0 0 32 29.6">
-                <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4
-                    c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
-            </svg>
-            <h1>Cox's Hub <span>Blood</span></h1>
-        </div>
-        <p class="login-subtitle">Admin Dashboard — নিরাপদ লগইন</p>
-
-        <div class="login-error" id="loginError"></div>
-
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="loginUser">Username</label>
-                <input type="text" id="loginUser" name="username"
-                    placeholder="Admin username" autocomplete="username" required>
-            </div>
-            <div class="form-group">
-                <label for="loginPass">Password</label>
-                <input type="password" id="loginPass" name="password"
-                    placeholder="••••••••" autocomplete="current-password" required>
-            </div>
-            <button type="submit" class="login-btn" id="loginBtn">
-                <span id="loginBtnText">লগইন করুন 🔐</span>
-            </button>
-        </form>
+<!-- ══════════════════════════════════════════
+     LOGIN PAGE
+══════════════════════════════════════════ -->
+<div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-50 dark:from-gray-950 dark:to-gray-900 p-4">
+  <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md p-8 border-t-4 border-blood fade-in">
+    <!-- Logo -->
+    <div class="flex items-center justify-center gap-2 mb-6">
+      <svg class="w-9 h-9 fill-blood drop-shadow" viewBox="0 0 32 29.6">
+        <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+      </svg>
+      <h1 class="text-xl font-bold text-gray-800 dark:text-white">Cox's Hub <span class="text-blood">Blood</span></h1>
     </div>
+    <p class="text-center text-xs text-gray-400 mb-8 tracking-wide uppercase">Admin Dashboard — Secure Login</p>
+
+    <div id="loginError" class="hidden mb-4 px-4 py-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium"></div>
+
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label class="form-label">Username</label>
+        <input id="loginUser" type="text" class="form-input" placeholder="Admin username" autocomplete="username" required>
+      </div>
+      <div>
+        <label class="form-label">Password</label>
+        <input id="loginPass" type="password" class="form-input" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <button type="submit" id="loginBtn" class="w-full py-3 bg-gradient-to-r from-blood to-blood-dark text-white font-bold rounded-xl shadow-lg hover:shadow-red-200 hover:-translate-y-0.5 transition-all duration-200 mt-2">
+        <span id="loginBtnTxt">লগইন করুন 🔐</span>
+      </button>
+    </form>
+  </div>
 </div>
 
-<!-- ============ DASHBOARD ============ -->
-<div class="dashboard" id="dashboard">
+<!-- ══════════════════════════════════════════
+     DASHBOARD
+══════════════════════════════════════════ -->
+<div id="dashboard" class="hidden min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="w-64 shrink-0 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 flex flex-col fixed top-0 left-0 h-full z-30 transition-transform duration-300 shadow-sm">
+    <!-- Logo -->
+    <div class="flex items-center gap-2 px-5 py-5 border-b border-gray-100 dark:border-gray-800">
+      <svg class="w-7 h-7 fill-blood" viewBox="0 0 32 29.6">
+        <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+      </svg>
+      <span class="font-bold text-gray-800 dark:text-white text-sm">Cox's Hub <span class="text-blood">Blood</span></span>
+    </div>
+    <!-- Nav -->
+    <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+      <div class="text-[10px] font-bold text-gray-400 uppercase px-3 py-2 tracking-widest">Main</div>
+      <div class="sidebar-link active" data-tab="donors" onclick="switchTab('donors')">
+        <span>🩸</span> ডোনার ম্যানেজমেন্ট
+      </div>
+      <div class="sidebar-link" data-tab="notices" onclick="switchTab('notices')">
+        <span>📢</span> নোটিশ ম্যানেজমেন্ট
+      </div>
+      <div class="sidebar-link" data-tab="users" onclick="switchTab('users')">
+        <span>👥</span> ইউজার ম্যানেজমেন্ট
+      </div>
+      <div class="text-[10px] font-bold text-gray-400 uppercase px-3 py-2 tracking-widest mt-3">Site</div>
+      <a href="/" target="_blank" class="sidebar-link">
+        <span>🌐</span> মেইন সাইট দেখুন
+      </a>
+    </nav>
+    <!-- User info -->
+    <div class="p-4 border-t border-gray-100 dark:border-gray-800">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-blood/10 flex items-center justify-center text-blood font-bold text-sm">A</div>
+        <div class="flex-1 min-w-0">
+          <div id="sidebarUsername" class="text-sm font-semibold text-gray-800 dark:text-white truncate">—</div>
+          <div class="text-xs text-blood font-medium">Admin</div>
+        </div>
+        <button onclick="doLogout()" title="লগআউট" class="text-gray-400 hover:text-blood transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="flex-1 ml-64 flex flex-col min-h-screen">
 
     <!-- Topbar -->
-    <header class="topbar">
-        <div class="topbar-left">
-            <svg class="topbar-heart" viewBox="0 0 32 29.6">
-                <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4
-                    c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
-            </svg>
-            <span class="topbar-title">Cox's Hub <span>Blood</span> — Admin</span>
-        </div>
-        <div class="topbar-right">
-            <span class="admin-badge">👤 anwersir777</span>
-            <button class="theme-btn" id="dashThemeBtn" title="Toggle theme">🌙</button>
-            <button class="logout-btn" id="logoutBtn">লগআউট ↩</button>
-        </div>
+    <header class="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-6 py-3 flex items-center justify-between shadow-sm">
+      <div class="flex items-center gap-3">
+        <button id="sidebarToggle" class="lg:hidden text-gray-500 hover:text-blood" onclick="toggleSidebar()">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <h2 id="pageTitle" class="font-bold text-gray-800 dark:text-white text-base">ডোনার ম্যানেজমেন্ট</h2>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="toggleTheme()" id="themeBtn" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-base hover:scale-110 transition">🌙</button>
+        <button onclick="doLogout()" class="text-xs font-semibold text-gray-500 hover:text-blood border border-gray-200 dark:border-gray-700 px-3 py-1.5 rounded-lg transition">↩ Logout</button>
+      </div>
     </header>
 
-    <!-- Main -->
-    <main class="dash-main">
+    <!-- Content -->
+    <main class="flex-1 p-6 space-y-6">
 
-        <!-- Stats -->
-        <div class="stats-row" id="statsRow">
-            <div class="stat-card">
-                <div class="stat-icon">🫂</div>
-                <div class="stat-info">
-                    <strong id="statTotal">—</strong>
-                    <span>মোট ডোনার</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">✅</div>
-                <div class="stat-info">
-                    <strong id="statEligible">—</strong>
-                    <span>এখন উপযুক্ত</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">🩸</div>
-                <div class="stat-info">
-                    <strong id="statOPlus">—</strong>
-                    <span>O+ ডোনার</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">📅</div>
-                <div class="stat-info">
-                    <strong id="statToday">—</strong>
-                    <span>আজকের রেজিস্ট্রেশন</span>
-                </div>
-            </div>
+      <!-- ── DONORS TAB ── -->
+      <div id="tab-donors" class="tab-content fade-in space-y-5">
+        <!-- Stats row -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border-l-4 border-blood flex items-center gap-3">
+            <span class="text-2xl">🫂</span>
+            <div><strong id="statTotal" class="block text-2xl font-bold text-blood-dark">—</strong><span class="text-xs text-gray-400 font-semibold">মোট ডোনার</span></div>
+          </div>
+          <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border-l-4 border-green-500 flex items-center gap-3">
+            <span class="text-2xl">✅</span>
+            <div><strong id="statEligible" class="block text-2xl font-bold text-green-600">—</strong><span class="text-xs text-gray-400 font-semibold">উপযুক্ত</span></div>
+          </div>
+          <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border-l-4 border-orange-400 flex items-center gap-3">
+            <span class="text-2xl">🩸</span>
+            <div><strong id="statOPlus" class="block text-2xl font-bold text-orange-500">—</strong><span class="text-xs text-gray-400 font-semibold">O+ ডোনার</span></div>
+          </div>
+          <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border-l-4 border-blue-400 flex items-center gap-3">
+            <span class="text-2xl">📅</span>
+            <div><strong id="statToday" class="block text-2xl font-bold text-blue-500">—</strong><span class="text-xs text-gray-400 font-semibold">আজকের রেজি.</span></div>
+          </div>
         </div>
 
         <!-- Toolbar -->
-        <div class="toolbar">
-            <select id="filterBlood">
-                <option value="">সব গ্রুপ</option>
-                <option>A+</option><option>A-</option>
-                <option>B+</option><option>B-</option>
-                <option>AB+</option><option>AB-</option>
-                <option>O+</option><option>O-</option>
-            </select>
-            <select id="filterArea">
-                <option value="">সব এলাকা</option>
-                <option value="sadar">কক্সবাজার সদর</option>
-                <option value="teknaf">টেকনাফ</option>
-                <option value="ukhia">উখিয়া</option>
-                <option value="ramu">রামু</option>
-                <option value="chakaria">চকরিয়া</option>
-                <option value="pekua">পেকুয়া</option>
-                <option value="moheshkhali">মহেশখালী</option>
-                <option value="kutubdia">কুতুবদিয়া</option>
-            </select>
-            <button class="toolbar-btn btn-primary" id="filterBtn">🔍 ফিল্টার</button>
-            <button class="toolbar-btn btn-refresh" id="refreshBtn">↻ রিফ্রেশ</button>
-            <div class="toolbar-spacer"></div>
-            <span class="total-badge" id="totalBadge">লোড হচ্ছে...</span>
-            <button class="toolbar-btn btn-export" id="exportBtn">📥 CSV Export</button>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-4 flex flex-wrap items-center gap-3">
+          <select id="filterBlood" class="form-input !w-auto text-sm">
+            <option value="">সব গ্রুপ</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+          </select>
+          <select id="filterArea" class="form-input !w-auto text-sm">
+            <option value="">সব এলাকা</option>
+            <option value="sadar">কক্সবাজার সদর</option>
+            <option value="teknaf">টেকনাফ</option>
+            <option value="ukhia">উখিয়া</option>
+            <option value="ramu">রামু</option>
+            <option value="chakaria">চকরিয়া</option>
+            <option value="pekua">পেকুয়া</option>
+            <option value="moheshkhali">মহেশখালী</option>
+            <option value="kutubdia">কুতুবদিয়া</option>
+          </select>
+          <button onclick="loadDonors(1)" class="btn-blood">🔍 ফিল্টার</button>
+          <button onclick="loadDonors(currentPage)" class="btn-ghost-blood">↻ রিফ্রেশ</button>
+          <div class="flex-1"></div>
+          <span id="donorTotalBadge" class="text-xs font-bold text-blood bg-red-50 border border-red-100 px-3 py-1.5 rounded-full">—</span>
+          <button onclick="exportCSV()" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-xl text-sm transition">📥 CSV</button>
+          <button onclick="openDonorModal()" class="btn-blood">+ নতুন ডোনার</button>
         </div>
 
         <!-- Table -->
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>নাম</th>
-                        <th>রক্তের গ্রুপ</th>
-                        <th>এলাকা</th>
-                        <th>ফোন</th>
-                        <th>শেষ দান</th>
-                        <th>উপযুক্ততা</th>
-                        <th>রেজিস্ট্রেশন</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="donorTableBody">
-                    <tr><td colspan="9" class="table-spinner"><div class="spinner-ring"></div></td></tr>
-                </tbody>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gradient-to-r from-blood to-blood-dark text-white">
+                <tr>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">#</th>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">নাম</th>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">রক্তের গ্রুপ</th>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">এলাকা</th>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">ফোন</th>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">শেষ দান</th>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">উপযুক্ততা</th>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">Action</th>
+                </tr>
+              </thead>
+              <tbody id="donorTableBody">
+                <tr><td colspan="8" class="py-16 text-center text-gray-400"><div class="inline-block w-8 h-8 border-4 border-red-100 border-t-blood rounded-full spinner"></div></td></tr>
+              </tbody>
             </table>
-            <div class="pagination" id="paginationBar">
-                <span class="page-info" id="pageInfo">লোড হচ্ছে...</span>
-                <div class="page-btns" id="pageBtns"></div>
-            </div>
+          </div>
+          <!-- Pagination -->
+          <div class="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-gray-800 flex-wrap gap-2">
+            <span id="donorPageInfo" class="text-xs text-gray-400">—</span>
+            <div id="donorPageBtns" class="flex gap-1"></div>
+          </div>
         </div>
+      </div>
+
+      <!-- ── NOTICES TAB ── -->
+      <div id="tab-notices" class="tab-content hidden fade-in space-y-5">
+        <div class="flex items-center justify-between">
+          <p class="text-sm text-gray-500">সাইটের homepage-এ দেখানো নোটিশ ম্যানেজ করুন।</p>
+          <button onclick="openNoticeModal()" class="btn-blood">+ নতুন নোটিশ</button>
+        </div>
+        <div id="noticesContainer" class="space-y-3">
+          <div class="py-12 text-center text-gray-400"><div class="inline-block w-8 h-8 border-4 border-red-100 border-t-blood rounded-full spinner"></div></div>
+        </div>
+      </div>
+
+      <!-- ── USERS TAB ── -->
+      <div id="tab-users" class="tab-content hidden fade-in space-y-5">
+        <div class="flex items-center justify-between">
+          <p class="text-sm text-gray-500">সব users দেখুন ও manage করুন। শুধু admin role-এর user dashboard access পাবে।</p>
+          <button onclick="openUserModal()" class="btn-blood">+ নতুন User</button>
+        </div>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gradient-to-r from-blood to-blood-dark text-white">
+                <tr>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">#</th>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">Username</th>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">নাম</th>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">Role</th>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">যোগ দিয়েছেন</th>
+                  <th class="px-4 py-3 text-left font-semibold text-xs tracking-wider">Action</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr><td colspan="6" class="py-16 text-center text-gray-400"><div class="inline-block w-8 h-8 border-4 border-red-100 border-t-blood rounded-full spinner"></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
     </main>
+  </div>
 </div>
 
-<!-- Toast container -->
-<div class="toast-container" id="toastContainer"></div>
+<!-- ══════════════════════════════════════════
+     MODALS
+══════════════════════════════════════════ -->
+
+<!-- Donor Modal -->
+<div id="donorModal" class="modal-backdrop hidden">
+  <div class="modal-box fade-in">
+    <div class="flex items-center justify-between mb-5">
+      <h3 id="donorModalTitle" class="font-bold text-lg">নতুন ডোনার</h3>
+      <button onclick="closeModal('donorModal')" class="text-gray-400 hover:text-blood text-xl leading-none">✕</button>
+    </div>
+    <form id="donorForm" class="space-y-3">
+      <input type="hidden" id="donorId">
+      <div class="grid grid-cols-2 gap-3">
+        <div class="col-span-2">
+          <label class="form-label">পূর্ণ নাম *</label>
+          <input id="dName" type="text" class="form-input" placeholder="নাম লিখুন" required>
+        </div>
+        <div>
+          <label class="form-label">রক্তের গ্রুপ *</label>
+          <select id="dBlood" class="form-input" required>
+            <option value="">নির্বাচন করুন</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">এলাকা</label>
+          <select id="dArea" class="form-input">
+            <option value="sadar">কক্সবাজার সদর</option>
+            <option value="teknaf">টেকনাফ</option>
+            <option value="ukhia">উখিয়া</option>
+            <option value="ramu">রামু</option>
+            <option value="chakaria">চকরিয়া</option>
+            <option value="pekua">পেকুয়া</option>
+            <option value="moheshkhali">মহেশখালী</option>
+            <option value="kutubdia">কুতুবদিয়া</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">ফোন নম্বর *</label>
+          <input id="dPhone" type="tel" class="form-input" placeholder="01XXXXXXXXX" required>
+        </div>
+        <div>
+          <label class="form-label">শেষ রক্তদান</label>
+          <input id="dLastDonation" type="date" class="form-input">
+        </div>
+        <div class="col-span-2">
+          <label class="form-label">বর্তমান ঠিকানা</label>
+          <input id="dCurrentAddr" type="text" class="form-input" placeholder="বর্তমান ঠিকানা">
+        </div>
+        <div class="col-span-2">
+          <label class="form-label">শারীরিক সমস্যা (যদি থাকে)</label>
+          <textarea id="dHealth" class="form-input" rows="2" placeholder="কোনো সমস্যা থাকলে লিখুন"></textarea>
+        </div>
+      </div>
+      <div id="donorFormError" class="hidden text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg"></div>
+      <div class="flex gap-2 pt-2">
+        <button type="submit" class="btn-blood flex-1">💾 সেভ করুন</button>
+        <button type="button" onclick="closeModal('donorModal')" class="flex-1 border border-gray-200 dark:border-gray-700 text-gray-500 font-semibold px-4 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition">বাতিল</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Notice Modal -->
+<div id="noticeModal" class="modal-backdrop hidden">
+  <div class="modal-box fade-in">
+    <div class="flex items-center justify-between mb-5">
+      <h3 id="noticeModalTitle" class="font-bold text-lg">নতুন নোটিশ</h3>
+      <button onclick="closeModal('noticeModal')" class="text-gray-400 hover:text-blood text-xl leading-none">✕</button>
+    </div>
+    <form id="noticeForm" class="space-y-3">
+      <input type="hidden" id="noticeId">
+      <div>
+        <label class="form-label">শিরোনাম *</label>
+        <input id="nTitle" type="text" class="form-input" placeholder="নোটিশের শিরোনাম" required>
+      </div>
+      <div>
+        <label class="form-label">বার্তা *</label>
+        <textarea id="nMessage" class="form-input" rows="3" placeholder="নোটিশের বিস্তারিত বার্তা" required></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="form-label">ধরন</label>
+          <select id="nType" class="form-input">
+            <option value="info">ℹ️ তথ্য (নীল)</option>
+            <option value="warning">⚠️ সতর্কতা (হলুদ)</option>
+            <option value="danger">🚨 জরুরি (লাল)</option>
+            <option value="success">✅ সফল (সবুজ)</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">অবস্থা</label>
+          <select id="nActive" class="form-input">
+            <option value="true">✅ সক্রিয়</option>
+            <option value="false">❌ নিষ্ক্রিয়</option>
+          </select>
+        </div>
+      </div>
+      <div id="noticeFormError" class="hidden text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg"></div>
+      <div class="flex gap-2 pt-2">
+        <button type="submit" class="btn-blood flex-1">💾 সেভ করুন</button>
+        <button type="button" onclick="closeModal('noticeModal')" class="flex-1 border border-gray-200 dark:border-gray-700 text-gray-500 font-semibold px-4 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition">বাতিল</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- User Modal -->
+<div id="userModal" class="modal-backdrop hidden">
+  <div class="modal-box fade-in">
+    <div class="flex items-center justify-between mb-5">
+      <h3 id="userModalTitle" class="font-bold text-lg">নতুন User</h3>
+      <button onclick="closeModal('userModal')" class="text-gray-400 hover:text-blood text-xl leading-none">✕</button>
+    </div>
+    <form id="userForm" class="space-y-3">
+      <input type="hidden" id="userId">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="form-label">Username *</label>
+          <input id="uUsername" type="text" class="form-input" placeholder="username" autocomplete="off">
+        </div>
+        <div>
+          <label class="form-label">নাম</label>
+          <input id="uName" type="text" class="form-input" placeholder="পূর্ণ নাম">
+        </div>
+        <div>
+          <label class="form-label" id="uPassLabel">Password *</label>
+          <input id="uPassword" type="password" class="form-input" placeholder="••••••••" autocomplete="new-password">
+        </div>
+        <div>
+          <label class="form-label">Role</label>
+          <select id="uRole" class="form-input">
+            <option value="admin">👑 Admin</option>
+            <option value="user">👤 User</option>
+          </select>
+        </div>
+      </div>
+      <div id="userFormError" class="hidden text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg"></div>
+      <div class="flex gap-2 pt-2">
+        <button type="submit" class="btn-blood flex-1">💾 সেভ করুন</button>
+        <button type="button" onclick="closeModal('userModal')" class="flex-1 border border-gray-200 dark:border-gray-700 text-gray-500 font-semibold px-4 py-2 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition">বাতিল</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toastBox" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
 
 <script>
+// ══════════════════════
+//  CONFIG
+// ══════════════════════
 const API = '/api';
-let authToken   = null;
-let currentPage = 1;
-let allDonors   = [];
-
+let token = null, currentPage = 1, allDonors = [];
 const areaMap = {
-    sadar: 'কক্সবাজার সদর', teknaf: 'টেকনাফ', ukhia: 'উখিয়া',
-    ramu: 'রামু', chakaria: 'চকরিয়া', pekua: 'পেকুয়া',
-    moheshkhali: 'মহেশখালী', kutubdia: 'কুতুবদিয়া',
+    sadar:'কক্সবাজার সদর', teknaf:'টেকনাফ', ukhia:'উখিয়া',
+    ramu:'রামু', chakaria:'চকরিয়া', pekua:'পেকুয়া',
+    moheshkhali:'মহেশখালী', kutubdia:'কুতুবদিয়া',
 };
 
-// ── Helpers ──────────────────────────────────
-function isEligible(dateStr) {
-    if (!dateStr) return false;
-    const diff = (Date.now() - new Date(dateStr).getTime()) / 86400000;
-    return diff >= 120;
-}
-function fmtDate(dateStr) {
-    if (!dateStr) return '—';
-    return new Date(dateStr).toLocaleDateString('bn-BD', { year:'numeric', month:'short', day:'numeric' });
-}
-function showToast(msg, type = 'success') {
-    const t = document.createElement('div');
-    t.className = `toast toast-${type}`;
-    t.textContent = msg;
-    document.getElementById('toastContainer').appendChild(t);
-    setTimeout(() => t.remove(), 3500);
+// ══════════════════════
+//  HELPERS
+// ══════════════════════
+const $ = id => document.getElementById(id);
+const isEligible = d => d && (Date.now() - new Date(d).getTime()) / 86400000 >= 120;
+const fmtDate = s => s ? new Date(s).toLocaleDateString('bn-BD',{year:'numeric',month:'short',day:'numeric'}) : '—';
+
+function toast(msg, type='success') {
+    const el = document.createElement('div');
+    el.className = `pointer-events-auto px-4 py-3 rounded-xl text-white text-sm font-semibold shadow-lg
+        ${type==='success'?'bg-green-600':type==='error'?'bg-blood':'bg-blue-600'}
+        animate-[fadeIn_.3s_ease]`;
+    el.textContent = msg;
+    $('toastBox').appendChild(el);
+    setTimeout(() => el.remove(), 3500);
 }
 
-// ── Theme ─────────────────────────────────────
-const themeBtn = document.getElementById('dashThemeBtn');
-themeBtn.addEventListener('click', () => {
-    const cur = document.documentElement.getAttribute('data-theme');
-    const next = cur === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
-    localStorage.setItem('dashTheme', next);
-});
-const savedTheme = localStorage.getItem('dashTheme');
-if (savedTheme) {
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+function closeModal(id) { $(id).classList.add('hidden'); }
+function openModal(id)  { $(id).classList.remove('hidden'); }
+
+// ══════════════════════
+//  THEME
+// ══════════════════════
+function toggleTheme() {
+    const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    $('themeBtn').textContent = t==='dark' ? '☀️' : '🌙';
+    localStorage.setItem('dashTheme', t);
+}
+(function(){
+    const t = localStorage.getItem('dashTheme');
+    if(t){ document.documentElement.setAttribute('data-theme',t); }
+    if(document.documentElement.getAttribute('data-theme')==='dark') $('themeBtn').textContent='☀️';
+})();
+
+// ══════════════════════
+//  SIDEBAR
+// ══════════════════════
+function toggleSidebar() {
+    $('sidebar').classList.toggle('-translate-x-full');
+}
+function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
+    $(`tab-${tab}`).classList.remove('hidden');
+    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+    const titles = { donors:'ডোনার ম্যানেজমেন্ট', notices:'নোটিশ ম্যানেজমেন্ট', users:'ইউজার ম্যানেজমেন্ট' };
+    $('pageTitle').textContent = titles[tab];
+    if(tab==='donors')  loadDonors(1);
+    if(tab==='notices') loadNotices();
+    if(tab==='users')   loadUsers();
 }
 
-// ── Auth check on load ────────────────────────
+// ══════════════════════
+//  AUTH
+// ══════════════════════
 window.addEventListener('DOMContentLoaded', () => {
     const saved = sessionStorage.getItem('chblood_token');
-    if (saved) {
-        authToken = saved;
-        showDashboard();
-        loadDonors();
-    }
+    if(saved){ token=saved; showDashboard(); loadDonors(1); }
 });
 
-// ── Login ─────────────────────────────────────
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
+$('loginForm').addEventListener('submit', async e => {
     e.preventDefault();
-    const username = document.getElementById('loginUser').value.trim();
-    const password = document.getElementById('loginPass').value;
-    const btn      = document.getElementById('loginBtn');
-    const errEl    = document.getElementById('loginError');
-
+    const btn = $('loginBtn'), errEl = $('loginError');
     btn.disabled = true;
-    document.getElementById('loginBtnText').textContent = 'যাচাই হচ্ছে...';
-    errEl.classList.remove('show');
-
+    $('loginBtnTxt').textContent = 'যাচাই হচ্ছে...';
+    errEl.classList.add('hidden');
     try {
-        const res  = await fetch(`${API}/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password }),
+        const r = await fetch(`${API}/login`, {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ username: $('loginUser').value.trim(), password: $('loginPass').value })
         });
-        const data = await res.json();
-
-        if (!data.success) throw new Error(data.message || 'লগইন ব্যর্থ হয়েছে');
-
-        authToken = data.token;
-        sessionStorage.setItem('chblood_token', authToken);
+        const d = await r.json();
+        if(!d.success) throw new Error(d.message);
+        token = d.token;
+        sessionStorage.setItem('chblood_token', token);
+        if(d.user) $('sidebarUsername').textContent = d.user.name || d.user.username;
         showDashboard();
-        loadDonors();
-
-    } catch (err) {
+        loadDonors(1);
+    } catch(err) {
         errEl.textContent = '❌ ' + err.message;
-        errEl.classList.add('show');
+        errEl.classList.remove('hidden');
     } finally {
         btn.disabled = false;
-        document.getElementById('loginBtnText').textContent = 'লগইন করুন 🔐';
+        $('loginBtnTxt').textContent = 'লগইন করুন 🔐';
     }
 });
 
 function showDashboard() {
-    document.getElementById('loginPage').style.display = 'none';
-    document.getElementById('dashboard').classList.add('show');
+    $('loginPage').classList.add('hidden');
+    $('dashboard').classList.remove('hidden');
 }
-function showLogin() {
-    document.getElementById('loginPage').style.display = 'flex';
-    document.getElementById('dashboard').classList.remove('show');
-}
-
-// ── Logout ────────────────────────────────────
-document.getElementById('logoutBtn').addEventListener('click', () => {
+function doLogout() {
     sessionStorage.removeItem('chblood_token');
-    authToken = null;
-    allDonors = [];
-    showLogin();
-});
+    token = null;
+    $('dashboard').classList.add('hidden');
+    $('loginPage').classList.remove('hidden');
+}
 
-// ── Load donors ───────────────────────────────
-async function loadDonors(page = 1) {
+async function apiFetch(path, opts={}) {
+    const res = await fetch(`${API}${path}`, {
+        ...opts,
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type':'application/json', ...(opts.headers||{}) }
+    });
+    if(res.status===401){ doLogout(); throw new Error('Session expired'); }
+    return res.json();
+}
+
+// ══════════════════════
+//  DONORS
+// ══════════════════════
+async function loadDonors(page=1) {
     currentPage = page;
-    const blood = document.getElementById('filterBlood').value;
-    const area  = document.getElementById('filterArea').value;
-
-    document.getElementById('donorTableBody').innerHTML =
-        `<tr><td colspan="9" class="table-spinner"><div class="spinner-ring"></div></td></tr>`;
-    document.getElementById('totalBadge').textContent = 'লোড হচ্ছে...';
-
-    const params = new URLSearchParams({ page, limit: 50 });
-    if (blood) params.set('blood', blood);
-    if (area)  params.set('area',  area);
-
+    const blood = $('filterBlood').value, area = $('filterArea').value;
+    $('donorTableBody').innerHTML = `<tr><td colspan="8" class="py-16 text-center text-gray-400"><div class="inline-block w-8 h-8 border-4 border-red-100 border-t-blood rounded-full spinner"></div></td></tr>`;
     try {
-        const res  = await fetch(`${API}/admin?${params}`, {
-            headers: { Authorization: `Bearer ${authToken}` }
-        });
-
-        if (res.status === 401) {
-            sessionStorage.removeItem('chblood_token');
-            showLogin();
-            return;
-        }
-
-        const data = await res.json();
-        if (!data.success) throw new Error(data.message);
-
-        allDonors = data.donors;
-        renderTable(data.donors);
-        renderPagination(data.page, data.totalPages, data.total);
-        updateStats(data.donors, data.total);
-        document.getElementById('totalBadge').textContent = `মোট: ${data.total} জন`;
-
-    } catch (err) {
-        document.getElementById('donorTableBody').innerHTML =
-            `<tr><td colspan="9" class="table-empty">⚠️ ${err.message}</td></tr>`;
-        showToast(err.message, 'error');
+        const params = new URLSearchParams({ col:'donors', page, limit:50 });
+        if(blood) params.set('blood',blood);
+        if(area)  params.set('area',area);
+        const d = await apiFetch(`/admin?${params}`);
+        if(!d.success) throw new Error(d.message);
+        allDonors = d.donors;
+        renderDonors(d.donors);
+        renderPagination('donor', d.page, d.totalPages, d.total);
+        $('donorTotalBadge').textContent = `মোট: ${d.total} জন`;
+        $('statTotal').textContent   = d.total;
+        $('statEligible').textContent = d.donors.filter(x=>isEligible(x.lastDonation)).length;
+        $('statOPlus').textContent   = d.donors.filter(x=>x.blood==='O+').length;
+        const tod = new Date().toDateString();
+        $('statToday').textContent   = d.donors.filter(x=>x.createdAt && new Date(x.createdAt).toDateString()===tod).length;
+    } catch(err) {
+        $('donorTableBody').innerHTML = `<tr><td colspan="8" class="py-10 text-center text-red-400 text-sm">⚠️ ${err.message}</td></tr>`;
     }
 }
 
-// ── Render table ──────────────────────────────
-function renderTable(donors) {
-    const tbody = document.getElementById('donorTableBody');
-    if (!donors.length) {
-        tbody.innerHTML = `<tr><td colspan="9" class="table-empty">কোনো ডোনার পাওয়া যায়নি।</td></tr>`;
+function renderDonors(donors) {
+    if(!donors.length) {
+        $('donorTableBody').innerHTML = `<tr><td colspan="8" class="py-10 text-center text-gray-400 text-sm">কোনো ডোনার পাওয়া যায়নি।</td></tr>`;
         return;
     }
-    const offset = (currentPage - 1) * 50;
-    tbody.innerHTML = donors.map((d, i) => {
-        const eligible  = isEligible(d.lastDonation);
-        const areaLabel = areaMap[d.area] || d.area || '—';
-        return `
-        <tr>
-            <td style="color:#adb5bd;font-size:0.78rem">${offset + i + 1}</td>
-            <td style="font-weight:600;color:#212529">${d.name || '—'}</td>
-            <td><span class="blood-badge">${d.blood || '—'}</span></td>
-            <td>${areaLabel}</td>
-            <td style="font-family:monospace">${d.phone || '—'}</td>
-            <td>${fmtDate(d.lastDonation)}</td>
-            <td><span class="eligible-badge ${eligible ? 'eligible-yes' : 'eligible-no'}">
-                ${eligible ? '✅ উপযুক্ত' : '⏳ অপেক্ষমান'}
-            </span></td>
-            <td style="font-size:0.8rem;color:#adb5bd">${fmtDate(d.createdAt)}</td>
-            <td>
-                <button class="del-btn" onclick="deleteDonor('${d._id}', this)">🗑 Delete</button>
-            </td>
-        </tr>`;
-    }).join('');
+    const off = (currentPage-1)*50;
+    $('donorTableBody').innerHTML = donors.map((d,i) => `
+    <tr class="table-row">
+      <td class="px-4 py-3 text-gray-400 text-xs">${off+i+1}</td>
+      <td class="px-4 py-3 font-semibold text-gray-800 dark:text-gray-100">${d.name||'—'}</td>
+      <td class="px-4 py-3"><span class="blood-badge">${d.blood||'—'}</span></td>
+      <td class="px-4 py-3 text-xs text-gray-500">${areaMap[d.area]||d.area||'—'}</td>
+      <td class="px-4 py-3 font-mono text-xs text-gray-600 dark:text-gray-300">${d.phone||'—'}</td>
+      <td class="px-4 py-3 text-xs text-gray-500">${fmtDate(d.lastDonation)}</td>
+      <td class="px-4 py-3">
+        <span class="${isEligible(d.lastDonation)?'badge-success':'badge-warning'}">
+          ${isEligible(d.lastDonation)?'✅ উপযুক্ত':'⏳ অপেক্ষমান'}
+        </span>
+      </td>
+      <td class="px-4 py-3">
+        <div class="flex gap-1">
+          <button onclick='editDonor(${JSON.stringify(d)})' class="text-xs bg-blue-50 text-blue-600 border border-blue-100 px-2.5 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition font-semibold">✏️</button>
+          <button onclick="deleteDonor('${d._id}')" class="text-xs bg-red-50 text-red-500 border border-red-100 px-2.5 py-1 rounded-lg hover:bg-blood hover:text-white transition font-semibold">🗑</button>
+        </div>
+      </td>
+    </tr>`).join('');
 }
 
-// ── Pagination ────────────────────────────────
-function renderPagination(page, totalPages, total) {
-    document.getElementById('pageInfo').textContent =
-        `পেজ ${page} / ${totalPages} (মোট ${total} জন)`;
-
-    const btns = document.getElementById('pageBtns');
+function renderPagination(prefix, page, totalPages, total) {
+    const info = $(`${prefix}PageInfo`), btns = $(`${prefix}PageBtns`);
+    info.textContent = `পেজ ${page}/${totalPages} • মোট ${total}`;
     btns.innerHTML = '';
-
     const prev = document.createElement('button');
-    prev.className = 'page-btn';
-    prev.textContent = '← আগে';
-    prev.disabled = page <= 1;
-    prev.onclick = () => loadDonors(page - 1);
+    prev.className = 'page-btn text-xs px-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg disabled:opacity-40 hover:border-blood hover:text-blood transition font-semibold';
+    prev.textContent = '←'; prev.disabled = page<=1;
+    prev.onclick = () => loadDonors(page-1);
     btns.appendChild(prev);
-
-    // Show up to 5 page buttons
-    const start = Math.max(1, page - 2);
-    const end   = Math.min(totalPages, start + 4);
-    for (let p = start; p <= end; p++) {
-        const b = document.createElement('button');
-        b.className = `page-btn${p === page ? ' active' : ''}`;
-        b.textContent = p;
-        b.onclick = () => loadDonors(p);
+    const s=Math.max(1,page-2), e=Math.min(totalPages,s+4);
+    for(let p=s;p<=e;p++){
+        const b=document.createElement('button');
+        b.className=`text-xs px-3 py-1.5 border rounded-lg font-semibold transition ${p===page?'bg-blood text-white border-blood':'border-gray-200 dark:border-gray-700 hover:border-blood hover:text-blood'}`;
+        b.textContent=p; b.onclick=()=>loadDonors(p);
         btns.appendChild(b);
     }
-
-    const next = document.createElement('button');
-    next.className = 'page-btn';
-    next.textContent = 'পরে →';
-    next.disabled = page >= totalPages;
-    next.onclick = () => loadDonors(page + 1);
+    const next=document.createElement('button');
+    next.className='text-xs px-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg disabled:opacity-40 hover:border-blood hover:text-blood transition font-semibold';
+    next.textContent='→'; next.disabled=page>=totalPages;
+    next.onclick=()=>loadDonors(page+1);
     btns.appendChild(next);
 }
 
-// ── Stats cards ───────────────────────────────
-function updateStats(donors, total) {
-    document.getElementById('statTotal').textContent   = total;
-    const eligible = donors.filter(d => isEligible(d.lastDonation)).length;
-    document.getElementById('statEligible').textContent = eligible;
-    const oPlus = donors.filter(d => d.blood === 'O+').length;
-    document.getElementById('statOPlus').textContent   = oPlus;
-    const today = new Date().toDateString();
-    const todayCount = donors.filter(d =>
-        d.createdAt && new Date(d.createdAt).toDateString() === today
-    ).length;
-    document.getElementById('statToday').textContent   = todayCount;
+// Donor Modal — Add
+function openDonorModal() {
+    $('donorModalTitle').textContent = 'নতুন ডোনার যোগ করুন';
+    $('donorId').value=''; $('dName').value=''; $('dBlood').value='';
+    $('dArea').value='sadar'; $('dPhone').value=''; $('dLastDonation').value='';
+    $('dCurrentAddr').value=''; $('dHealth').value='';
+    $('donorFormError').classList.add('hidden');
+    openModal('donorModal');
 }
-
-// ── Delete donor ──────────────────────────────
-async function deleteDonor(id, btn) {
-    if (!confirm('এই ডোনারকে মুছে ফেলবেন?')) return;
-    btn.disabled = true;
-    btn.textContent = '...';
+// Donor Modal — Edit
+function editDonor(d) {
+    $('donorModalTitle').textContent = 'ডোনার আপডেট করুন';
+    $('donorId').value = d._id;
+    $('dName').value   = d.name||'';
+    $('dBlood').value  = d.blood||'';
+    $('dArea').value   = d.area||'sadar';
+    $('dPhone').value  = d.phone||'';
+    $('dLastDonation').value = d.lastDonation ? d.lastDonation.split('T')[0] : '';
+    $('dCurrentAddr').value  = d.currentAddress||'';
+    $('dHealth').value       = d.healthIssues||'';
+    $('donorFormError').classList.add('hidden');
+    openModal('donorModal');
+}
+$('donorForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = $('donorId').value;
+    const body = { name:$('dName').value, blood:$('dBlood').value, area:$('dArea').value,
+        phone:$('dPhone').value, lastDonation:$('dLastDonation').value||null,
+        currentAddress:$('dCurrentAddr').value, healthIssues:$('dHealth').value };
     try {
-        const res  = await fetch(`${API}/admin?id=${id}`, {
-            method: 'DELETE',
-            headers: { Authorization: `Bearer ${authToken}` }
-        });
-        const data = await res.json();
-        if (!data.success) throw new Error(data.message);
-        showToast('ডোনার মুছে ফেলা হয়েছে।');
-        btn.closest('tr').remove();
-    } catch (err) {
-        showToast(err.message, 'error');
-        btn.disabled = false;
-        btn.textContent = '🗑 Delete';
-    }
-}
-
-// ── Export CSV ────────────────────────────────
-document.getElementById('exportBtn').addEventListener('click', () => {
-    if (!allDonors.length) { showToast('কোনো ডেটা নেই।', 'error'); return; }
-    const headers = ['#','নাম','রক্তের গ্রুপ','এলাকা','ফোন','শেষ দান','উপযুক্ততা','রেজিস্ট্রেশন'];
-    const rows = allDonors.map((d, i) => [
-        i + 1, d.name, d.blood, areaMap[d.area] || d.area,
-        d.phone, d.lastDonation || '',
-        isEligible(d.lastDonation) ? 'উপযুক্ত' : 'অপেক্ষমান',
-        d.createdAt ? new Date(d.createdAt).toLocaleDateString('en-GB') : ''
-    ]);
-    const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `CHBlood_Donors_${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    showToast('CSV export সফল হয়েছে! 📥');
+        const d = id
+            ? await apiFetch(`/admin?col=donors&id=${id}`, {method:'PUT',  body:JSON.stringify(body)})
+            : await apiFetch(`/admin?col=donors`,          {method:'POST', body:JSON.stringify(body)});
+        if(!d.success) throw new Error(d.message);
+        toast(id ? 'ডোনার আপডেট হয়েছে ✅' : 'নতুন ডোনার যোগ হয়েছে ✅');
+        closeModal('donorModal'); loadDonors(currentPage);
+    } catch(err) { $('donorFormError').textContent=err.message; $('donorFormError').classList.remove('hidden'); }
 });
 
-// ── Filter & Refresh ──────────────────────────
-document.getElementById('filterBtn').addEventListener('click',  () => loadDonors(1));
-document.getElementById('refreshBtn').addEventListener('click', () => loadDonors(currentPage));
+async function deleteDonor(id) {
+    if(!confirm('এই ডোনারকে মুছে ফেলবেন?')) return;
+    try {
+        const d = await apiFetch(`/admin?col=donors&id=${id}`, {method:'DELETE'});
+        if(!d.success) throw new Error(d.message);
+        toast('ডোনার মুছে ফেলা হয়েছে।');
+        loadDonors(currentPage);
+    } catch(err) { toast(err.message,'error'); }
+}
+
+// CSV Export
+function exportCSV() {
+    if(!allDonors.length){ toast('কোনো ডেটা নেই','error'); return; }
+    const h=['#','নাম','রক্তের গ্রুপ','এলাকা','ফোন','শেষ দান','উপযুক্ততা','রেজিস্ট্রেশন'];
+    const r=allDonors.map((d,i)=>[i+1,d.name,d.blood,areaMap[d.area]||d.area,d.phone,
+        d.lastDonation||'', isEligible(d.lastDonation)?'উপযুক্ত':'অপেক্ষমান',
+        d.createdAt?new Date(d.createdAt).toLocaleDateString('en-GB'):'']);
+    const csv=[h,...r].map(row=>row.map(c=>`"${c}"`).join(',')).join('\n');
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
+    a.download=`CHBlood_Donors_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click(); toast('CSV export সফল 📥');
+}
+
+// ══════════════════════
+//  NOTICES
+// ══════════════════════
+async function loadNotices() {
+    $('noticesContainer').innerHTML = `<div class="py-12 text-center text-gray-400"><div class="inline-block w-8 h-8 border-4 border-red-100 border-t-blood rounded-full spinner"></div></div>`;
+    try {
+        const d = await apiFetch('/admin?col=notices&limit=20');
+        if(!d.success) throw new Error(d.message);
+        if(!d.notices.length){ $('noticesContainer').innerHTML=`<p class="text-center text-gray-400 py-10 text-sm">কোনো নোটিশ নেই।</p>`; return; }
+        $('noticesContainer').innerHTML = d.notices.map(n=>`
+        <div class="notice-card-${n.type} rounded-xl p-4 flex items-start justify-between gap-3">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="badge-${n.type}">${{info:'ℹ️ তথ্য',warning:'⚠️ সতর্কতা',danger:'🚨 জরুরি',success:'✅ সফল'}[n.type]}</span>
+              <span class="font-bold text-sm text-gray-800 dark:text-gray-100">${n.title}</span>
+              ${!n.active?'<span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-semibold">নিষ্ক্রিয়</span>':''}
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-300">${n.message}</p>
+            <p class="text-xs text-gray-400 mt-1">${fmtDate(n.createdAt)}</p>
+          </div>
+          <div class="flex gap-1 shrink-0">
+            <button onclick='editNotice(${JSON.stringify(n)})' class="text-xs bg-blue-50 text-blue-600 border border-blue-100 px-2.5 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition font-semibold">✏️</button>
+            <button onclick="deleteNotice('${n._id}')" class="text-xs bg-red-50 text-red-500 border border-red-100 px-2.5 py-1 rounded-lg hover:bg-blood hover:text-white transition font-semibold">🗑</button>
+          </div>
+        </div>`).join('');
+    } catch(err){ $('noticesContainer').innerHTML=`<p class="text-center text-red-400 text-sm py-8">⚠️ ${err.message}</p>`; }
+}
+
+function openNoticeModal() {
+    $('noticeModalTitle').textContent='নতুন নোটিশ যোগ করুন';
+    $('noticeId').value=''; $('nTitle').value=''; $('nMessage').value='';
+    $('nType').value='info'; $('nActive').value='true';
+    $('noticeFormError').classList.add('hidden');
+    openModal('noticeModal');
+}
+function editNotice(n) {
+    $('noticeModalTitle').textContent='নোটিশ আপডেট করুন';
+    $('noticeId').value=n._id; $('nTitle').value=n.title;
+    $('nMessage').value=n.message; $('nType').value=n.type;
+    $('nActive').value=String(n.active);
+    $('noticeFormError').classList.add('hidden');
+    openModal('noticeModal');
+}
+$('noticeForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id=$('noticeId').value;
+    const body={title:$('nTitle').value,message:$('nMessage').value,type:$('nType').value,active:$('nActive').value==='true'};
+    try {
+        const d=id ? await apiFetch(`/admin?col=notices&id=${id}`,{method:'PUT',body:JSON.stringify(body)})
+                   : await apiFetch('/admin?col=notices',{method:'POST',body:JSON.stringify(body)});
+        if(!d.success) throw new Error(d.message);
+        toast(id?'নোটিশ আপডেট হয়েছে ✅':'নোটিশ যোগ হয়েছে ✅');
+        closeModal('noticeModal'); loadNotices();
+    } catch(err){ $('noticeFormError').textContent=err.message; $('noticeFormError').classList.remove('hidden'); }
+});
+async function deleteNotice(id) {
+    if(!confirm('নোটিশটি মুছে ফেলবেন?')) return;
+    try {
+        const d=await apiFetch(`/admin?col=notices&id=${id}`,{method:'DELETE'});
+        if(!d.success) throw new Error(d.message);
+        toast('নোটিশ মুছে ফেলা হয়েছে।'); loadNotices();
+    } catch(err){ toast(err.message,'error'); }
+}
+
+// ══════════════════════
+//  USERS
+// ══════════════════════
+async function loadUsers() {
+    $('usersTableBody').innerHTML=`<tr><td colspan="6" class="py-16 text-center text-gray-400"><div class="inline-block w-8 h-8 border-4 border-red-100 border-t-blood rounded-full spinner"></div></td></tr>`;
+    try {
+        const d=await apiFetch('/admin?col=users&limit=50');
+        if(!d.success) throw new Error(d.message);
+        if(!d.users.length){ $('usersTableBody').innerHTML=`<tr><td colspan="6" class="py-10 text-center text-gray-400 text-sm">কোনো user নেই।</td></tr>`; return; }
+        $('usersTableBody').innerHTML=d.users.map((u,i)=>`
+        <tr class="table-row">
+          <td class="px-4 py-3 text-gray-400 text-xs">${i+1}</td>
+          <td class="px-4 py-3 font-mono font-semibold text-sm text-gray-800 dark:text-gray-100">${u.username}</td>
+          <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">${u.name||'—'}</td>
+          <td class="px-4 py-3"><span class="${u.role==='admin'?'blood-badge':'badge-info'}">${u.role==='admin'?'👑 Admin':'👤 User'}</span></td>
+          <td class="px-4 py-3 text-xs text-gray-400">${fmtDate(u.createdAt)}</td>
+          <td class="px-4 py-3">
+            <div class="flex gap-1">
+              <button onclick='editUser(${JSON.stringify(u)})' class="text-xs bg-blue-50 text-blue-600 border border-blue-100 px-2.5 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition font-semibold">✏️</button>
+              <button onclick="deleteUser('${u._id}')" class="text-xs bg-red-50 text-red-500 border border-red-100 px-2.5 py-1 rounded-lg hover:bg-blood hover:text-white transition font-semibold">🗑</button>
+            </div>
+          </td>
+        </tr>`).join('');
+    } catch(err){ $('usersTableBody').innerHTML=`<tr><td colspan="6" class="py-8 text-center text-red-400 text-sm">⚠️ ${err.message}</td></tr>`; }
+}
+
+function openUserModal() {
+    $('userModalTitle').textContent='নতুন User যোগ করুন';
+    $('userId').value=''; $('uUsername').value=''; $('uName').value='';
+    $('uPassword').value=''; $('uRole').value='user';
+    $('uUsername').disabled=false;
+    $('uPassLabel').textContent='Password *';
+    $('userFormError').classList.add('hidden');
+    openModal('userModal');
+}
+function editUser(u) {
+    $('userModalTitle').textContent='User আপডেট করুন';
+    $('userId').value=u._id; $('uUsername').value=u.username;
+    $('uName').value=u.name||''; $('uPassword').value='';
+    $('uRole').value=u.role||'user';
+    $('uUsername').disabled=true;
+    $('uPassLabel').textContent='নতুন Password (খালি রাখলে পরিবর্তন হবে না)';
+    $('userFormError').classList.add('hidden');
+    openModal('userModal');
+}
+$('userForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id=$('userId').value;
+    const body={username:$('uUsername').value,name:$('uName').value,role:$('uRole').value};
+    if($('uPassword').value) body.password=$('uPassword').value;
+    if(!id && !$('uPassword').value){ $('userFormError').textContent='নতুন user-এর জন্য password দিতে হবে।'; $('userFormError').classList.remove('hidden'); return; }
+    try {
+        const d=id ? await apiFetch(`/admin?col=users&id=${id}`,{method:'PUT',body:JSON.stringify(body)})
+                   : await apiFetch('/admin?col=users',{method:'POST',body:JSON.stringify(body)});
+        if(!d.success) throw new Error(d.message);
+        toast(id?'User আপডেট হয়েছে ✅':'নতুন User যোগ হয়েছে ✅');
+        closeModal('userModal'); loadUsers();
+    } catch(err){ $('userFormError').textContent=err.message; $('userFormError').classList.remove('hidden'); }
+});
+async function deleteUser(id) {
+    if(!confirm('এই User-কে মুছে ফেলবেন?')) return;
+    try {
+        const d=await apiFetch(`/admin?col=users&id=${id}`,{method:'DELETE'});
+        if(!d.success) throw new Error(d.message);
+        toast('User মুছে ফেলা হয়েছে।'); loadUsers();
+    } catch(err){ toast(err.message,'error'); }
+}
+
+// Close modal on backdrop click
+document.querySelectorAll('.modal-backdrop').forEach(m => {
+    m.addEventListener('click', e => { if(e.target===m) m.classList.add('hidden'); });
+});
 </script>
 </body>
 </html>

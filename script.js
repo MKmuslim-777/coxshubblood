@@ -397,8 +397,49 @@ function updateLanguage(lang) {
 }
 
 // ============================================
-//   DONOR SEARCH — MongoDB API
+//   NOTICES — Homepage থেকে load
 // ============================================
+async function loadActiveNotices() {
+    try {
+        const res  = await fetch(`${API_BASE}/notices`);
+        const data = await res.json();
+        if (!data.success || !data.notices?.length) return;
+
+        const banner   = document.getElementById('emergencyBanner');
+        const textEl   = document.getElementById('emergencyText');
+        if (!banner || !textEl) return;
+
+        // Show first active notice in emergency banner
+        const notice = data.notices[0];
+        const typeIcon = { info:'ℹ️', warning:'⚠️', danger:'🚨', success:'✅' };
+        const icon = typeIcon[notice.type] || '📢';
+
+        textEl.innerHTML = `<strong>${icon} ${notice.title}:</strong> ${notice.message}`;
+
+        // Color by type
+        const colors = {
+            info:    'linear-gradient(90deg,#0077cc,#0099ff,#0077cc)',
+            warning: 'linear-gradient(90deg,#cc8800,#ffaa00,#cc8800)',
+            danger:  'linear-gradient(90deg,#c1121f,#e63946,#c1121f)',
+            success: 'linear-gradient(90deg,#1a7a40,#28a745,#1a7a40)',
+        };
+        banner.style.background = colors[notice.type] || colors.danger;
+        banner.classList.remove('hidden');
+        adjustBodyPadding();
+
+        // If multiple notices, add a ticker for the rest
+        if (data.notices.length > 1) {
+            let idx = 0;
+            setInterval(() => {
+                idx = (idx + 1) % data.notices.length;
+                const n = data.notices[idx];
+                const ic = typeIcon[n.type] || '📢';
+                textEl.innerHTML = `<strong>${ic} ${n.title}:</strong> ${n.message}`;
+                banner.style.background = colors[n.type] || colors.danger;
+            }, 6000);
+        }
+    } catch (_) { /* notices optional, fail silently */ }
+}
 function setupDonorSearch() {
     if (!searchDonorBtn) return;
     searchDonorBtn.addEventListener('click', runSearch);
@@ -1003,6 +1044,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDonorSearch();
     renderCamps();
     setupCertificate();
+    loadActiveNotices();
 
     // Event listeners
     registerBtn?.addEventListener('click', e => {
