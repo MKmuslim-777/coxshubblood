@@ -52,8 +52,8 @@ tailwind.config = {
 <!-- ══════════════════════════════════════════
      LOGIN PAGE
 ══════════════════════════════════════════ -->
-<div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-50 dark:from-gray-950 dark:to-gray-900 p-4">
-  <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md p-8 border-t-4 border-blood fade-in">
+<div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-700 to-pink-700 p-4 relative overflow-hidden">
+  <div class="backdrop-blur-xl bg-white/95 dark:bg-gray-900/90 rounded-3xl shadow-2xl w-full max-w-md p-8 border border-white/20 fade-in">
     <!-- Logo -->
     <div class="flex items-center justify-center gap-2 mb-6">
       <svg class="w-9 h-9 fill-blood drop-shadow" viewBox="0 0 32 29.6">
@@ -87,7 +87,7 @@ tailwind.config = {
 <div id="dashboard" class="hidden min-h-screen flex">
 
   <!-- Sidebar -->
-  <aside id="sidebar" class="w-64 shrink-0 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 flex flex-col fixed top-0 left-0 h-full z-30 transition-transform duration-300 shadow-sm">
+  <aside id="sidebar" class="w-64 shrink-0 bg-gradient-to-b from-red-700 to-red-950 text-white flex flex-col fixed top-0 left-0 h-full z-30 transition-transform duration-300 shadow-2xl">
     <!-- Logo -->
     <div class="flex items-center gap-2 px-5 py-5 border-b border-gray-100 dark:border-gray-800">
       <svg class="w-7 h-7 fill-blood" viewBox="0 0 32 29.6">
@@ -149,7 +149,22 @@ tailwind.config = {
 
       <!-- ── DONORS TAB ── -->
       <div id="tab-donors" class="tab-content fade-in space-y-5">
-        <!-- Stats row -->
+        
+<div class="rounded-3xl p-6 bg-gradient-to-r from-red-600 to-pink-600 text-white shadow-xl">
+<div class="flex items-center justify-between flex-wrap gap-4">
+<div>
+<h2 class="text-2xl font-bold">👋 Welcome Back Admin</h2>
+<p class="opacity-90">Cox's Hub Blood Management Dashboard</p>
+</div>
+<div class="flex gap-4 text-center">
+<div><div class="text-2xl font-bold">+12</div><div class="text-xs">New Donors</div></div>
+<div><div class="text-2xl font-bold">+4</div><div class="text-xs">Requests</div></div>
+<div><div class="text-2xl font-bold">+2</div><div class="text-xs">Emergency</div></div>
+</div>
+</div>
+</div>
+
+<!-- Stats row -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border-l-4 border-blood flex items-center gap-3">
             <span class="text-2xl">🫂</span>
