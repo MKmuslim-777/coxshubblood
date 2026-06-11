@@ -367,7 +367,7 @@ body.dark .hamburger:hover{background:rgba(230,57,70,.15);}
 <!-- ═══════════════════════════════════
      DASHBOARD
 ═══════════════════════════════════ -->
-<div id="dashboard" class="hidden">
+<div id="dashboard" style="display:none;min-height:100vh;">
 
   <!-- Sidebar overlay (mobile) -->
   <div id="sidebarOverlay" onclick="closeSidebar()"></div>
@@ -832,8 +832,17 @@ $('loginForm').addEventListener('submit',async e=>{
   finally{btn.disabled=false;$('loginBtnTxt').textContent='লগইন করুন 🔐';}
 });
 
-function showDashboard(){$('loginPage').style.display='none';$('dashboard').style.display='block';}
-function doLogout(){sessionStorage.removeItem('chblood_token');token=null;$('dashboard').style.display='none';$('loginPage').style.display='';}
+function showDashboard(){
+  $('loginPage').style.display='none';
+  $('dashboard').style.display='flex';
+  $('dashboard').style.minHeight='100vh';
+}
+function doLogout(){
+  sessionStorage.removeItem('chblood_token');
+  token=null;
+  $('dashboard').style.display='none';
+  $('loginPage').style.display='';
+}
 
 async function apiFetch(path,opts={}){
   const res=await fetch(`${API}${path}`,{...opts,headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json',...(opts.headers||{})}});
