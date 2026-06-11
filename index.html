@@ -204,21 +204,54 @@
 
     <!-- ===================== HERO SECTION ===================== -->
     <section class="hero" id="hero" aria-label="হিরো সেকশন">
+
+        <!-- SVG Defs (reused across page) -->
         <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
             <defs>
                 <path id="heart-path" d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4
                     c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
             </defs>
         </svg>
+
+        <!-- Decorative background blobs -->
+        <div class="hero-blob hero-blob-1" aria-hidden="true"></div>
+        <div class="hero-blob hero-blob-2" aria-hidden="true"></div>
+        <div class="hero-blob hero-blob-3" aria-hidden="true"></div>
+
+        <!-- Floating hearts -->
         <svg class="animated-heart" id="heart1" viewBox="0 0 32 29.6" data-parallax-depth="0.3" aria-hidden="true"><use xlink:href="#heart-path"/></svg>
         <svg class="animated-heart" id="heart2" viewBox="0 0 32 29.6" data-parallax-depth="0.2" aria-hidden="true"><use xlink:href="#heart-path"/></svg>
         <svg class="animated-heart" id="heart3" viewBox="0 0 32 29.6" data-parallax-depth="0.4" aria-hidden="true"><use xlink:href="#heart-path"/></svg>
         <svg class="animated-heart" id="heart4" viewBox="0 0 32 29.6" data-parallax-depth="0.25" aria-hidden="true"><use xlink:href="#heart-path"/></svg>
 
+        <!-- Floating blood drop particles -->
+        <div class="hero-particle p1" aria-hidden="true">🩸</div>
+        <div class="hero-particle p2" aria-hidden="true">🩸</div>
+        <div class="hero-particle p3" aria-hidden="true">🩸</div>
+
+        <!-- Main content -->
         <div class="hero-content">
-            <div class="hero-badge" data-lang-key="heroBadge">🩸 কক্সবাজার রক্তদাতা নেটওয়ার্ক</div>
+
+            <!-- Badge -->
+            <div class="hero-badge" data-lang-key="heroBadge">
+                <span class="badge-dot"></span>
+                🩸 কক্সবাজার রক্তদাতা নেটওয়ার্ক
+            </div>
+
+            <!-- Central heart icon -->
+            <div class="hero-heart-wrap" aria-hidden="true">
+                <svg class="hero-big-heart" viewBox="0 0 32 29.6">
+                    <use xlink:href="#heart-path"/>
+                </svg>
+                <div class="hero-heart-ring ring1"></div>
+                <div class="hero-heart-ring ring2"></div>
+            </div>
+
+            <!-- Heading -->
             <h1 class="title">রক্তদাতা <span>হিরো</span> হোন</h1>
             <p class="subtitle" data-lang-key="subtitle">একটি রক্তদান হাজার জীবন বাঁচাতে পারে।</p>
+
+            <!-- Buttons -->
             <div class="hero-btns">
                 <button class="cta-button" id="registerBtn" data-lang-key="registerButton">
                     রেজিস্টার করুন <span class="pulse">→</span>
@@ -227,12 +260,33 @@
                     ডোনার খুঁজুন 🔍
                 </a>
             </div>
+
+            <!-- Mini stats bar -->
+            <div class="hero-stats-bar">
+                <div class="hero-stat">
+                    <strong>১৪২+</strong>
+                    <span data-lang-key="counterText">জন ডোনার</span>
+                </div>
+                <div class="hero-stat-divider" aria-hidden="true"></div>
+                <div class="hero-stat">
+                    <strong>৮৯+</strong>
+                    <span data-lang-key="counterLives">জীবন বাঁচানো</span>
+                </div>
+                <div class="hero-stat-divider" aria-hidden="true"></div>
+                <div class="hero-stat">
+                    <strong>৮</strong>
+                    <span>টি এলাকা</span>
+                </div>
+            </div>
+
         </div>
 
+        <!-- Scroll indicator -->
         <div class="scroll-indicator" aria-hidden="true">
             <div class="scroll-text" data-lang-key="scrollText">স্ক্রল করুন</div>
             <div class="scroll-arrow"></div>
         </div>
+
     </section>
 
     <!-- ===================== COUNTER SECTION ===================== -->
