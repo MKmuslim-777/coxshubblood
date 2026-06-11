@@ -113,6 +113,184 @@ tailwind.config = {
 
   /* Topbar user avatar */
   .avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#e63946,#f97316); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 14px; }
+
+  /* Dashboard responsive layout */
+  #dashboard > div {
+    min-width: 0;
+  }
+  #dashboard main {
+    min-width: 0;
+  }
+  .card {
+    min-width: 0;
+  }
+  table {
+    min-width: 760px;
+  }
+  #donorPageBtns {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 1180px) {
+    #tab-donors > div:nth-of-type(2) {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+
+  @media (max-width: 900px) {
+    #sidebar {
+      transform: translateX(-100%) !important;
+    }
+    #sidebar.is-open {
+      transform: translateX(0) !important;
+    }
+    #dashboard > div {
+      margin-left: 0 !important;
+      width: 100%;
+    }
+    #sidebarToggle {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+    }
+    #dashboard header {
+      padding: 0 16px !important;
+    }
+    #dashboard main {
+      padding: 18px !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .btn-red,
+    .btn-outline,
+    .btn-ghost {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+    .modal-wrap {
+      align-items: flex-start;
+      overflow-y: auto;
+      padding: 12px;
+    }
+    .modal-box {
+      max-width: 100%;
+      padding: 20px;
+      border-radius: 16px;
+      max-height: calc(100vh - 24px);
+      overflow-y: auto;
+    }
+    #dashboard header {
+      height: auto !important;
+      min-height: 60px;
+      gap: 10px;
+      padding: 10px 12px !important;
+    }
+    #dashboard header > div:first-child {
+      min-width: 0;
+    }
+    #pageTitle {
+      font-size: 15px !important;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 52vw;
+    }
+    #pageSubtitle {
+      display: none;
+    }
+    #dashboard header > div:last-child {
+      gap: 8px !important;
+    }
+    #dashboard header > div:last-child button:last-child {
+      width: 36px;
+      height: 36px;
+      padding: 0 !important;
+      font-size: 0 !important;
+      overflow: hidden;
+      position: relative;
+    }
+    #dashboard header > div:last-child button:last-child::before {
+      content: "↩";
+      font-size: 16px;
+      color: inherit;
+    }
+    #dashboard main {
+      padding: 14px !important;
+    }
+    #tab-donors > div:first-child {
+      align-items: flex-start !important;
+      padding: 20px !important;
+      border-radius: 16px !important;
+    }
+    #tab-donors > div:first-child > div:last-child {
+      width: 100%;
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px !important;
+    }
+    #tab-donors > div:first-child > div:last-child > div[style*="width:1px"] {
+      display: none;
+    }
+    #tab-donors > div:nth-of-type(2) {
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+    #tab-donors > div:nth-of-type(3) {
+      align-items: stretch !important;
+      padding: 14px !important;
+    }
+    #tab-donors > div:nth-of-type(3) select,
+    #tab-donors > div:nth-of-type(3) button,
+    #tab-donors > div:nth-of-type(3) .badge {
+      width: 100% !important;
+    }
+    #tab-donors > div:nth-of-type(3) > div[style*="flex:1"] {
+      display: none;
+    }
+    #tab-donors > div:nth-of-type(4) > div:last-child {
+      align-items: stretch !important;
+      flex-direction: column;
+    }
+    #donorPageBtns {
+      justify-content: flex-start;
+    }
+    #tab-notices > .card,
+    #tab-users > .card:first-child {
+      align-items: stretch !important;
+      padding: 18px !important;
+    }
+    #noticesContainer > div {
+      flex-direction: column;
+    }
+    #noticesContainer > div > div:last-child {
+      width: 100%;
+    }
+    #noticesContainer > div > div:last-child button {
+      flex: 1;
+    }
+    #donorForm > div:first-of-type,
+    #noticeForm div[style*="grid-template-columns:1fr 1fr"],
+    #userForm > div:first-of-type {
+      grid-template-columns: 1fr !important;
+    }
+    #donorForm > div:last-child,
+    #noticeForm > div:last-child,
+    #userForm > div:last-child {
+      flex-direction: column;
+    }
+    #toastBox {
+      left: 12px !important;
+      right: 12px !important;
+      bottom: 12px !important;
+    }
+    #toastBox > div {
+      min-width: 0 !important;
+      width: 100%;
+    }
+  }
 </style>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen" id="appBody">
@@ -594,7 +772,7 @@ function toggleDark() {
 // ── Sidebar ──
 function toggleSidebar() {
   const s = $('sidebar');
-  s.style.transform = s.style.transform === 'translateX(-100%)' ? 'translateX(0)' : 'translateX(-100%)';
+  s.classList.toggle('is-open');
 }
 
 // ── Tab switching ──
@@ -627,6 +805,8 @@ function switchTab(tab) {
   if (tab === 'donors')  loadDonors(1);
   if (tab === 'notices') loadNotices();
   if (tab === 'users')   loadUsers();
+
+  if (window.innerWidth <= 900) $('sidebar').classList.remove('is-open');
 }
 
 // ── Auth ──
