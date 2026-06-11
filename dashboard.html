@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — Cox's Hub Blood</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Tailwind + DaisyUI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                colors: { 'blood-red': '#e63946', 'dark-red': '#c1121f' }
+            }}
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --blood-red: #e63946;
+            --dark-red:  #c1121f;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
+            background: #f4f6fb;
+            color: #212529;
+            min-height: 100vh;
+        }
+        [data-theme="dark"] body { background: #0f0f1e; color: #e0e0e0; }
+
+        /* ── Login Page ── */
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #fff0f0 0%, #fce8e8 100%);
+            padding: 20px;
+        }
+        [data-theme="dark"] .login-page { background: linear-gradient(135deg,#1a1a2e,#16213e); }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 44px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(230,57,70,0.12);
+            border-top: 5px solid var(--blood-red);
+        }
+        [data-theme="dark"] .login-card { background: #1a1a2e; }
+
+        .login-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+        .login-heart {
+            width: 36px; height: 36px;
+            fill: var(--blood-red);
+            filter: drop-shadow(0 3px 8px rgba(230,57,70,0.4));
+        }
+        .login-logo h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #212529;
+        }
+        [data-theme="dark"] .login-logo h1 { color: #e0e0e0; }
+        .login-logo h1 span { color: var(--blood-red); }
+        .login-subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #adb5bd;
+            margin-bottom: 30px;
+            letter-spacing: 0.3px;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 6px;
+        }
+        [data-theme="dark"] .form-group label { color: #bbb; }
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: white;
+            color: #212529;
+        }
+        [data-theme="dark"] .form-group input { background: #16213e; border-color: #333; color: #e0e0e0; }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--blood-red);
+            box-shadow: 0 0 0 3px rgba(230,57,70,0.15);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(45deg, var(--blood-red), var(--dark-red));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 18px rgba(230,57,70,0.35);
+            margin-top: 8px;
+            position: relative;
+        }
+        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(230,57,70,0.45); }
+        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .login-error {
+            background: rgba(230,57,70,0.08);
+            border: 1px solid rgba(230,57,70,0.25);
+            color: var(--dark-red);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .login-error.show { display: block; }
+
+        /* ── Dashboard ── */
+        .dashboard { display: none; min-height: 100vh; }
+        .dashboard.show { display: flex; flex-direction: column; }
+
+        /* Topbar */
+        .topbar {
+            background: white;
+            border-bottom: 1px solid #eee;
+            padding: 0 24px;
+            height: 62px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        [data-theme="dark"] .topbar { background: #1a1a2e; border-color: #2a2a4a; }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .topbar-heart {
+            width: 28px; height: 28px;
+            fill: var(--blood-red);
+        }
+        .topbar-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #212529;
+        }
+        [data-theme="dark"] .topbar-title { color: #e0e0e0; }
+        .topbar-title span { color: var(--blood-red); }
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .admin-badge {
+            background: rgba(230,57,70,0.1);
+            color: var(--dark-red);
+            border: 1px solid rgba(230,57,70,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+        .logout-btn {
+            background: none;
+            border: 1.5px solid #dee2e6;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #6c757d;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s;
+        }
+        .logout-btn:hover { border-color: var(--blood-red); color: var(--blood-red); }
+        .theme-btn {
+            background: #f4f6fb;
+            border: 1px solid #dee2e6;
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s;
+        }
+        .theme-btn:hover { transform: scale(1.1); }
+
+        /* Main content */
+        .dash-main {
+            flex: 1;
+            padding: 28px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Stats cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 14px;
+            padding: 22px 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            border-left: 5px solid var(--blood-red);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        [data-theme="dark"] .stat-card { background: #1a1a2e; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(230,57,70,0.1); }
+        .stat-icon { font-size: 2rem; flex-shrink: 0; }
+        .stat-info strong {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark-red);
+            line-height: 1;
+        }
+        .stat-info span {
+            font-size: 0.78rem;
+            color: #adb5bd;
+            font-weight: 600;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            background: white;
+            border-radius: 14px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        [data-theme="dark"] .toolbar { background: #1a1a2e; }
+        .toolbar select, .toolbar input {
+            padding: 9px 14px;
+            border: 1.5px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
+            background: white;
+            color: #212529;
+            cursor: pointer;
+            min-width: 140px;
+        }
+        [data-theme="dark"] .toolbar select,
+        [data-theme="dark"] .toolbar input { background: #16213e; border-color: #333; color: #e0e0e0; }
+        .toolbar select:focus, .toolbar input:focus {
+            outline: none;
+            border-color: var(--blood-red);
+            box-shadow: 0 0 0 3px rgba(230,57,70,0.12);
+        }
+        .toolbar-btn {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--blood-red); color: white; box-shadow: 0 3px 10px rgba(230,57,70,0.3); }
+        .btn-primary:hover { background: var(--dark-red); transform: translateY(-1px); }
+        .btn-export { background: #198754; color: white; }
+        .btn-export:hover { background: #146c43; transform: translateY(-1px); }
+        .btn-refresh { background: #f4f6fb; color: #495057; border: 1.5px solid #dee2e6; }
+        .btn-refresh:hover { background: #e9ecef; }
+        .toolbar-spacer { flex: 1; min-width: 10px; }
+        .total-badge {
+            background: rgba(230,57,70,0.08);
+            color: var(--dark-red);
+            border: 1px solid rgba(230,57,70,0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* Table */
+        .table-wrap {
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+        [data-theme="dark"] .table-wrap { background: #1a1a2e; }
+        .table-wrap table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        .table-wrap thead {
+            background: linear-gradient(90deg, var(--blood-red), var(--dark-red));
+            color: white;
+        }
+        .table-wrap thead th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .table-wrap tbody tr {
+            border-bottom: 1px solid #f1f3f5;
+            transition: background 0.15s;
+        }
+        [data-theme="dark"] .table-wrap tbody tr { border-color: #2a2a4a; }
+        .table-wrap tbody tr:hover { background: rgba(230,57,70,0.04); }
+        .table-wrap tbody td {
+            padding: 13px 16px;
+            color: #495057;
+            vertical-align: middle;
+        }
+        [data-theme="dark"] .table-wrap tbody td { color: #ccc; }
+        .blood-badge {
+            background: var(--blood-red);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+        }
+        .eligible-badge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .eligible-yes { background: rgba(25,135,84,0.1); color: #146c43; }
+        .eligible-no  { background: rgba(255,193,7,0.15); color: #997404; }
+        .del-btn {
+            background: rgba(220,53,69,0.1);
+            color: #dc3545;
+            border: 1px solid rgba(220,53,69,0.2);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Poppins', sans-serif;
+        }
+        .del-btn:hover { background: #dc3545; color: white; }
+
+        /* Empty / loading states */
+        .table-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #adb5bd;
+        }
+        .table-spinner {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .spinner-ring {
+            display: inline-block;
+            width: 36px; height: 36px;
+            border: 4px solid rgba(230,57,70,0.2);
+            border-top-color: var(--blood-red);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-top: 1px solid #f1f3f5;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        [data-theme="dark"] .pagination { border-color: #2a2a4a; }
+        .page-info { font-size: 0.82rem; color: #adb5bd; }
+        .page-btns { display: flex; gap: 6px; }
+        .page-btn {
+            padding: 6px 12px;
+            border: 1.5px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: white;
+            color: #495057;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s;
+        }
+        [data-theme="dark"] .page-btn { background: #16213e; border-color: #333; color: #ccc; }
+        .page-btn:hover:not(:disabled) { border-color: var(--blood-red); color: var(--blood-red); }
+        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .page-btn.active { background: var(--blood-red); color: white; border-color: var(--blood-red); }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            animation: toastIn 0.3s ease;
+            min-width: 220px;
+        }
+        .toast-success { background: #198754; }
+        .toast-error   { background: #dc3545; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dash-main { padding: 16px 12px; }
+            .topbar { padding: 0 14px; }
+            .table-wrap { overflow-x: auto; }
+            .table-wrap table { min-width: 700px; }
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .admin-badge { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ============ LOGIN PAGE ============ -->
+<div class="login-page" id="loginPage">
+    <div class="login-card">
+        <div class="login-logo">
+            <svg class="login-heart" viewBox="0 0 32 29.6">
+                <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4
+                    c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+            </svg>
+            <h1>Cox's Hub <span>Blood</span></h1>
+        </div>
+        <p class="login-subtitle">Admin Dashboard — নিরাপদ লগইন</p>
+
+        <div class="login-error" id="loginError"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginUser">Username</label>
+                <input type="text" id="loginUser" name="username"
+                    placeholder="Admin username" autocomplete="username" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPass">Password</label>
+                <input type="password" id="loginPass" name="password"
+                    placeholder="••••••••" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="login-btn" id="loginBtn">
+                <span id="loginBtnText">লগইন করুন 🔐</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div class="dashboard" id="dashboard">
+
+    <!-- Topbar -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <svg class="topbar-heart" viewBox="0 0 32 29.6">
+                <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4
+                    c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+            </svg>
+            <span class="topbar-title">Cox's Hub <span>Blood</span> — Admin</span>
+        </div>
+        <div class="topbar-right">
+            <span class="admin-badge">👤 anwersir777</span>
+            <button class="theme-btn" id="dashThemeBtn" title="Toggle theme">🌙</button>
+            <button class="logout-btn" id="logoutBtn">লগআউট ↩</button>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="dash-main">
+
+        <!-- Stats -->
+        <div class="stats-row" id="statsRow">
+            <div class="stat-card">
+                <div class="stat-icon">🫂</div>
+                <div class="stat-info">
+                    <strong id="statTotal">—</strong>
+                    <span>মোট ডোনার</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-info">
+                    <strong id="statEligible">—</strong>
+                    <span>এখন উপযুক্ত</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🩸</div>
+                <div class="stat-info">
+                    <strong id="statOPlus">—</strong>
+                    <span>O+ ডোনার</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-info">
+                    <strong id="statToday">—</strong>
+                    <span>আজকের রেজিস্ট্রেশন</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <select id="filterBlood">
+                <option value="">সব গ্রুপ</option>
+                <option>A+</option><option>A-</option>
+                <option>B+</option><option>B-</option>
+                <option>AB+</option><option>AB-</option>
+                <option>O+</option><option>O-</option>
+            </select>
+            <select id="filterArea">
+                <option value="">সব এলাকা</option>
+                <option value="sadar">কক্সবাজার সদর</option>
+                <option value="teknaf">টেকনাফ</option>
+                <option value="ukhia">উখিয়া</option>
+                <option value="ramu">রামু</option>
+                <option value="chakaria">চকরিয়া</option>
+                <option value="pekua">পেকুয়া</option>
+                <option value="moheshkhali">মহেশখালী</option>
+                <option value="kutubdia">কুতুবদিয়া</option>
+            </select>
+            <button class="toolbar-btn btn-primary" id="filterBtn">🔍 ফিল্টার</button>
+            <button class="toolbar-btn btn-refresh" id="refreshBtn">↻ রিফ্রেশ</button>
+            <div class="toolbar-spacer"></div>
+            <span class="total-badge" id="totalBadge">লোড হচ্ছে...</span>
+            <button class="toolbar-btn btn-export" id="exportBtn">📥 CSV Export</button>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>নাম</th>
+                        <th>রক্তের গ্রুপ</th>
+                        <th>এলাকা</th>
+                        <th>ফোন</th>
+                        <th>শেষ দান</th>
+                        <th>উপযুক্ততা</th>
+                        <th>রেজিস্ট্রেশন</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="donorTableBody">
+                    <tr><td colspan="9" class="table-spinner"><div class="spinner-ring"></div></td></tr>
+                </tbody>
+            </table>
+            <div class="pagination" id="paginationBar">
+                <span class="page-info" id="pageInfo">লোড হচ্ছে...</span>
+                <div class="page-btns" id="pageBtns"></div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const API = '/api';
+let authToken   = null;
+let currentPage = 1;
+let allDonors   = [];
+
+const areaMap = {
+    sadar: 'কক্সবাজার সদর', teknaf: 'টেকনাফ', ukhia: 'উখিয়া',
+    ramu: 'রামু', chakaria: 'চকরিয়া', pekua: 'পেকুয়া',
+    moheshkhali: 'মহেশখালী', kutubdia: 'কুতুবদিয়া',
+};
+
+// ── Helpers ──────────────────────────────────
+function isEligible(dateStr) {
+    if (!dateStr) return false;
+    const diff = (Date.now() - new Date(dateStr).getTime()) / 86400000;
+    return diff >= 120;
+}
+function fmtDate(dateStr) {
+    if (!dateStr) return '—';
+    return new Date(dateStr).toLocaleDateString('bn-BD', { year:'numeric', month:'short', day:'numeric' });
+}
+function showToast(msg, type = 'success') {
+    const t = document.createElement('div');
+    t.className = `toast toast-${type}`;
+    t.textContent = msg;
+    document.getElementById('toastContainer').appendChild(t);
+    setTimeout(() => t.remove(), 3500);
+}
+
+// ── Theme ─────────────────────────────────────
+const themeBtn = document.getElementById('dashThemeBtn');
+themeBtn.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('dashTheme', next);
+});
+const savedTheme = localStorage.getItem('dashTheme');
+if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+}
+
+// ── Auth check on load ────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+    const saved = sessionStorage.getItem('chblood_token');
+    if (saved) {
+        authToken = saved;
+        showDashboard();
+        loadDonors();
+    }
+});
+
+// ── Login ─────────────────────────────────────
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('loginUser').value.trim();
+    const password = document.getElementById('loginPass').value;
+    const btn      = document.getElementById('loginBtn');
+    const errEl    = document.getElementById('loginError');
+
+    btn.disabled = true;
+    document.getElementById('loginBtnText').textContent = 'যাচাই হচ্ছে...';
+    errEl.classList.remove('show');
+
+    try {
+        const res  = await fetch(`${API}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+
+        if (!data.success) throw new Error(data.message || 'লগইন ব্যর্থ হয়েছে');
+
+        authToken = data.token;
+        sessionStorage.setItem('chblood_token', authToken);
+        showDashboard();
+        loadDonors();
+
+    } catch (err) {
+        errEl.textContent = '❌ ' + err.message;
+        errEl.classList.add('show');
+    } finally {
+        btn.disabled = false;
+        document.getElementById('loginBtnText').textContent = 'লগইন করুন 🔐';
+    }
+});
+
+function showDashboard() {
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('dashboard').classList.add('show');
+}
+function showLogin() {
+    document.getElementById('loginPage').style.display = 'flex';
+    document.getElementById('dashboard').classList.remove('show');
+}
+
+// ── Logout ────────────────────────────────────
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    sessionStorage.removeItem('chblood_token');
+    authToken = null;
+    allDonors = [];
+    showLogin();
+});
+
+// ── Load donors ───────────────────────────────
+async function loadDonors(page = 1) {
+    currentPage = page;
+    const blood = document.getElementById('filterBlood').value;
+    const area  = document.getElementById('filterArea').value;
+
+    document.getElementById('donorTableBody').innerHTML =
+        `<tr><td colspan="9" class="table-spinner"><div class="spinner-ring"></div></td></tr>`;
+    document.getElementById('totalBadge').textContent = 'লোড হচ্ছে...';
+
+    const params = new URLSearchParams({ page, limit: 50 });
+    if (blood) params.set('blood', blood);
+    if (area)  params.set('area',  area);
+
+    try {
+        const res  = await fetch(`${API}/admin?${params}`, {
+            headers: { Authorization: `Bearer ${authToken}` }
+        });
+
+        if (res.status === 401) {
+            sessionStorage.removeItem('chblood_token');
+            showLogin();
+            return;
+        }
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+
+        allDonors = data.donors;
+        renderTable(data.donors);
+        renderPagination(data.page, data.totalPages, data.total);
+        updateStats(data.donors, data.total);
+        document.getElementById('totalBadge').textContent = `মোট: ${data.total} জন`;
+
+    } catch (err) {
+        document.getElementById('donorTableBody').innerHTML =
+            `<tr><td colspan="9" class="table-empty">⚠️ ${err.message}</td></tr>`;
+        showToast(err.message, 'error');
+    }
+}
+
+// ── Render table ──────────────────────────────
+function renderTable(donors) {
+    const tbody = document.getElementById('donorTableBody');
+    if (!donors.length) {
+        tbody.innerHTML = `<tr><td colspan="9" class="table-empty">কোনো ডোনার পাওয়া যায়নি।</td></tr>`;
+        return;
+    }
+    const offset = (currentPage - 1) * 50;
+    tbody.innerHTML = donors.map((d, i) => {
+        const eligible  = isEligible(d.lastDonation);
+        const areaLabel = areaMap[d.area] || d.area || '—';
+        return `
+        <tr>
+            <td style="color:#adb5bd;font-size:0.78rem">${offset + i + 1}</td>
+            <td style="font-weight:600;color:#212529">${d.name || '—'}</td>
+            <td><span class="blood-badge">${d.blood || '—'}</span></td>
+            <td>${areaLabel}</td>
+            <td style="font-family:monospace">${d.phone || '—'}</td>
+            <td>${fmtDate(d.lastDonation)}</td>
+            <td><span class="eligible-badge ${eligible ? 'eligible-yes' : 'eligible-no'}">
+                ${eligible ? '✅ উপযুক্ত' : '⏳ অপেক্ষমান'}
+            </span></td>
+            <td style="font-size:0.8rem;color:#adb5bd">${fmtDate(d.createdAt)}</td>
+            <td>
+                <button class="del-btn" onclick="deleteDonor('${d._id}', this)">🗑 Delete</button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+// ── Pagination ────────────────────────────────
+function renderPagination(page, totalPages, total) {
+    document.getElementById('pageInfo').textContent =
+        `পেজ ${page} / ${totalPages} (মোট ${total} জন)`;
+
+    const btns = document.getElementById('pageBtns');
+    btns.innerHTML = '';
+
+    const prev = document.createElement('button');
+    prev.className = 'page-btn';
+    prev.textContent = '← আগে';
+    prev.disabled = page <= 1;
+    prev.onclick = () => loadDonors(page - 1);
+    btns.appendChild(prev);
+
+    // Show up to 5 page buttons
+    const start = Math.max(1, page - 2);
+    const end   = Math.min(totalPages, start + 4);
+    for (let p = start; p <= end; p++) {
+        const b = document.createElement('button');
+        b.className = `page-btn${p === page ? ' active' : ''}`;
+        b.textContent = p;
+        b.onclick = () => loadDonors(p);
+        btns.appendChild(b);
+    }
+
+    const next = document.createElement('button');
+    next.className = 'page-btn';
+    next.textContent = 'পরে →';
+    next.disabled = page >= totalPages;
+    next.onclick = () => loadDonors(page + 1);
+    btns.appendChild(next);
+}
+
+// ── Stats cards ───────────────────────────────
+function updateStats(donors, total) {
+    document.getElementById('statTotal').textContent   = total;
+    const eligible = donors.filter(d => isEligible(d.lastDonation)).length;
+    document.getElementById('statEligible').textContent = eligible;
+    const oPlus = donors.filter(d => d.blood === 'O+').length;
+    document.getElementById('statOPlus').textContent   = oPlus;
+    const today = new Date().toDateString();
+    const todayCount = donors.filter(d =>
+        d.createdAt && new Date(d.createdAt).toDateString() === today
+    ).length;
+    document.getElementById('statToday').textContent   = todayCount;
+}
+
+// ── Delete donor ──────────────────────────────
+async function deleteDonor(id, btn) {
+    if (!confirm('এই ডোনারকে মুছে ফেলবেন?')) return;
+    btn.disabled = true;
+    btn.textContent = '...';
+    try {
+        const res  = await fetch(`${API}/admin?id=${id}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${authToken}` }
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+        showToast('ডোনার মুছে ফেলা হয়েছে।');
+        btn.closest('tr').remove();
+    } catch (err) {
+        showToast(err.message, 'error');
+        btn.disabled = false;
+        btn.textContent = '🗑 Delete';
+    }
+}
+
+// ── Export CSV ────────────────────────────────
+document.getElementById('exportBtn').addEventListener('click', () => {
+    if (!allDonors.length) { showToast('কোনো ডেটা নেই।', 'error'); return; }
+    const headers = ['#','নাম','রক্তের গ্রুপ','এলাকা','ফোন','শেষ দান','উপযুক্ততা','রেজিস্ট্রেশন'];
+    const rows = allDonors.map((d, i) => [
+        i + 1, d.name, d.blood, areaMap[d.area] || d.area,
+        d.phone, d.lastDonation || '',
+        isEligible(d.lastDonation) ? 'উপযুক্ত' : 'অপেক্ষমান',
+        d.createdAt ? new Date(d.createdAt).toLocaleDateString('en-GB') : ''
+    ]);
+    const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `CHBlood_Donors_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    showToast('CSV export সফল হয়েছে! 📥');
+});
+
+// ── Filter & Refresh ──────────────────────────
+document.getElementById('filterBtn').addEventListener('click',  () => loadDonors(1));
+document.getElementById('refreshBtn').addEventListener('click', () => loadDonors(currentPage));
+</script>
+</body>
+</html>
