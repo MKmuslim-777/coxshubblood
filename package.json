@@ -1,0 +1,15 @@
+{
+  "name": "coxs-hub-blood",
+  "version": "1.0.0",
+  "description": "Cox's Hub Blood (CH Blood) - কক্সবাজার রক্তদাতা নেটওয়ার্ক",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "mongodb": "^6.3.0"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
