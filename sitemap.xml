@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://chblood.com/</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="bn" href="https://chblood.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://chblood.com/"/>
+    <image:image>
+      <image:loc>https://chblood.com/thumbnail.jpg</image:loc>
+      <image:title>Cox's Hub Blood — কক্সবাজার রক্তদাতা নেটওয়ার্ক</image:title>
+      <image:caption>Cox's Hub Blood (CH Blood) — কক্সবাজারের সবচেয়ে বড় স্বেচ্ছাসেবী রক্তদাতা নেটওয়ার্ক</image:caption>
+    </image:image>
+  </url>
+
+</urlset>

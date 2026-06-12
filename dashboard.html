@@ -694,6 +694,7 @@ img { display: block; max-width: 100%; }
           <div class="toolbar-gap"></div>
           <span id="dBadge" class="badge b-red" style="padding:5px 12px;">লোড হচ্ছে...</span>
           <button onclick="exportCSV()" class="btn btn-green">📥 CSV</button>
+          <button onclick="exportJSON()" class="btn btn-green" style="background:#0369a1;" onmouseover="this.style.background='#075985'" onmouseout="this.style.background='#0369a1'">📦 JSON</button>
           <button onclick="openDonorModal()" class="btn btn-primary">+ নতুন ডোনার</button>
         </div>
 
@@ -1195,9 +1196,39 @@ function exportCSV() {
   const csv = [h,...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'}));
-  a.download = `CHBlood_${new Date().toISOString().split('T')[0]}.csv`;
+  a.download = `CHBlood_Donors_${new Date().toISOString().split('T')[0]}.csv`;
   a.click();
   toast('📥 CSV export সফল');
+}
+
+function exportJSON() {
+  if (!allDonors.length) { toast('কোনো ডেটা নেই', 'error'); return; }
+  const data = allDonors.map((d, i) => ({
+    serial:        i + 1,
+    name:          d.name          || '',
+    blood:         d.blood         || '',
+    area:          areaMap[d.area] || d.area || '',
+    areaCode:      d.area          || '',
+    phone:         d.phone         || '',
+    lastDonation:  d.lastDonation  || null,
+    eligible:      isEligible(d.lastDonation),
+    currentAddress: d.currentAddress || '',
+    healthIssues:  d.healthIssues  || '',
+    registeredAt:  d.createdAt     || null,
+  }));
+  const payload = {
+    exported:    new Date().toISOString(),
+    total:       data.length,
+    source:      "Cox's Hub Blood — Admin Dashboard",
+    donors:      data,
+  };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(
+    new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+  );
+  a.download = `CHBlood_Donors_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  toast('📦 JSON export সফল');
 }
 
 /* ══════════════════
