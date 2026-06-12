@@ -8,437 +8,609 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════
-   RESET & BASE
-═══════════════════════════════════ */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --red:#e63946; --red-dark:#c1121f;
-  --bg:#f0f2f5; --surface:#fff; --surface2:#f8fafc;
-  --border:#e5e7eb; --text:#1f2937; --muted:#6b7280; --faint:#9ca3af;
-  --sidebar-w:260px;
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --red: #e63946;
+  --red2: #c1121f;
+  --bg: #f1f3f8;
+  --white: #ffffff;
+  --border: #e5e7eb;
+  --text: #1a202c;
+  --sub: #6b7280;
+  --faint: #9ca3af;
+  --sidebar: 258px;
+  --topbar: 60px;
+  --radius: 14px;
+  --shadow: 0 2px 16px rgba(0,0,0,0.07);
 }
-html{font-size:14px;}
-body{font-family:'Poppins','Noto Sans Bengali',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-button{font-family:inherit;cursor:pointer;}
-input,select,textarea{font-family:inherit;}
-a{text-decoration:none;color:inherit;}
-
-/* ═══════════════════════════════════
-   SCROLLBAR
-═══════════════════════════════════ */
-::-webkit-scrollbar{width:5px;height:5px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:10px;}
-
-/* ═══════════════════════════════════
-   UTILITIES
-═══════════════════════════════════ */
-.hidden{display:none!important;}
-.flex{display:flex;}
-.items-center{align-items:center;}
-.gap-2{gap:8px;}
-.gap-3{gap:12px;}
-.w-full{width:100%;}
-.text-center{text-align:center;}
-@keyframes spin{to{transform:rotate(360deg);}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.fade-up{animation:fadeUp .25s ease;}
-.spinner{display:inline-block;width:28px;height:28px;border:3px solid #fecaca;border-top-color:var(--red);border-radius:50%;animation:spin .75s linear infinite;}
-
-/* ═══════════════════════════════════
-   FORM ELEMENTS
-═══════════════════════════════════ */
-.inp{
-  width:100%;padding:10px 14px;border:1.5px solid var(--border);
-  border-radius:10px;font-size:13px;background:var(--surface);color:var(--text);
-  transition:border-color .15s,box-shadow .15s;outline:none;
+html, body { height: 100%; }
+body {
+  font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
 }
-.inp:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(230,57,70,.1);}
-.lbl{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em;}
-
-/* ═══════════════════════════════════
-   BUTTONS
-═══════════════════════════════════ */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:700;border:none;transition:all .15s;white-space:nowrap;}
-.btn-red{background:var(--red);color:#fff;box-shadow:0 3px 10px rgba(230,57,70,.28);}
-.btn-red:hover{background:var(--red-dark);transform:translateY(-1px);box-shadow:0 5px 15px rgba(230,57,70,.38);}
-.btn-outline{background:transparent;color:var(--red);border:1.5px solid var(--red);}
-.btn-outline:hover{background:var(--red);color:#fff;}
-.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--border);}
-.btn-ghost:hover{border-color:var(--red);color:var(--red);}
-.btn-green{background:#16a34a;color:#fff;}
-.btn-green:hover{background:#15803d;}
-
-/* ═══════════════════════════════════
-   CARDS
-═══════════════════════════════════ */
-.card{background:var(--surface);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);}
-
-/* ═══════════════════════════════════
-   BADGES
-═══════════════════════════════════ */
-.badge{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;}
-.badge-blood{background:var(--red);color:#fff;}
-.badge-green{background:#dcfce7;color:#16a34a;}
-.badge-yellow{background:#fef9c3;color:#a16207;}
-.badge-blue{background:#dbeafe;color:#1d4ed8;}
-.badge-red{background:#fee2e2;color:#dc2626;}
-.badge-gray{background:#f3f4f6;color:#4b5563;}
-.badge-admin{background:linear-gradient(90deg,#e63946,#f97316);color:#fff;}
-
-/* ═══════════════════════════════════
-   TABLE
-═══════════════════════════════════ */
-.tbl{width:100%;border-collapse:collapse;min-width:680px;}
-.tbl thead tr{background:linear-gradient(90deg,var(--red),var(--red-dark));}
-.tbl thead th{padding:12px 14px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.05em;color:#fff;white-space:nowrap;}
-.tbl tbody tr td{padding:11px 14px;font-size:13px;border-bottom:1px solid #f3f4f6;transition:background .1s;}
-.tbl tbody tr:hover td{background:#fff5f5;}
-.tbl tbody tr:last-child td{border-bottom:none;}
-
-/* ═══════════════════════════════════
-   NOTICE CARDS
-═══════════════════════════════════ */
-.notice-info   {border-left:4px solid #60a5fa;background:#eff6ff;}
-.notice-warning{border-left:4px solid #facc15;background:#fefce8;}
-.notice-danger {border-left:4px solid var(--red);background:#fff1f2;}
-.notice-success{border-left:4px solid #4ade80;background:#f0fdf4;}
-
-/* ═══════════════════════════════════
-   MODAL
-═══════════════════════════════════ */
-.modal-wrap{
-  position:fixed;inset:0;background:rgba(0,0,0,.55);
-  backdrop-filter:blur(3px);z-index:100;
-  display:none;align-items:center;justify-content:center;
-  padding:16px;overflow-y:auto;
+button, input, select, textarea, a {
+  font-family: inherit;
+  font-size: inherit;
 }
-.modal-wrap.open{display:flex;}
-.modal-box{
-  background:var(--surface);border-radius:20px;
-  box-shadow:0 20px 60px rgba(0,0,0,.2);
-  width:100%;max-width:520px;padding:26px;
-  animation:fadeUp .22s ease;position:relative;
-  margin:auto;
+button { cursor: pointer; }
+a { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+
+/* ── Layout ── */
+#loginPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 50%, #be185d 100%);
+  position: relative;
+  overflow: hidden;
+}
+#dashboard {
+  display: none;
+  min-height: 100vh;
+}
+#dashboard.visible {
+  display: flex;
 }
 
-/* ═══════════════════════════════════
-   TOAST
-═══════════════════════════════════ */
-#toastBox{position:fixed;bottom:20px;right:20px;z-index:200;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:320px;width:calc(100% - 40px);}
-
-/* ═══════════════════════════════════
-   TAB PANELS
-═══════════════════════════════════ */
-.tab-panel{display:none;}
-.tab-panel.active{display:block;animation:fadeUp .25s ease;}
-
-/* ═══════════════════════════════════
-   SIDEBAR
-═══════════════════════════════════ */
-#sidebar{
-  width:var(--sidebar-w);
-  background:linear-gradient(170deg,#c1121f 0%,#7f1d1d 100%);
-  display:flex;flex-direction:column;
-  position:fixed;top:0;left:0;height:100%;z-index:50;
-  box-shadow:4px 0 24px rgba(0,0,0,.22);
-  transition:transform .3s cubic-bezier(.4,0,.2,1);
-}
-.nav-item{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;border-radius:12px;
-  font-size:13.5px;font-weight:600;cursor:pointer;
-  color:rgba(255,255,255,.72);
-  transition:all .18s ease;
-}
-.nav-item:hover{background:rgba(255,255,255,.13);color:#fff;}
-.nav-item.active{background:#fff;color:var(--red);box-shadow:0 4px 14px rgba(0,0,0,.18);}
-
-/* Overlay for mobile sidebar */
-#sidebarOverlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:49;
-  display:none;
-}
-#sidebarOverlay.open{display:block;}
-
-/* ═══════════════════════════════════
-   MAIN WRAPPER
-═══════════════════════════════════ */
-#mainWrap{
-  margin-left:var(--sidebar-w);
-  display:flex;flex-direction:column;
-  min-height:100vh;transition:margin-left .3s cubic-bezier(.4,0,.2,1);
+/* ── Sidebar ── */
+.sidebar {
+  width: var(--sidebar);
+  min-width: var(--sidebar);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(175deg, #c1121f 0%, #7f1d1d 100%);
+  box-shadow: 3px 0 20px rgba(0,0,0,0.18);
+  overflow: hidden;
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  z-index: 50;
 }
 
-/* ═══════════════════════════════════
-   TOPBAR
-═══════════════════════════════════ */
-#topbar{
-  position:sticky;top:0;z-index:40;
-  background:var(--surface);border-bottom:1px solid var(--border);
-  padding:0 24px;height:62px;
-  display:flex;align-items:center;justify-content:space-between;
-  box-shadow:0 1px 8px rgba(0,0,0,.06);
-  gap:12px;
-}
-.hamburger{
-  display:none;background:none;border:none;
-  padding:7px;border-radius:8px;cursor:pointer;
-  flex-shrink:0;
-}
-.hamburger:hover{background:#fee2e2;}
-.hamburger svg{display:block;}
-.avatar{
-  width:34px;height:34px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,var(--red),#f97316);
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-weight:800;font-size:14px;
+/* ── Main area ── */
+.main-area {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* ═══════════════════════════════════
-   PAGE MAIN
-═══════════════════════════════════ */
-#pageMain{flex:1;padding:22px;background:var(--bg);}
-
-/* ═══════════════════════════════════
-   WELCOME BANNER
-═══════════════════════════════════ */
-.banner{
-  background:linear-gradient(120deg,var(--red) 0%,#f97316 100%);
-  border-radius:18px;padding:22px 26px;color:#fff;
-  margin-bottom:20px;
-  display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:16px;
-  box-shadow:0 8px 24px rgba(230,57,70,.28);
-}
-.banner-stats{display:flex;gap:0;align-items:center;}
-.banner-stat{text-align:center;padding:0 18px;}
-.banner-divider{width:1px;height:36px;background:rgba(255,255,255,.25);}
-
-/* ═══════════════════════════════════
-   STATS GRID
-═══════════════════════════════════ */
-.stats-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;margin-bottom:20px;
-}
-.stat-card{
-  padding:18px;display:flex;align-items:center;gap:13px;
-  transition:transform .15s,box-shadow .15s;
-}
-.stat-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1);}
-.stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-
-/* ═══════════════════════════════════
-   TOOLBAR
-═══════════════════════════════════ */
-.toolbar{
-  display:flex;flex-wrap:wrap;align-items:center;gap:10px;
-  padding:14px 18px;margin-bottom:18px;
-}
-.toolbar-spacer{flex:1;min-width:8px;}
-
-/* ═══════════════════════════════════
-   PAGINATION
-═══════════════════════════════════ */
-.page-footer{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:11px 18px;border-top:1px solid var(--border);
-  flex-wrap:wrap;gap:8px;
-}
-#donorPageBtns{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;}
-
-/* ═══════════════════════════════════
-   STAT CARD HOVER
-═══════════════════════════════════ */
-.action-btn{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:5px 10px;border-radius:7px;font-size:12px;font-weight:700;
-  border:1px solid;cursor:pointer;transition:all .12s;
-}
-.action-edit{background:#eff6ff;color:#2563eb;border-color:#dbeafe;}
-.action-edit:hover{background:#2563eb;color:#fff;border-color:#2563eb;}
-.action-del{background:#fff1f2;color:var(--red);border-color:#fecdd3;}
-.action-del:hover{background:var(--red);color:#fff;border-color:var(--red);}
-
-/* ═══════════════════════════════════
-   DARK MODE
-═══════════════════════════════════ */
-body.dark{--bg:#0d1117;--surface:#161b22;--surface2:#1a2030;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--faint:#6e7681;}
-body.dark .tbl tbody tr td{border-color:#21262d;}
-body.dark .tbl tbody tr:hover td{background:rgba(230,57,70,.06);}
-body.dark .notice-info   {background:rgba(59,130,246,.08);}
-body.dark .notice-warning{background:rgba(234,179,8,.08);}
-body.dark .notice-danger {background:rgba(230,57,70,.08);}
-body.dark .notice-success{background:rgba(74,222,128,.08);}
-body.dark .inp{background:#21262d;border-color:#30363d;color:#e6edf3;}
-body.dark .inp:focus{border-color:var(--red);}
-body.dark .modal-box{background:#161b22;}
-body.dark .btn-ghost{border-color:#30363d;color:#8b949e;}
-body.dark #topbar{background:#161b22;border-color:#21262d;}
-body.dark .hamburger:hover{background:rgba(230,57,70,.15);}
-
-/* ═══════════════════════════════════
-   RESPONSIVE — TABLET (≤1024px)
-═══════════════════════════════════ */
-@media(max-width:1024px){
-  .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .banner-stats{gap:0;}
+/* ── Topbar ── */
+.topbar {
+  height: var(--topbar);
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
 }
 
-/* ═══════════════════════════════════
-   RESPONSIVE — MOBILE (≤768px)
-═══════════════════════════════════ */
-@media(max-width:768px){
-  #sidebar{transform:translateX(-100%);}
-  #sidebar.open{transform:translateX(0);}
-  #mainWrap{margin-left:0;}
-  .hamburger{display:flex;}
-  #topbar{padding:0 14px;height:56px;}
-  #pageMain{padding:14px;}
-  .banner{padding:18px;}
-  .banner-stats{width:100%;justify-content:space-around;}
-  .banner-stat{padding:0 10px;}
-  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
-  .stat-card{padding:14px;}
-  .toolbar{padding:12px 14px;gap:8px;}
-  .toolbar-spacer{display:none;}
-  .toolbar select,.toolbar .badge{width:100%;}
-  .toolbar-actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;}
-  .toolbar-actions .btn{flex:1;}
-  .page-footer{flex-direction:column;align-items:flex-start;}
-  #donorPageBtns{justify-content:flex-start;}
-  .modal-box{padding:20px;}
-  .form-grid{grid-template-columns:1fr!important;}
-  .form-grid [style*="grid-column"]{grid-column:1!important;}
-  #toastBox{left:12px;right:12px;bottom:12px;width:auto;max-width:none;}
+/* ── Page content ── */
+.page-content {
+  flex: 1;
+  padding: 22px;
+  overflow-x: hidden;
 }
 
-/* ═══════════════════════════════════
-   RESPONSIVE — SMALL (≤480px)
-═══════════════════════════════════ */
-@media(max-width:480px){
-  .stats-grid{grid-template-columns:1fr 1fr;}
-  .banner h3{font-size:17px;}
-  .banner-divider{display:none;}
-  #pageTitle{font-size:15px;}
-  .btn{padding:8px 14px;font-size:12.5px;}
+/* ── Cards ── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* ── Sidebar nav ── */
+.snav-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 8px 8px;
+}
+.snav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  margin-bottom: 2px;
+}
+.snav-item:hover { background: rgba(255,255,255,0.12); color: #fff; }
+.snav-item.active { background: #fff; color: var(--red); box-shadow: 0 3px 12px rgba(0,0,0,0.15); }
+.snav-icon { font-size: 17px; flex-shrink: 0; }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.14s;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(230,57,70,0.28);
+}
+.btn-primary:hover { background: var(--red2); transform: translateY(-1px); box-shadow: 0 5px 14px rgba(230,57,70,0.36); }
+.btn-outline {
+  background: transparent;
+  color: var(--red);
+  border: 1.5px solid var(--red);
+}
+.btn-outline:hover { background: var(--red); color: #fff; }
+.btn-ghost {
+  background: transparent;
+  color: var(--sub);
+  border: 1.5px solid var(--border);
+}
+.btn-ghost:hover { border-color: var(--red); color: var(--red); }
+.btn-green { background: #16a34a; color: #fff; }
+.btn-green:hover { background: #15803d; }
+.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 7px; }
+
+/* ── Form ── */
+.fld { display: flex; flex-direction: column; gap: 5px; }
+.flbl {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sub);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.finp {
+  width: 100%;
+  padding: 9px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  font-size: 13.5px;
+  background: var(--white);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.14s, box-shadow 0.14s;
+}
+.finp:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(230,57,70,0.1); }
+
+/* ── Table ── */
+.tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 660px;
+}
+.tbl thead tr {
+  background: linear-gradient(90deg, var(--red), var(--red2));
+}
+.tbl thead th {
+  padding: 11px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.tbl tbody td {
+  padding: 11px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid #f3f4f6;
+  color: var(--text);
+}
+.tbl tbody tr:last-child td { border-bottom: none; }
+.tbl tbody tr:hover td { background: #fff5f5; }
+
+/* ── Badges ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+.b-red   { background: var(--red); color: #fff; }
+.b-green { background: #dcfce7; color: #16a34a; }
+.b-yellow{ background: #fef9c3; color: #a16207; }
+.b-blue  { background: #dbeafe; color: #1d4ed8; }
+.b-gray  { background: #f3f4f6; color: #4b5563; }
+.b-admin { background: linear-gradient(90deg,var(--red),#f97316); color: #fff; }
+
+/* ── Notice cards ── */
+.ncard { border-radius: 12px; padding: 16px 18px; display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.ncard-info    { border-left: 4px solid #60a5fa; background: #eff6ff; }
+.ncard-warning { border-left: 4px solid #facc15; background: #fefce8; }
+.ncard-danger  { border-left: 4px solid var(--red); background: #fff1f2; }
+.ncard-success { border-left: 4px solid #4ade80; background: #f0fdf4; }
+
+/* ── Modal ── */
+.modal-bg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(3px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+.modal-bg.open { display: flex; }
+.modal-box {
+  background: var(--white);
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  width: 100%;
+  max-width: 510px;
+  padding: 26px;
+  animation: popUp 0.2s ease;
+  position: relative;
+  margin: auto;
+}
+@keyframes popUp { from { opacity:0; transform: scale(0.95) translateY(10px); } to { opacity:1; transform: scale(1) translateY(0); } }
+
+/* ── Toast ── */
+#toastWrap {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  max-width: 300px;
+  width: calc(100% - 40px);
+}
+.toast-item {
+  padding: 11px 16px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+  pointer-events: auto;
+  animation: slideIn 0.22s ease;
+}
+@keyframes slideIn { from { opacity:0; transform: translateX(30px); } to { opacity:1; transform: translateX(0); } }
+
+/* ── Tab panels ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeUp 0.22s ease; }
+@keyframes fadeUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+
+/* ── Spinner ── */
+.spin {
+  display: inline-block;
+  width: 28px; height: 28px;
+  border: 3px solid #fecaca;
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: spinning 0.7s linear infinite;
+}
+@keyframes spinning { to { transform: rotate(360deg); } }
+
+/* ── Avatar ── */
+.avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--red), #f97316);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 800; font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* ── Stats grid ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  padding: 18px 16px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  transition: transform 0.14s, box-shadow 0.14s;
+}
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.stat-icon {
+  width: 44px; height: 44px;
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* ── Banner ── */
+.banner {
+  background: linear-gradient(120deg, var(--red) 0%, #f97316 100%);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 22px rgba(230,57,70,0.28);
+}
+.banner-stats {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.bstat { text-align: center; padding: 0 14px; }
+.bstat-num { font-size: 22px; font-weight: 800; }
+.bstat-lbl { font-size: 11px; opacity: 0.78; margin-top: 1px; }
+.bstat-divider { width: 1px; height: 34px; background: rgba(255,255,255,0.22); }
+
+/* ── Toolbar ── */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.toolbar-gap { flex: 1; min-width: 4px; }
+
+/* ── Pagination ── */
+.pg-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pg-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+.pg-btn {
+  padding: 5px 10px;
+  font-size: 12px; font-weight: 700;
+  border-radius: 7px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.pg-btn:hover { border-color: var(--red); color: var(--red); }
+.pg-btn.active { background: var(--red); border-color: var(--red); color: #fff; }
+.pg-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ── Action buttons ── */
+.act-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 10px; font-size: 11.5px; font-weight: 700;
+  border-radius: 7px; cursor: pointer;
+  border: 1px solid; transition: all 0.12s;
+}
+.act-edit { background: #eff6ff; color: #2563eb; border-color: #dbeafe; }
+.act-edit:hover { background: #2563eb; color: #fff; border-color: #2563eb; }
+.act-del { background: #fff1f2; color: var(--red); border-color: #fecdd3; }
+.act-del:hover { background: var(--red); color: #fff; border-color: var(--red); }
+
+/* ── Grid helpers ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+.col-span-2 { grid-column: 1 / -1; }
+
+/* ── Mobile overlay ── */
+#sideOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.42);
+  z-index: 49;
+}
+#sideOverlay.show { display: block; }
+
+/* ── Hamburger ── */
+.ham-btn {
+  display: none;
+  background: none; border: none; padding: 7px;
+  border-radius: 8px; cursor: pointer;
+  flex-shrink: 0;
+}
+.ham-btn:hover { background: #fee2e2; }
+
+/* ═══════════════════════════════
+   RESPONSIVE
+═══════════════════════════════ */
+@media (max-width: 1100px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; height: 100%;
+    transform: translateX(-100%);
+    z-index: 50;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main-area { width: 100%; }
+  .ham-btn { display: flex; }
+  .page-content { padding: 14px; }
+  .topbar { padding: 0 14px; }
+  .banner { padding: 18px 16px; }
+  .bstat-divider { display: none; }
+  .banner-stats { width: 100%; justify-content: space-around; }
+  .bstat { padding: 0 6px; }
+  .toolbar-gap { display: none; }
+  .toolbar .finp { width: 100%; }
+  .toolbar { gap: 7px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .stat-card { padding: 13px; }
+  .pg-wrap { flex-direction: column; align-items: flex-start; }
+  .modal-box { padding: 20px; max-height: calc(100vh - 32px); overflow-y: auto; }
+  #toastWrap { left: 12px; right: 12px; max-width: none; }
+}
+
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 9px; }
+  .stat-card { padding: 12px 10px; }
+  .stat-icon { width: 38px; height: 38px; font-size: 18px; }
+  .grid-2 { grid-template-columns: 1fr !important; }
+  .col-span-2 { grid-column: 1 !important; }
+  .banner-stats { flex-wrap: wrap; }
+  .bstat { flex: 1; min-width: 60px; }
+  .btn { padding: 8px 12px; font-size: 12px; }
 }
 </style>
 </head>
-<body id="appBody">
+<body>
 
-<!-- ═══════════════════════════════════
-     LOGIN PAGE
-═══════════════════════════════════ -->
-<div id="loginPage" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(135deg,#7f1d1d 0%,#b91c1c 45%,#be185d 100%);position:relative;overflow:hidden;">
-  <div style="position:absolute;width:360px;height:360px;background:rgba(255,255,255,.05);border-radius:50%;top:-80px;right:-80px;pointer-events:none;"></div>
-  <div style="position:absolute;width:240px;height:240px;background:rgba(255,255,255,.05);border-radius:50%;bottom:-60px;left:-60px;pointer-events:none;"></div>
+<!-- ════════════════════════════════
+     LOGIN
+════════════════════════════════ -->
+<div id="loginPage">
+  <!-- Decorative blobs -->
+  <div style="position:absolute;width:350px;height:350px;border-radius:50%;background:rgba(255,255,255,0.05);top:-90px;right:-90px;pointer-events:none;"></div>
+  <div style="position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.05);bottom:-50px;left:-50px;pointer-events:none;"></div>
 
-  <div class="fade-up" style="background:rgba(255,255,255,.97);border-radius:22px;padding:36px 32px;box-shadow:0 24px 64px rgba(0,0,0,.25);width:100%;max-width:420px;position:relative;z-index:1;">
+  <div style="position:relative;z-index:1;width:100%;max-width:410px;background:#fff;border-radius:22px;padding:36px 32px;box-shadow:0 24px 64px rgba(0,0,0,0.24);">
+    <!-- Logo -->
     <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:28px;">
-      <div style="width:58px;height:58px;background:linear-gradient(135deg,var(--red),var(--red-dark));border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:0 8px 24px rgba(230,57,70,.38);">
+      <div style="width:56px;height:56px;background:linear-gradient(135deg,var(--red),var(--red2));border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:13px;box-shadow:0 8px 22px rgba(230,57,70,0.36);">
         <svg width="28" height="25" viewBox="0 0 32 29.6" fill="white"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
       </div>
-      <h1 style="font-size:21px;font-weight:800;color:var(--text);">Cox's Hub <span style="color:var(--red);">Blood</span></h1>
-      <p style="font-size:11.5px;color:var(--faint);margin-top:4px;letter-spacing:.08em;text-transform:uppercase;">Admin Dashboard</p>
+      <h1 style="font-size:20px;font-weight:800;color:var(--text);">Cox's Hub <span style="color:var(--red);">Blood</span></h1>
+      <p style="font-size:11px;color:var(--faint);margin-top:4px;letter-spacing:0.08em;text-transform:uppercase;">Admin Panel</p>
     </div>
 
-    <div id="loginError" class="hidden" style="background:#fff1f2;border:1px solid #fecdd3;color:var(--red);padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:16px;"></div>
+    <div id="loginErr" style="display:none;background:#fff1f2;border:1px solid #fecdd3;color:var(--red);padding:10px 14px;border-radius:9px;font-size:13px;font-weight:600;margin-bottom:16px;"></div>
 
     <form id="loginForm">
-      <div style="margin-bottom:14px;">
-        <label class="lbl">Username</label>
-        <input id="loginUser" type="text" class="inp" placeholder="Admin username" autocomplete="username" required>
+      <div class="fld" style="margin-bottom:14px;">
+        <label class="flbl">Username</label>
+        <input id="lUser" type="text" class="finp" placeholder="admin" autocomplete="username" required>
       </div>
-      <div style="margin-bottom:22px;">
-        <label class="lbl">Password</label>
-        <input id="loginPass" type="password" class="inp" placeholder="••••••••" autocomplete="current-password" required>
+      <div class="fld" style="margin-bottom:22px;">
+        <label class="flbl">Password</label>
+        <input id="lPass" type="password" class="finp" placeholder="••••••••" autocomplete="current-password" required>
       </div>
-      <button type="submit" id="loginBtn" class="btn btn-red w-full" style="padding:12px;font-size:15px;border-radius:12px;">
-        <span id="loginBtnTxt">লগইন করুন 🔐</span>
+      <button type="submit" id="lBtn" class="btn btn-primary" style="width:100%;padding:12px;font-size:15px;border-radius:11px;">
+        <span id="lBtnTxt">লগইন করুন 🔐</span>
       </button>
     </form>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════
+<!-- ════════════════════════════════
      DASHBOARD
-═══════════════════════════════════ -->
-<div id="dashboard" style="display:none;min-height:100vh;">
+════════════════════════════════ -->
+<div id="dashboard">
 
-  <!-- Sidebar overlay (mobile) -->
-  <div id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <!-- Mobile sidebar overlay -->
+  <div id="sideOverlay" onclick="closeSidebar()"></div>
 
   <!-- ── Sidebar ── -->
-  <aside id="sidebar">
-    <div style="padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.12);">
-      <div style="display:flex;align-items:center;gap:11px;">
-        <div style="width:36px;height:36px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+  <aside class="sidebar" id="sidebar">
+    <!-- Logo -->
+    <div style="padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,0.11);">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:35px;height:35px;background:rgba(255,255,255,0.14);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <svg width="18" height="16" viewBox="0 0 32 29.6" fill="white"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
         </div>
         <div>
-          <div style="color:#fff;font-weight:800;font-size:14px;line-height:1.3;">Cox's Hub</div>
-          <div style="color:rgba(255,255,255,.55);font-size:11px;">Blood Admin</div>
+          <div style="color:#fff;font-weight:800;font-size:14px;line-height:1.25;">Cox's Hub</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:11px;">Blood Admin</div>
         </div>
       </div>
     </div>
 
-    <nav style="flex:1;padding:14px 10px;overflow-y:auto;">
-      <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.38);letter-spacing:.12em;text-transform:uppercase;padding:0 6px 10px;">ম্যানেজমেন্ট</div>
-      <div class="nav-item active" id="nav-donors" onclick="switchTab('donors')">
-        <span style="font-size:16px;">🩸</span> ডোনার ম্যানেজমেন্ট
+    <!-- Nav -->
+    <nav style="flex:1;padding:12px 10px;overflow-y:auto;">
+      <div class="snav-label">ম্যানেজমেন্ট</div>
+      <div class="snav-item active" id="nav-donors" onclick="switchTab('donors')">
+        <span class="snav-icon">🩸</span> ডোনার ম্যানেজমেন্ট
       </div>
-      <div class="nav-item" id="nav-notices" onclick="switchTab('notices')">
-        <span style="font-size:16px;">📢</span> নোটিশ ম্যানেজমেন্ট
+      <div class="snav-item" id="nav-notices" onclick="switchTab('notices')">
+        <span class="snav-icon">📢</span> নোটিশ ম্যানেজমেন্ট
       </div>
-      <div class="nav-item" id="nav-users" onclick="switchTab('users')">
-        <span style="font-size:16px;">👥</span> ইউজার ম্যানেজমেন্ট
+      <div class="snav-item" id="nav-users" onclick="switchTab('users')">
+        <span class="snav-icon">👥</span> ইউজার ম্যানেজমেন্ট
       </div>
-      <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.38);letter-spacing:.12em;text-transform:uppercase;padding:16px 6px 10px;">সাইট</div>
-      <a href="/" target="_blank" class="nav-item">
-        <span style="font-size:16px;">🌐</span> মেইন সাইট
+      <div class="snav-label">সাইট</div>
+      <a href="/" target="_blank" class="snav-item">
+        <span class="snav-icon">🌐</span> মেইন সাইট দেখুন
       </a>
     </nav>
 
-    <div style="padding:14px;border-top:1px solid rgba(255,255,255,.12);">
+    <!-- Footer -->
+    <div style="padding:13px 14px;border-top:1px solid rgba(255,255,255,0.11);">
       <div style="display:flex;align-items:center;gap:10px;">
-        <div class="avatar" id="sidebarAvatar">A</div>
+        <div class="avatar" id="sAvatar">A</div>
         <div style="flex:1;min-width:0;">
-          <div id="sidebarUsername" style="color:#fff;font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
-          <div style="color:rgba(255,255,255,.5);font-size:11px;">Administrator</div>
+          <div id="sUsername" style="color:#fff;font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
+          <div style="color:rgba(255,255,255,0.48);font-size:11px;">Administrator</div>
         </div>
-        <button onclick="doLogout()" title="লগআউট" style="color:rgba(255,255,255,.45);background:none;border:none;cursor:pointer;padding:4px;border-radius:6px;transition:color .15s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.45)'">
-          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        <button onclick="doLogout()" title="লগআউট" style="background:none;border:none;padding:4px;color:rgba(255,255,255,0.42);border-radius:6px;cursor:pointer;transition:color 0.15s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.42)'">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
         </button>
       </div>
     </div>
   </aside>
 
-  <!-- ── Main ── -->
-  <div id="mainWrap">
+  <!-- ── Main area ── -->
+  <div class="main-area">
 
     <!-- Topbar -->
-    <header id="topbar">
+    <header class="topbar">
       <div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1;">
-        <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Menu">
-          <svg width="20" height="20" fill="none" stroke="#e63946" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <button class="ham-btn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg width="20" height="20" fill="none" stroke="var(--red)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
         <div style="min-width:0;">
-          <h2 id="pageTitle" style="font-weight:800;font-size:16px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">ডোনার ম্যানেজমেন্ট</h2>
-          <p id="pageSubtitle" style="font-size:11.5px;color:var(--faint);margin-top:1px;">রক্তদাতাদের তথ্য পরিচালনা করুন</p>
+          <div id="pageTitle" style="font-size:16px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">ডোনার ম্যানেজমেন্ট</div>
+          <div id="pageSub" style="font-size:11.5px;color:var(--faint);">রক্তদাতাদের তথ্য পরিচালনা করুন</div>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
-        <button onclick="toggleDark()" id="darkBtn" style="width:34px;height:34px;border-radius:50%;background:var(--surface2);border:1.5px solid var(--border);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s;">🌙</button>
-        <button onclick="doLogout()" style="font-size:12px;font-weight:700;color:var(--muted);border:1.5px solid var(--border);padding:6px 12px;border-radius:8px;background:none;cursor:pointer;transition:all .15s;white-space:nowrap;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">↩ Logout</button>
+        <button id="darkBtn" onclick="toggleDark()" style="width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border);background:#f9fafb;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.14s;">🌙</button>
+        <button onclick="doLogout()" style="font-size:12px;font-weight:700;color:var(--sub);border:1.5px solid var(--border);padding:6px 13px;border-radius:8px;background:none;cursor:pointer;transition:all 0.14s;white-space:nowrap;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--sub)'">↩ Logout</button>
       </div>
     </header>
 
-    <!-- Content -->
-    <main id="pageMain">
+    <!-- ────────── PAGE CONTENT ────────── -->
+    <div class="page-content">
 
       <!-- ══ DONORS TAB ══ -->
       <div id="tab-donors" class="tab-panel active">
@@ -446,23 +618,23 @@ body.dark .hamburger:hover{background:rgba(230,57,70,.15);}
         <!-- Banner -->
         <div class="banner">
           <div>
-            <h3 style="font-size:19px;font-weight:800;margin-bottom:3px;">👋 স্বাগতম, Admin</h3>
-            <p style="opacity:.82;font-size:13px;">Cox's Hub Blood Management System</p>
+            <div style="font-size:18px;font-weight:800;margin-bottom:3px;">👋 স্বাগতম, Admin</div>
+            <div style="font-size:13px;opacity:0.82;">Cox's Hub Blood Management System</div>
           </div>
           <div class="banner-stats">
-            <div class="banner-stat">
-              <div style="font-size:22px;font-weight:800;" id="bannerTotal">—</div>
-              <div style="font-size:11px;opacity:.78;margin-top:2px;">মোট ডোনার</div>
+            <div class="bstat">
+              <div class="bstat-num" id="bTotal">—</div>
+              <div class="bstat-lbl">মোট ডোনার</div>
             </div>
-            <div class="banner-divider"></div>
-            <div class="banner-stat">
-              <div style="font-size:22px;font-weight:800;" id="bannerEligible">—</div>
-              <div style="font-size:11px;opacity:.78;margin-top:2px;">উপযুক্ত</div>
+            <div class="bstat-divider"></div>
+            <div class="bstat">
+              <div class="bstat-num" id="bEligible">—</div>
+              <div class="bstat-lbl">উপযুক্ত</div>
             </div>
-            <div class="banner-divider"></div>
-            <div class="banner-stat">
-              <div style="font-size:22px;font-weight:800;" id="bannerToday">—</div>
-              <div style="font-size:11px;opacity:.78;margin-top:2px;">আজকের</div>
+            <div class="bstat-divider"></div>
+            <div class="bstat">
+              <div class="bstat-num" id="bToday">—</div>
+              <div class="bstat-lbl">আজকের</div>
             </div>
           </div>
         </div>
@@ -472,28 +644,28 @@ body.dark .hamburger:hover{background:rgba(230,57,70,.15);}
           <div class="card stat-card" style="border-left:4px solid var(--red);">
             <div class="stat-icon" style="background:#fff1f2;">🫂</div>
             <div>
-              <div id="statTotal" style="font-size:24px;font-weight:800;color:var(--red);line-height:1;">—</div>
+              <div id="sTotal" style="font-size:24px;font-weight:800;color:var(--red);line-height:1.1;">—</div>
               <div style="font-size:11.5px;color:var(--faint);font-weight:600;margin-top:2px;">মোট ডোনার</div>
             </div>
           </div>
           <div class="card stat-card" style="border-left:4px solid #22c55e;">
             <div class="stat-icon" style="background:#f0fdf4;">✅</div>
             <div>
-              <div id="statEligible" style="font-size:24px;font-weight:800;color:#16a34a;line-height:1;">—</div>
+              <div id="sEligible" style="font-size:24px;font-weight:800;color:#16a34a;line-height:1.1;">—</div>
               <div style="font-size:11.5px;color:var(--faint);font-weight:600;margin-top:2px;">দান উপযুক্ত</div>
             </div>
           </div>
           <div class="card stat-card" style="border-left:4px solid #f97316;">
             <div class="stat-icon" style="background:#fff7ed;">🩸</div>
             <div>
-              <div id="statOPlus" style="font-size:24px;font-weight:800;color:#ea580c;line-height:1;">—</div>
+              <div id="sOPlus" style="font-size:24px;font-weight:800;color:#ea580c;line-height:1.1;">—</div>
               <div style="font-size:11.5px;color:var(--faint);font-weight:600;margin-top:2px;">O+ গ্রুপ</div>
             </div>
           </div>
           <div class="card stat-card" style="border-left:4px solid #3b82f6;">
             <div class="stat-icon" style="background:#eff6ff;">📅</div>
             <div>
-              <div id="statToday" style="font-size:24px;font-weight:800;color:#2563eb;line-height:1;">—</div>
+              <div id="sToday" style="font-size:24px;font-weight:800;color:#2563eb;line-height:1.1;">—</div>
               <div style="font-size:11.5px;color:var(--faint);font-weight:600;margin-top:2px;">আজকের রেজি.</div>
             </div>
           </div>
@@ -501,12 +673,12 @@ body.dark .hamburger:hover{background:rgba(230,57,70,.15);}
 
         <!-- Toolbar -->
         <div class="card toolbar">
-          <select id="filterBlood" class="inp" style="width:auto;min-width:115px;">
+          <select id="fBlood" class="finp" style="width:auto;min-width:110px;">
             <option value="">🩸 সব গ্রুপ</option>
             <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
             <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
           </select>
-          <select id="filterArea" class="inp" style="width:auto;min-width:150px;">
+          <select id="fArea" class="finp" style="width:auto;min-width:150px;">
             <option value="">📍 সব এলাকা</option>
             <option value="sadar">কক্সবাজার সদর</option>
             <option value="teknaf">টেকনাফ</option>
@@ -517,17 +689,17 @@ body.dark .hamburger:hover{background:rgba(230,57,70,.15);}
             <option value="moheshkhali">মহেশখালী</option>
             <option value="kutubdia">কুতুবদিয়া</option>
           </select>
-          <button onclick="loadDonors(1)" class="btn btn-red">🔍 ফিল্টার</button>
-          <button onclick="loadDonors(currentPage)" class="btn btn-outline">↻ রিফ্রেশ</button>
-          <div class="toolbar-spacer"></div>
-          <span id="donorTotalBadge" class="badge badge-blood" style="padding:5px 12px;">লোড হচ্ছে...</span>
+          <button onclick="loadDonors(1)" class="btn btn-primary">🔍 ফিল্টার</button>
+          <button onclick="loadDonors(curPage)" class="btn btn-outline">↻ রিফ্রেশ</button>
+          <div class="toolbar-gap"></div>
+          <span id="dBadge" class="badge b-red" style="padding:5px 12px;">লোড হচ্ছে...</span>
           <button onclick="exportCSV()" class="btn btn-green">📥 CSV</button>
-          <button onclick="openDonorModal()" class="btn btn-red">+ নতুন ডোনার</button>
+          <button onclick="openDonorModal()" class="btn btn-primary">+ নতুন ডোনার</button>
         </div>
 
         <!-- Table -->
-        <div class="card" style="overflow:hidden;">
-          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <div class="card">
+          <div class="tbl-wrap">
             <table class="tbl">
               <thead>
                 <tr>
@@ -535,117 +707,117 @@ body.dark .hamburger:hover{background:rgba(230,57,70,.15);}
                   <th>ফোন</th><th>শেষ দান</th><th>উপযুক্ততা</th><th>Action</th>
                 </tr>
               </thead>
-              <tbody id="donorTableBody">
-                <tr><td colspan="8" style="padding:48px;text-align:center;"><div class="spinner"></div></td></tr>
+              <tbody id="donorTbody">
+                <tr><td colspan="8" style="padding:48px;text-align:center;"><div class="spin"></div></td></tr>
               </tbody>
             </table>
           </div>
-          <div class="page-footer">
-            <span id="donorPageInfo" style="font-size:12px;color:var(--faint);font-weight:600;">—</span>
-            <div id="donorPageBtns"></div>
+          <div class="pg-wrap">
+            <span id="pgInfo" style="font-size:12px;color:var(--faint);font-weight:600;">—</span>
+            <div class="pg-btns" id="pgBtns"></div>
           </div>
         </div>
       </div>
 
       <!-- ══ NOTICES TAB ══ -->
       <div id="tab-notices" class="tab-panel">
-        <div class="card" style="padding:18px 22px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div class="card" style="padding:18px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
           <div>
-            <h3 style="font-weight:800;font-size:15px;color:var(--text);">📢 নোটিশ তালিকা</h3>
-            <p style="font-size:12px;color:var(--faint);margin-top:3px;">সাইটের homepage-এ দেখানো নোটিশ ম্যানেজ করুন</p>
+            <div style="font-size:15px;font-weight:800;">📢 নোটিশ তালিকা</div>
+            <div style="font-size:12px;color:var(--faint);margin-top:2px;">সাইটের homepage-এ প্রকাশিত নোটিশ ম্যানেজ করুন</div>
           </div>
-          <button onclick="openNoticeModal()" class="btn btn-red">+ নতুন নোটিশ</button>
+          <button onclick="openNoticeModal()" class="btn btn-primary">+ নতুন নোটিশ</button>
         </div>
-        <div id="noticesContainer">
-          <div style="padding:48px;text-align:center;"><div class="spinner"></div></div>
+        <div id="noticesCon">
+          <div style="padding:48px;text-align:center;"><div class="spin"></div></div>
         </div>
       </div>
 
       <!-- ══ USERS TAB ══ -->
       <div id="tab-users" class="tab-panel">
-        <div class="card" style="padding:18px 22px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div class="card" style="padding:18px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
           <div>
-            <h3 style="font-weight:800;font-size:15px;color:var(--text);">👥 ইউজার তালিকা</h3>
-            <p style="font-size:12px;color:var(--faint);margin-top:3px;">Admin role-এর user-রাই শুধু dashboard access পাবে</p>
+            <div style="font-size:15px;font-weight:800;">👥 ইউজার তালিকা</div>
+            <div style="font-size:12px;color:var(--faint);margin-top:2px;">Admin role-এর ইউজাররাই শুধু dashboard access পাবে</div>
           </div>
-          <button onclick="openUserModal()" class="btn btn-red">+ নতুন User</button>
+          <button onclick="openUserModal()" class="btn btn-primary">+ নতুন User</button>
         </div>
-        <div class="card" style="overflow:hidden;">
-          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <div class="card">
+          <div class="tbl-wrap">
             <table class="tbl">
               <thead>
                 <tr><th>#</th><th>Username</th><th>নাম</th><th>Role</th><th>যোগ দিয়েছেন</th><th>Action</th></tr>
               </thead>
-              <tbody id="usersTableBody">
-                <tr><td colspan="6" style="padding:48px;text-align:center;"><div class="spinner"></div></td></tr>
+              <tbody id="userTbody">
+                <tr><td colspan="6" style="padding:48px;text-align:center;"><div class="spin"></div></td></tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
 
-    </main>
-  </div>
-</div>
+    </div><!-- end page-content -->
+  </div><!-- end main-area -->
+</div><!-- end dashboard -->
 
-<!-- ═══════════════════════════════════
+<!-- ════════════════════════════════
      MODALS
-═══════════════════════════════════ -->
+════════════════════════════════ -->
 
 <!-- Donor Modal -->
-<div id="donorModal" class="modal-wrap">
+<div id="donorModal" class="modal-bg">
   <div class="modal-box">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;">
       <div>
-        <h3 id="donorModalTitle" style="font-size:17px;font-weight:800;color:var(--text);">নতুন ডোনার</h3>
-        <p style="font-size:11.5px;color:var(--faint);margin-top:2px;">* চিহ্নিত ঘর পূরণ করুন</p>
+        <div id="donorModalTitle" style="font-size:17px;font-weight:800;">নতুন ডোনার</div>
+        <div style="font-size:12px;color:var(--faint);margin-top:2px;">* চিহ্নিত ঘর পূরণ করুন</div>
       </div>
-      <button onclick="closeModal('donorModal')" style="width:30px;height:30px;border-radius:50%;background:#f3f4f6;border:none;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">✕</button>
+      <button onclick="closeModal('donorModal')" style="width:30px;height:30px;border-radius:50%;background:#f3f4f6;border:none;cursor:pointer;font-size:16px;flex-shrink:0;transition:background 0.12s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#f3f4f6'">✕</button>
     </div>
     <form id="donorForm">
       <input type="hidden" id="donorId">
-      <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div style="grid-column:1/-1;">
-          <label class="lbl">পূর্ণ নাম *</label>
-          <input id="dName" type="text" class="inp" placeholder="ডোনারের পূর্ণ নাম" required>
+      <div class="grid-2">
+        <div class="fld col-span-2">
+          <label class="flbl">পূর্ণ নাম *</label>
+          <input id="dName" type="text" class="finp" placeholder="ডোনারের পূর্ণ নাম" required>
         </div>
-        <div>
-          <label class="lbl">রক্তের গ্রুপ *</label>
-          <select id="dBlood" class="inp" required>
+        <div class="fld">
+          <label class="flbl">রক্তের গ্রুপ *</label>
+          <select id="dBlood" class="finp" required>
             <option value="">নির্বাচন করুন</option>
             <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
             <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
           </select>
         </div>
-        <div>
-          <label class="lbl">এলাকা</label>
-          <select id="dArea" class="inp">
+        <div class="fld">
+          <label class="flbl">এলাকা</label>
+          <select id="dArea" class="finp">
             <option value="sadar">কক্সবাজার সদর</option><option value="teknaf">টেকনাফ</option>
             <option value="ukhia">উখিয়া</option><option value="ramu">রামু</option>
             <option value="chakaria">চকরিয়া</option><option value="pekua">পেকুয়া</option>
             <option value="moheshkhali">মহেশখালী</option><option value="kutubdia">কুতুবদিয়া</option>
           </select>
         </div>
-        <div>
-          <label class="lbl">ফোন নম্বর *</label>
-          <input id="dPhone" type="tel" class="inp" placeholder="01XXXXXXXXX" required>
+        <div class="fld">
+          <label class="flbl">ফোন নম্বর *</label>
+          <input id="dPhone" type="tel" class="finp" placeholder="01XXXXXXXXX" required>
         </div>
-        <div>
-          <label class="lbl">শেষ রক্তদান</label>
-          <input id="dLastDonation" type="date" class="inp">
+        <div class="fld">
+          <label class="flbl">শেষ রক্তদান</label>
+          <input id="dLastDon" type="date" class="finp">
         </div>
-        <div style="grid-column:1/-1;">
-          <label class="lbl">বর্তমান ঠিকানা</label>
-          <input id="dCurrentAddr" type="text" class="inp" placeholder="বর্তমান ঠিকানা লিখুন">
+        <div class="fld col-span-2">
+          <label class="flbl">বর্তমান ঠিকানা</label>
+          <input id="dAddr" type="text" class="finp" placeholder="বর্তমান ঠিকানা লিখুন">
         </div>
-        <div style="grid-column:1/-1;">
-          <label class="lbl">শারীরিক সমস্যা</label>
-          <textarea id="dHealth" class="inp" rows="2" placeholder="না থাকলে খালি রাখুন" style="resize:none;"></textarea>
+        <div class="fld col-span-2">
+          <label class="flbl">শারীরিক সমস্যা</label>
+          <textarea id="dHealth" class="finp" rows="2" placeholder="না থাকলে খালি রাখুন" style="resize:none;"></textarea>
         </div>
       </div>
-      <div id="donorFormError" class="hidden" style="background:#fff1f2;border:1px solid #fecdd3;color:var(--red);padding:10px 14px;border-radius:8px;font-size:12px;font-weight:600;margin-top:12px;"></div>
-      <div style="display:flex;gap:10px;margin-top:18px;">
-        <button type="submit" class="btn btn-red" style="flex:1;padding:11px;">💾 সেভ করুন</button>
+      <div id="donorErr" style="display:none;background:#fff1f2;border:1px solid #fecdd3;color:var(--red);padding:9px 13px;border-radius:8px;font-size:12.5px;font-weight:600;margin-top:12px;"></div>
+      <div style="display:flex;gap:9px;margin-top:18px;">
+        <button type="submit" class="btn btn-primary" style="flex:1;padding:11px;">💾 সেভ করুন</button>
         <button type="button" onclick="closeModal('donorModal')" class="btn btn-ghost" style="flex:1;padding:11px;">বাতিল</button>
       </div>
     </form>
@@ -653,48 +825,48 @@ body.dark .hamburger:hover{background:rgba(230,57,70,.15);}
 </div>
 
 <!-- Notice Modal -->
-<div id="noticeModal" class="modal-wrap">
+<div id="noticeModal" class="modal-bg">
   <div class="modal-box">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;">
       <div>
-        <h3 id="noticeModalTitle" style="font-size:17px;font-weight:800;color:var(--text);">নতুন নোটিশ</h3>
-        <p style="font-size:11.5px;color:var(--faint);margin-top:2px;">সাইটে প্রকাশিত হবে</p>
+        <div id="noticeModalTitle" style="font-size:17px;font-weight:800;">নতুন নোটিশ</div>
+        <div style="font-size:12px;color:var(--faint);margin-top:2px;">সাইটে প্রকাশিত হবে</div>
       </div>
-      <button onclick="closeModal('noticeModal')" style="width:30px;height:30px;border-radius:50%;background:#f3f4f6;border:none;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">✕</button>
+      <button onclick="closeModal('noticeModal')" style="width:30px;height:30px;border-radius:50%;background:#f3f4f6;border:none;cursor:pointer;font-size:16px;flex-shrink:0;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#f3f4f6'">✕</button>
     </div>
     <form id="noticeForm">
       <input type="hidden" id="noticeId">
       <div style="display:flex;flex-direction:column;gap:12px;">
-        <div>
-          <label class="lbl">শিরোনাম *</label>
-          <input id="nTitle" type="text" class="inp" placeholder="নোটিশের শিরোনাম" required>
+        <div class="fld">
+          <label class="flbl">শিরোনাম *</label>
+          <input id="nTitle" type="text" class="finp" placeholder="নোটিশের শিরোনাম" required>
         </div>
-        <div>
-          <label class="lbl">বার্তা *</label>
-          <textarea id="nMessage" class="inp" rows="3" placeholder="বিস্তারিত বার্তা" required style="resize:none;"></textarea>
+        <div class="fld">
+          <label class="flbl">বার্তা *</label>
+          <textarea id="nMsg" class="finp" rows="3" placeholder="বিস্তারিত বার্তা" required style="resize:none;"></textarea>
         </div>
-        <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div>
-            <label class="lbl">ধরন</label>
-            <select id="nType" class="inp">
+        <div class="grid-2">
+          <div class="fld">
+            <label class="flbl">ধরন</label>
+            <select id="nType" class="finp">
               <option value="info">ℹ️ তথ্য (নীল)</option>
               <option value="warning">⚠️ সতর্কতা (হলুদ)</option>
               <option value="danger">🚨 জরুরি (লাল)</option>
               <option value="success">✅ সফল (সবুজ)</option>
             </select>
           </div>
-          <div>
-            <label class="lbl">অবস্থা</label>
-            <select id="nActive" class="inp">
+          <div class="fld">
+            <label class="flbl">অবস্থা</label>
+            <select id="nActive" class="finp">
               <option value="true">✅ সক্রিয়</option>
               <option value="false">❌ নিষ্ক্রিয়</option>
             </select>
           </div>
         </div>
       </div>
-      <div id="noticeFormError" class="hidden" style="background:#fff1f2;border:1px solid #fecdd3;color:var(--red);padding:10px 14px;border-radius:8px;font-size:12px;font-weight:600;margin-top:12px;"></div>
-      <div style="display:flex;gap:10px;margin-top:18px;">
-        <button type="submit" class="btn btn-red" style="flex:1;padding:11px;">💾 সেভ করুন</button>
+      <div id="noticeErr" style="display:none;background:#fff1f2;border:1px solid #fecdd3;color:var(--red);padding:9px 13px;border-radius:8px;font-size:12.5px;font-weight:600;margin-top:12px;"></div>
+      <div style="display:flex;gap:9px;margin-top:18px;">
+        <button type="submit" class="btn btn-primary" style="flex:1;padding:11px;">💾 সেভ করুন</button>
         <button type="button" onclick="closeModal('noticeModal')" class="btn btn-ghost" style="flex:1;padding:11px;">বাতিল</button>
       </div>
     </form>
@@ -702,41 +874,41 @@ body.dark .hamburger:hover{background:rgba(230,57,70,.15);}
 </div>
 
 <!-- User Modal -->
-<div id="userModal" class="modal-wrap">
+<div id="userModal" class="modal-bg">
   <div class="modal-box">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;">
       <div>
-        <h3 id="userModalTitle" style="font-size:17px;font-weight:800;color:var(--text);">নতুন User</h3>
-        <p style="font-size:11.5px;color:var(--faint);margin-top:2px;">নতুন অ্যাকাউন্ট তৈরি করুন</p>
+        <div id="userModalTitle" style="font-size:17px;font-weight:800;">নতুন User</div>
+        <div style="font-size:12px;color:var(--faint);margin-top:2px;">নতুন অ্যাকাউন্ট তৈরি করুন</div>
       </div>
-      <button onclick="closeModal('userModal')" style="width:30px;height:30px;border-radius:50%;background:#f3f4f6;border:none;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">✕</button>
+      <button onclick="closeModal('userModal')" style="width:30px;height:30px;border-radius:50%;background:#f3f4f6;border:none;cursor:pointer;font-size:16px;flex-shrink:0;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#f3f4f6'">✕</button>
     </div>
     <form id="userForm">
       <input type="hidden" id="userId">
-      <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div>
-          <label class="lbl">Username *</label>
-          <input id="uUsername" type="text" class="inp" placeholder="username" autocomplete="off">
+      <div class="grid-2">
+        <div class="fld">
+          <label class="flbl">Username *</label>
+          <input id="uUser" type="text" class="finp" placeholder="username" autocomplete="off">
         </div>
-        <div>
-          <label class="lbl">পূর্ণ নাম</label>
-          <input id="uName" type="text" class="inp" placeholder="নাম লিখুন">
+        <div class="fld">
+          <label class="flbl">পূর্ণ নাম</label>
+          <input id="uName" type="text" class="finp" placeholder="নাম লিখুন">
         </div>
-        <div>
-          <label class="lbl" id="uPassLabel">Password *</label>
-          <input id="uPassword" type="password" class="inp" placeholder="••••••••" autocomplete="new-password">
+        <div class="fld">
+          <label class="flbl" id="uPassLbl">Password *</label>
+          <input id="uPass" type="password" class="finp" placeholder="••••••••" autocomplete="new-password">
         </div>
-        <div>
-          <label class="lbl">Role</label>
-          <select id="uRole" class="inp">
+        <div class="fld">
+          <label class="flbl">Role</label>
+          <select id="uRole" class="finp">
             <option value="admin">👑 Admin</option>
             <option value="user">👤 User</option>
           </select>
         </div>
       </div>
-      <div id="userFormError" class="hidden" style="background:#fff1f2;border:1px solid #fecdd3;color:var(--red);padding:10px 14px;border-radius:8px;font-size:12px;font-weight:600;margin-top:12px;"></div>
-      <div style="display:flex;gap:10px;margin-top:18px;">
-        <button type="submit" class="btn btn-red" style="flex:1;padding:11px;">💾 সেভ করুন</button>
+      <div id="userErr" style="display:none;background:#fff1f2;border:1px solid #fecdd3;color:var(--red);padding:9px 13px;border-radius:8px;font-size:12.5px;font-weight:600;margin-top:12px;"></div>
+      <div style="display:flex;gap:9px;margin-top:18px;">
+        <button type="submit" class="btn btn-primary" style="flex:1;padding:11px;">💾 সেভ করুন</button>
         <button type="button" onclick="closeModal('userModal')" class="btn btn-ghost" style="flex:1;padding:11px;">বাতিল</button>
       </div>
     </form>
@@ -744,356 +916,430 @@ body.dark .hamburger:hover{background:rgba(230,57,70,.15);}
 </div>
 
 <!-- Toast -->
-<div id="toastBox"></div>
+<div id="toastWrap"></div>
 
-<!-- ═══════════════════════════════════
-     JAVASCRIPT
-═══════════════════════════════════ -->
+<!-- ════════════════════════════════
+     SCRIPT
+════════════════════════════════ -->
 <script>
+'use strict';
 const API = '/api';
-let token = null, currentPage = 1, allDonors = [], isDark = false;
-const areaMap = {sadar:'কক্সবাজার সদর',teknaf:'টেকনাফ',ukhia:'উখিয়া',ramu:'রামু',chakaria:'চকরিয়া',pekua:'পেকুয়া',moheshkhali:'মহেশখালী',kutubdia:'কুতুবদিয়া'};
-const $ = id => document.getElementById(id);
-const isEligible = d => d && (Date.now()-new Date(d).getTime())/86400000>=120;
+let token = null, curPage = 1, allDonors = [], darkMode = false;
+
+const areaMap = {
+  sadar:'কক্সবাজার সদর', teknaf:'টেকনাফ', ukhia:'উখিয়া', ramu:'রামু',
+  chakaria:'চকরিয়া', pekua:'পেকুয়া', moheshkhali:'মহেশখালী', kutubdia:'কুতুবদিয়া'
+};
+
+const G = id => document.getElementById(id);
+const isEligible = d => d && (Date.now() - new Date(d).getTime()) / 86400000 >= 120;
 const fmtDate = s => s ? new Date(s).toLocaleDateString('bn-BD',{year:'numeric',month:'short',day:'numeric'}) : '—';
 
 /* ── Toast ── */
-function toast(msg, type='success'){
-  const colors={success:'#16a34a',error:'#e63946',info:'#2563eb'};
-  const el=document.createElement('div');
-  el.style.cssText=`pointer-events:auto;padding:11px 16px;border-radius:10px;background:${colors[type]||colors.info};color:#fff;font-size:13px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.2);animation:fadeUp .2s ease;`;
-  el.textContent=msg;
-  $('toastBox').appendChild(el);
-  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),300);},3000);
+function toast(msg, type='success') {
+  const colors = { success:'#16a34a', error:'#e63946', info:'#2563eb' };
+  const el = document.createElement('div');
+  el.className = 'toast-item';
+  el.style.background = colors[type] || colors.info;
+  el.textContent = msg;
+  G('toastWrap').appendChild(el);
+  setTimeout(() => {
+    el.style.transition = 'opacity 0.3s';
+    el.style.opacity = '0';
+    setTimeout(() => el.remove(), 300);
+  }, 3000);
 }
 
-/* ── Modals ── */
-function closeModal(id){$(id).classList.remove('open');}
-function openModal(id){$(id).classList.add('open');}
+/* ── Modal ── */
+function openModal(id)  { G(id).classList.add('open'); }
+function closeModal(id) { G(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(m =>
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); })
+);
 
 /* ── Dark mode ── */
-function toggleDark(){
-  isDark=!isDark;
-  document.body.classList.toggle('dark',isDark);
-  $('darkBtn').textContent=isDark?'☀️':'🌙';
-  localStorage.setItem('chDark',isDark);
+function toggleDark() {
+  darkMode = !darkMode;
+  const r = document.documentElement.style;
+  if (darkMode) {
+    r.setProperty('--bg', '#0d1117');
+    r.setProperty('--white', '#161b22');
+    r.setProperty('--border', '#30363d');
+    r.setProperty('--text', '#e6edf3');
+    r.setProperty('--sub', '#8b949e');
+    r.setProperty('--faint', '#6e7681');
+    G('darkBtn').textContent = '☀️';
+  } else {
+    r.setProperty('--bg', '#f1f3f8');
+    r.setProperty('--white', '#ffffff');
+    r.setProperty('--border', '#e5e7eb');
+    r.setProperty('--text', '#1a202c');
+    r.setProperty('--sub', '#6b7280');
+    r.setProperty('--faint', '#9ca3af');
+    G('darkBtn').textContent = '🌙';
+  }
+  localStorage.setItem('chDark', darkMode);
 }
-(function(){if(localStorage.getItem('chDark')==='true')toggleDark();})();
+if (localStorage.getItem('chDark') === 'true') toggleDark();
 
 /* ── Sidebar ── */
-function toggleSidebar(){
-  $('sidebar').classList.toggle('open');
-  $('sidebarOverlay').classList.toggle('open');
+function toggleSidebar() {
+  G('sidebar').classList.toggle('open');
+  G('sideOverlay').classList.toggle('show');
 }
-function closeSidebar(){
-  $('sidebar').classList.remove('open');
-  $('sidebarOverlay').classList.remove('open');
+function closeSidebar() {
+  G('sidebar').classList.remove('open');
+  G('sideOverlay').classList.remove('show');
 }
 
-/* ── Tab switching ── */
-function switchTab(tab){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const panel=$('tab-'+tab);
-  if(panel) panel.classList.add('active');
-  const nav=$('nav-'+tab);
-  if(nav) nav.classList.add('active');
-  const titles={
-    donors: {title:'ডোনার ম্যানেজমেন্ট',sub:'রক্তদাতাদের তথ্য পরিচালনা করুন'},
-    notices:{title:'নোটিশ ম্যানেজমেন্ট',sub:'সাইটের নোটিশ তৈরি ও পরিচালনা করুন'},
-    users:  {title:'ইউজার ম্যানেজমেন্ট',sub:'Admin ও User অ্যাকাউন্ট পরিচালনা করুন'},
+/* ── Tab switch ── */
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.snav-item').forEach(n => n.classList.remove('active'));
+  G('tab-' + tab)?.classList.add('active');
+  G('nav-' + tab)?.classList.add('active');
+  const meta = {
+    donors:  ['ডোনার ম্যানেজমেন্ট',  'রক্তদাতাদের তথ্য পরিচালনা করুন'],
+    notices: ['নোটিশ ম্যানেজমেন্ট',  'সাইটের নোটিশ তৈরি ও পরিচালনা করুন'],
+    users:   ['ইউজার ম্যানেজমেন্ট',   'Admin ও User অ্যাকাউন্ট পরিচালনা করুন'],
   };
-  if(titles[tab]){$('pageTitle').textContent=titles[tab].title;$('pageSubtitle').textContent=titles[tab].sub;}
-  if(tab==='donors')  loadDonors(1);
-  if(tab==='notices') loadNotices();
-  if(tab==='users')   loadUsers();
-  if(window.innerWidth<=768) closeSidebar();
+  if (meta[tab]) {
+    G('pageTitle').textContent = meta[tab][0];
+    G('pageSub').textContent   = meta[tab][1];
+  }
+  if (tab === 'donors')  loadDonors(1);
+  if (tab === 'notices') loadNotices();
+  if (tab === 'users')   loadUsers();
+  if (window.innerWidth <= 768) closeSidebar();
 }
 
 /* ── Auth ── */
-window.addEventListener('DOMContentLoaded',()=>{
-  const saved=sessionStorage.getItem('chblood_token');
-  if(saved){token=saved;showDashboard();loadDonors(1);}
+window.addEventListener('DOMContentLoaded', () => {
+  const t = sessionStorage.getItem('chblood_token');
+  if (t) { token = t; showDash(); loadDonors(1); }
 });
 
-$('loginForm').addEventListener('submit',async e=>{
+G('loginForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const btn=$('loginBtn'),errEl=$('loginError');
-  btn.disabled=true;$('loginBtnTxt').textContent='যাচাই হচ্ছে...';errEl.classList.add('hidden');
-  try{
-    const r=await fetch(`${API}/login`,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({username:$('loginUser').value.trim(),password:$('loginPass').value})});
-    const d=await r.json();
-    if(!d.success) throw new Error(d.message);
-    token=d.token;sessionStorage.setItem('chblood_token',token);
-    if(d.user){const n=d.user.name||d.user.username;$('sidebarUsername').textContent=n;$('sidebarAvatar').textContent=n.charAt(0).toUpperCase();}
-    showDashboard();loadDonors(1);
-  }catch(err){errEl.textContent='❌ '+err.message;errEl.classList.remove('hidden');}
-  finally{btn.disabled=false;$('loginBtnTxt').textContent='লগইন করুন 🔐';}
+  const btn = G('lBtn'), err = G('loginErr');
+  btn.disabled = true;
+  G('lBtnTxt').textContent = 'যাচাই হচ্ছে...';
+  err.style.display = 'none';
+  try {
+    const r = await fetch(`${API}/login`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ username: G('lUser').value.trim(), password: G('lPass').value })
+    });
+    const d = await r.json();
+    if (!d.success) throw new Error(d.message);
+    token = d.token;
+    sessionStorage.setItem('chblood_token', token);
+    if (d.user) {
+      const name = d.user.name || d.user.username;
+      G('sUsername').textContent = name;
+      G('sAvatar').textContent = name.charAt(0).toUpperCase();
+    }
+    showDash();
+    loadDonors(1);
+  } catch(ex) {
+    err.textContent = '❌ ' + ex.message;
+    err.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    G('lBtnTxt').textContent = 'লগইন করুন 🔐';
+  }
 });
 
-function showDashboard(){
-  $('loginPage').style.display='none';
-  $('dashboard').style.display='flex';
-  $('dashboard').style.minHeight='100vh';
+function showDash() {
+  G('loginPage').style.display = 'none';
+  const db = G('dashboard');
+  db.style.display = 'flex';
+  db.classList.add('visible');
 }
-function doLogout(){
+function doLogout() {
   sessionStorage.removeItem('chblood_token');
-  token=null;
-  $('dashboard').style.display='none';
-  $('loginPage').style.display='';
+  token = null;
+  G('dashboard').style.display = 'none';
+  G('dashboard').classList.remove('visible');
+  G('loginPage').style.display = '';
 }
 
-async function apiFetch(path,opts={}){
-  const res=await fetch(`${API}${path}`,{...opts,headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json',...(opts.headers||{})}});
-  if(res.status===401){doLogout();throw new Error('Session expired');}
+async function apiFetch(path, opts = {}) {
+  const res = await fetch(`${API}${path}`, {
+    ...opts,
+    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', ...(opts.headers||{}) }
+  });
+  if (res.status === 401) { doLogout(); throw new Error('Session expired'); }
   return res.json();
 }
 
-/* ════════════════
+/* ══════════════════
    DONORS
-════════════════ */
-async function loadDonors(page=1){
-  currentPage=page;
-  const blood=$('filterBlood').value,area=$('filterArea').value;
-  $('donorTableBody').innerHTML=`<tr><td colspan="8" style="padding:48px;text-align:center;"><div class="spinner"></div></td></tr>`;
-  try{
-    const p=new URLSearchParams({col:'donors',page,limit:50});
-    if(blood) p.set('blood',blood);
-    if(area)  p.set('area',area);
-    const d=await apiFetch(`/admin?${p}`);
-    if(!d.success) throw new Error(d.message);
-    allDonors=d.donors;
+══════════════════ */
+async function loadDonors(page = 1) {
+  curPage = page;
+  const blood = G('fBlood').value, area = G('fArea').value;
+  G('donorTbody').innerHTML = `<tr><td colspan="8" style="padding:48px;text-align:center;"><div class="spin"></div></td></tr>`;
+  try {
+    const p = new URLSearchParams({ col:'donors', page, limit:50 });
+    if (blood) p.set('blood', blood);
+    if (area)  p.set('area', area);
+    const d = await apiFetch(`/admin?${p}`);
+    if (!d.success) throw new Error(d.message);
+    allDonors = d.donors;
     renderDonors(d.donors);
-    renderPagination(d.page,d.totalPages,d.total);
-    $('donorTotalBadge').textContent=`মোট: ${d.total} জন`;
-    $('statTotal').textContent=$('bannerTotal').textContent=d.total;
-    const el=d.donors.filter(x=>isEligible(x.lastDonation)).length;
-    $('statEligible').textContent=$('bannerEligible').textContent=el;
-    $('statOPlus').textContent=d.donors.filter(x=>x.blood==='O+').length;
-    const tod=new Date().toDateString();
-    const tc=d.donors.filter(x=>x.createdAt&&new Date(x.createdAt).toDateString()===tod).length;
-    $('statToday').textContent=$('bannerToday').textContent=tc;
-  }catch(err){
-    $('donorTableBody').innerHTML=`<tr><td colspan="8" style="padding:40px;text-align:center;color:#e63946;font-size:13px;">⚠️ ${err.message}</td></tr>`;
+    renderPg(d.page, d.totalPages, d.total);
+    G('dBadge').textContent = `মোট: ${d.total} জন`;
+    G('sTotal').textContent = G('bTotal').textContent = d.total;
+    const el = d.donors.filter(x => isEligible(x.lastDonation)).length;
+    G('sEligible').textContent = G('bEligible').textContent = el;
+    G('sOPlus').textContent = d.donors.filter(x => x.blood === 'O+').length;
+    const tod = new Date().toDateString();
+    const tc = d.donors.filter(x => x.createdAt && new Date(x.createdAt).toDateString() === tod).length;
+    G('sToday').textContent = G('bToday').textContent = tc;
+  } catch(ex) {
+    G('donorTbody').innerHTML = `<tr><td colspan="8" style="padding:40px;text-align:center;color:var(--red);font-size:13px;">⚠️ ${ex.message}</td></tr>`;
   }
 }
 
-function renderDonors(donors){
-  if(!donors.length){$('donorTableBody').innerHTML=`<tr><td colspan="8" style="padding:40px;text-align:center;color:var(--faint);font-size:13px;">কোনো ডোনার পাওয়া যায়নি।</td></tr>`;return;}
-  const off=(currentPage-1)*50;
-  $('donorTableBody').innerHTML=donors.map((d,i)=>`
-  <tr class="tbl-row">
+function renderDonors(donors) {
+  if (!donors.length) {
+    G('donorTbody').innerHTML = `<tr><td colspan="8" style="padding:40px;text-align:center;color:var(--faint);font-size:13px;">কোনো ডোনার পাওয়া যায়নি।</td></tr>`;
+    return;
+  }
+  const off = (curPage - 1) * 50;
+  G('donorTbody').innerHTML = donors.map((d, i) => `
+  <tr>
     <td style="color:var(--faint);font-size:12px;">${off+i+1}</td>
     <td style="font-weight:700;">${d.name||'—'}</td>
-    <td><span class="badge badge-blood">${d.blood||'—'}</span></td>
-    <td style="color:var(--muted);font-size:12.5px;">${areaMap[d.area]||d.area||'—'}</td>
+    <td><span class="badge b-red">${d.blood||'—'}</span></td>
+    <td style="color:var(--sub);font-size:12.5px;">${areaMap[d.area]||d.area||'—'}</td>
     <td style="font-family:monospace;font-size:12.5px;">${d.phone||'—'}</td>
-    <td style="color:var(--muted);font-size:12px;">${fmtDate(d.lastDonation)}</td>
-    <td><span class="badge ${isEligible(d.lastDonation)?'badge-green':'badge-yellow'}">${isEligible(d.lastDonation)?'✅ উপযুক্ত':'⏳ অপেক্ষমান'}</span></td>
+    <td style="color:var(--sub);font-size:12px;">${fmtDate(d.lastDonation)}</td>
+    <td><span class="badge ${isEligible(d.lastDonation)?'b-green':'b-yellow'}">${isEligible(d.lastDonation)?'✅ উপযুক্ত':'⏳ অপেক্ষমান'}</span></td>
     <td>
       <div style="display:flex;gap:5px;flex-wrap:wrap;">
-        <button class="action-btn action-edit" onclick='editDonor(${JSON.stringify(d)})'>✏️ এডিট</button>
-        <button class="action-btn action-del" onclick="deleteDonor('${d._id}')">🗑 মুছুন</button>
+        <button class="act-btn act-edit" onclick='editDonor(${JSON.stringify(d)})'>✏️ এডিট</button>
+        <button class="act-btn act-del" onclick="deleteDonor('${d._id}')">🗑</button>
       </div>
     </td>
   </tr>`).join('');
 }
 
-function renderPagination(page,totalPages,total){
-  $('donorPageInfo').textContent=`পেজ ${page}/${totalPages} • মোট ${total} জন`;
-  const btns=$('donorPageBtns');btns.innerHTML='';
-  const mk=(label,pg,active=false,disabled=false)=>{
-    const b=document.createElement('button');
-    b.textContent=label;b.disabled=disabled;
-    b.style.cssText=`padding:5px 10px;border-radius:7px;font-size:12px;font-weight:700;cursor:${disabled?'not-allowed':'pointer'};border:1.5px solid ${active?'#e63946':'#e5e7eb'};background:${active?'#e63946':'var(--surface)'};color:${active?'#fff':'var(--text)'};opacity:${disabled?.4:1};transition:all .12s;`;
-    if(!disabled&&!active){b.onmouseover=()=>{b.style.borderColor='#e63946';b.style.color='#e63946';};b.onmouseout=()=>{b.style.borderColor='#e5e7eb';b.style.color='var(--text)';};}
-    b.onclick=()=>{if(!disabled)loadDonors(pg);};btns.appendChild(b);
+function renderPg(page, total, count) {
+  G('pgInfo').textContent = `পেজ ${page}/${total} • মোট ${count} জন`;
+  const wrap = G('pgBtns');
+  wrap.innerHTML = '';
+  const mk = (lbl, pg, active, dis) => {
+    const b = document.createElement('button');
+    b.className = 'pg-btn' + (active ? ' active' : '');
+    b.textContent = lbl;
+    b.disabled = dis;
+    b.onclick = () => { if (!dis) loadDonors(pg); };
+    wrap.appendChild(b);
   };
-  mk('←',page-1,false,page<=1);
-  const s=Math.max(1,page-2),e=Math.min(totalPages,s+4);
-  for(let p=s;p<=e;p++) mk(p,p,p===page);
-  mk('→',page+1,false,page>=totalPages);
+  mk('←', page-1, false, page <= 1);
+  const s = Math.max(1, page-2), e = Math.min(total, s+4);
+  for (let p = s; p <= e; p++) mk(p, p, p === page, false);
+  mk('→', page+1, false, page >= total);
 }
 
-function openDonorModal(){
-  $('donorModalTitle').textContent='নতুন ডোনার যোগ করুন';
-  ['donorId','dName','dPhone','dLastDonation','dCurrentAddr','dHealth'].forEach(id=>$(id).value='');
-  $('dBlood').value='';$('dArea').value='sadar';
-  $('donorFormError').classList.add('hidden');openModal('donorModal');
+function openDonorModal() {
+  G('donorModalTitle').textContent = 'নতুন ডোনার যোগ করুন';
+  ['donorId','dName','dPhone','dLastDon','dAddr','dHealth'].forEach(id => G(id).value = '');
+  G('dBlood').value = ''; G('dArea').value = 'sadar';
+  G('donorErr').style.display = 'none';
+  openModal('donorModal');
 }
-function editDonor(d){
-  $('donorModalTitle').textContent='ডোনার তথ্য আপডেট করুন';
-  $('donorId').value=d._id;$('dName').value=d.name||'';$('dBlood').value=d.blood||'';
-  $('dArea').value=d.area||'sadar';$('dPhone').value=d.phone||'';
-  $('dLastDonation').value=d.lastDonation?d.lastDonation.split('T')[0]:'';
-  $('dCurrentAddr').value=d.currentAddress||'';$('dHealth').value=d.healthIssues||'';
-  $('donorFormError').classList.add('hidden');openModal('donorModal');
+function editDonor(d) {
+  G('donorModalTitle').textContent = 'ডোনার তথ্য আপডেট করুন';
+  G('donorId').value = d._id; G('dName').value = d.name||'';
+  G('dBlood').value = d.blood||''; G('dArea').value = d.area||'sadar';
+  G('dPhone').value = d.phone||'';
+  G('dLastDon').value = d.lastDonation ? d.lastDonation.split('T')[0] : '';
+  G('dAddr').value = d.currentAddress||''; G('dHealth').value = d.healthIssues||'';
+  G('donorErr').style.display = 'none';
+  openModal('donorModal');
 }
-$('donorForm').addEventListener('submit',async e=>{
+G('donorForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const id=$('donorId').value;
-  const body={name:$('dName').value,blood:$('dBlood').value,area:$('dArea').value,
-    phone:$('dPhone').value,lastDonation:$('dLastDonation').value||null,
-    currentAddress:$('dCurrentAddr').value,healthIssues:$('dHealth').value};
-  try{
-    const d=id?await apiFetch(`/admin?col=donors&id=${id}`,{method:'PUT',body:JSON.stringify(body)})
-              :await apiFetch('/admin?col=donors',{method:'POST',body:JSON.stringify(body)});
-    if(!d.success) throw new Error(d.message);
-    toast(id?'✅ ডোনার আপডেট হয়েছে':'✅ নতুন ডোনার যোগ হয়েছে');
-    closeModal('donorModal');loadDonors(currentPage);
-  }catch(err){$('donorFormError').textContent=err.message;$('donorFormError').classList.remove('hidden');}
+  const id = G('donorId').value;
+  const body = { name:G('dName').value, blood:G('dBlood').value, area:G('dArea').value,
+    phone:G('dPhone').value, lastDonation:G('dLastDon').value||null,
+    currentAddress:G('dAddr').value, healthIssues:G('dHealth').value };
+  try {
+    const d = id
+      ? await apiFetch(`/admin?col=donors&id=${id}`, {method:'PUT',  body:JSON.stringify(body)})
+      : await apiFetch('/admin?col=donors',           {method:'POST', body:JSON.stringify(body)});
+    if (!d.success) throw new Error(d.message);
+    toast(id ? '✅ ডোনার আপডেট হয়েছে' : '✅ নতুন ডোনার যোগ হয়েছে');
+    closeModal('donorModal'); loadDonors(curPage);
+  } catch(ex) { G('donorErr').textContent = ex.message; G('donorErr').style.display = 'block'; }
 });
-async function deleteDonor(id){
-  if(!confirm('এই ডোনারকে মুছে ফেলবেন?')) return;
-  try{
-    const d=await apiFetch(`/admin?col=donors&id=${id}`,{method:'DELETE'});
-    if(!d.success) throw new Error(d.message);
-    toast('ডোনার মুছে ফেলা হয়েছে।');loadDonors(currentPage);
-  }catch(err){toast(err.message,'error');}
+async function deleteDonor(id) {
+  if (!confirm('এই ডোনারকে মুছে ফেলবেন?')) return;
+  try {
+    const d = await apiFetch(`/admin?col=donors&id=${id}`, {method:'DELETE'});
+    if (!d.success) throw new Error(d.message);
+    toast('ডোনার মুছে ফেলা হয়েছে।'); loadDonors(curPage);
+  } catch(ex) { toast(ex.message, 'error'); }
 }
-function exportCSV(){
-  if(!allDonors.length){toast('কোনো ডেটা নেই','error');return;}
-  const h=['#','নাম','রক্তের গ্রুপ','এলাকা','ফোন','শেষ দান','উপযুক্ততা','রেজিস্ট্রেশন'];
-  const rows=allDonors.map((d,i)=>[i+1,d.name,d.blood,areaMap[d.area]||d.area,d.phone,
-    d.lastDonation||'',isEligible(d.lastDonation)?'উপযুক্ত':'অপেক্ষমান',
-    d.createdAt?new Date(d.createdAt).toLocaleDateString('en-GB'):'']);
-  const csv=[h,...rows].map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
-  a.download=`CHBlood_Donors_${new Date().toISOString().split('T')[0]}.csv`;
-  a.click();toast('📥 CSV export সফল');
+function exportCSV() {
+  if (!allDonors.length) { toast('কোনো ডেটা নেই', 'error'); return; }
+  const h = ['#','নাম','রক্তের গ্রুপ','এলাকা','ফোন','শেষ দান','উপযুক্ততা','রেজিস্ট্রেশন'];
+  const rows = allDonors.map((d,i) => [
+    i+1, d.name, d.blood, areaMap[d.area]||d.area, d.phone,
+    d.lastDonation||'', isEligible(d.lastDonation)?'উপযুক্ত':'অপেক্ষমান',
+    d.createdAt ? new Date(d.createdAt).toLocaleDateString('en-GB') : ''
+  ]);
+  const csv = [h,...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'}));
+  a.download = `CHBlood_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  toast('📥 CSV export সফল');
 }
 
-/* ════════════════
+/* ══════════════════
    NOTICES
-════════════════ */
-async function loadNotices(){
-  $('noticesContainer').innerHTML=`<div style="padding:48px;text-align:center;"><div class="spinner"></div></div>`;
-  try{
-    const d=await apiFetch('/admin?col=notices&limit=20');
-    if(!d.success) throw new Error(d.message);
-    if(!d.notices.length){$('noticesContainer').innerHTML=`<div class="card" style="padding:40px;text-align:center;color:var(--faint);font-size:13px;">কোনো নোটিশ নেই।</div>`;return;}
-    const tl={info:'ℹ️ তথ্য',warning:'⚠️ সতর্কতা',danger:'🚨 জরুরি',success:'✅ সফল'};
-    const bc={info:'badge-blue',warning:'badge-yellow',danger:'badge-red',success:'badge-green'};
-    $('noticesContainer').innerHTML=d.notices.map(n=>`
-    <div class="notice-${n.type}" style="border-radius:14px;padding:16px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
-      <div style="flex:1;min-width:200px;">
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
-          <span class="badge ${bc[n.type]||'badge-gray'}">${tl[n.type]||n.type}</span>
-          <span style="font-weight:800;font-size:14px;color:var(--text);">${n.title}</span>
-          ${!n.active?'<span class="badge badge-gray">নিষ্ক্রিয়</span>':''}
+══════════════════ */
+async function loadNotices() {
+  G('noticesCon').innerHTML = `<div style="padding:48px;text-align:center;"><div class="spin"></div></div>`;
+  try {
+    const d = await apiFetch('/admin?col=notices&limit=20');
+    if (!d.success) throw new Error(d.message);
+    if (!d.notices.length) {
+      G('noticesCon').innerHTML = `<div class="card" style="padding:40px;text-align:center;color:var(--faint);font-size:13px;">কোনো নোটিশ নেই।</div>`;
+      return;
+    }
+    const tl = {info:'ℹ️ তথ্য', warning:'⚠️ সতর্কতা', danger:'🚨 জরুরি', success:'✅ সফল'};
+    const bc = {info:'b-blue', warning:'b-yellow', danger:'b-red', success:'b-green'};
+    G('noticesCon').innerHTML = d.notices.map(n => `
+    <div class="ncard ncard-${n.type}">
+      <div style="flex:1;min-width:180px;">
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:5px;">
+          <span class="badge ${bc[n.type]||'b-gray'}">${tl[n.type]||n.type}</span>
+          <span style="font-weight:800;font-size:14px;">${n.title}</span>
+          ${!n.active ? '<span class="badge b-gray">নিষ্ক্রিয়</span>' : ''}
         </div>
-        <p style="font-size:13px;color:var(--muted);margin-bottom:4px;">${n.message}</p>
-        <p style="font-size:11px;color:var(--faint);">${fmtDate(n.createdAt)}</p>
+        <div style="font-size:13px;color:var(--sub);margin-bottom:3px;">${n.message}</div>
+        <div style="font-size:11px;color:var(--faint);">${fmtDate(n.createdAt)}</div>
       </div>
-      <div style="display:flex;gap:6px;flex-shrink:0;">
-        <button class="action-btn action-edit" onclick='editNotice(${JSON.stringify(n)})'>✏️</button>
-        <button class="action-btn action-del" onclick="deleteNotice('${n._id}')">🗑</button>
+      <div style="display:flex;gap:6px;flex-shrink:0;align-self:flex-start;">
+        <button class="act-btn act-edit" onclick='editNotice(${JSON.stringify(n)})'>✏️</button>
+        <button class="act-btn act-del" onclick="deleteNotice('${n._id}')">🗑</button>
       </div>
     </div>`).join('');
-  }catch(err){$('noticesContainer').innerHTML=`<div class="card" style="padding:32px;text-align:center;color:#e63946;font-size:13px;">⚠️ ${err.message}</div>`;}
+  } catch(ex) {
+    G('noticesCon').innerHTML = `<div class="card" style="padding:32px;text-align:center;color:var(--red);font-size:13px;">⚠️ ${ex.message}</div>`;
+  }
 }
-function openNoticeModal(){
-  $('noticeModalTitle').textContent='নতুন নোটিশ যোগ করুন';
-  $('noticeId').value='';$('nTitle').value='';$('nMessage').value='';
-  $('nType').value='info';$('nActive').value='true';
-  $('noticeFormError').classList.add('hidden');openModal('noticeModal');
+function openNoticeModal() {
+  G('noticeModalTitle').textContent = 'নতুন নোটিশ যোগ করুন';
+  G('noticeId').value = ''; G('nTitle').value = ''; G('nMsg').value = '';
+  G('nType').value = 'info'; G('nActive').value = 'true';
+  G('noticeErr').style.display = 'none'; openModal('noticeModal');
 }
-function editNotice(n){
-  $('noticeModalTitle').textContent='নোটিশ আপডেট করুন';
-  $('noticeId').value=n._id;$('nTitle').value=n.title;
-  $('nMessage').value=n.message;$('nType').value=n.type;$('nActive').value=String(n.active);
-  $('noticeFormError').classList.add('hidden');openModal('noticeModal');
+function editNotice(n) {
+  G('noticeModalTitle').textContent = 'নোটিশ আপডেট করুন';
+  G('noticeId').value = n._id; G('nTitle').value = n.title;
+  G('nMsg').value = n.message; G('nType').value = n.type;
+  G('nActive').value = String(n.active);
+  G('noticeErr').style.display = 'none'; openModal('noticeModal');
 }
-$('noticeForm').addEventListener('submit',async e=>{
+G('noticeForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const id=$('noticeId').value;
-  const body={title:$('nTitle').value,message:$('nMessage').value,type:$('nType').value,active:$('nActive').value==='true'};
-  try{
-    const d=id?await apiFetch(`/admin?col=notices&id=${id}`,{method:'PUT',body:JSON.stringify(body)})
-              :await apiFetch('/admin?col=notices',{method:'POST',body:JSON.stringify(body)});
-    if(!d.success) throw new Error(d.message);
-    toast(id?'✅ নোটিশ আপডেট হয়েছে':'✅ নোটিশ যোগ হয়েছে');
-    closeModal('noticeModal');loadNotices();
-  }catch(err){$('noticeFormError').textContent=err.message;$('noticeFormError').classList.remove('hidden');}
+  const id = G('noticeId').value;
+  const body = { title:G('nTitle').value, message:G('nMsg').value, type:G('nType').value, active:G('nActive').value==='true' };
+  try {
+    const d = id
+      ? await apiFetch(`/admin?col=notices&id=${id}`, {method:'PUT',  body:JSON.stringify(body)})
+      : await apiFetch('/admin?col=notices',           {method:'POST', body:JSON.stringify(body)});
+    if (!d.success) throw new Error(d.message);
+    toast(id ? '✅ নোটিশ আপডেট হয়েছে' : '✅ নোটিশ যোগ হয়েছে');
+    closeModal('noticeModal'); loadNotices();
+  } catch(ex) { G('noticeErr').textContent = ex.message; G('noticeErr').style.display = 'block'; }
 });
-async function deleteNotice(id){
-  if(!confirm('নোটিশটি মুছে ফেলবেন?')) return;
-  try{
-    const d=await apiFetch(`/admin?col=notices&id=${id}`,{method:'DELETE'});
-    if(!d.success) throw new Error(d.message);
-    toast('নোটিশ মুছে ফেলা হয়েছে।');loadNotices();
-  }catch(err){toast(err.message,'error');}
+async function deleteNotice(id) {
+  if (!confirm('নোটিশটি মুছে ফেলবেন?')) return;
+  try {
+    const d = await apiFetch(`/admin?col=notices&id=${id}`, {method:'DELETE'});
+    if (!d.success) throw new Error(d.message);
+    toast('নোটিশ মুছে ফেলা হয়েছে।'); loadNotices();
+  } catch(ex) { toast(ex.message, 'error'); }
 }
 
-/* ════════════════
+/* ══════════════════
    USERS
-════════════════ */
-async function loadUsers(){
-  $('usersTableBody').innerHTML=`<tr><td colspan="6" style="padding:48px;text-align:center;"><div class="spinner"></div></td></tr>`;
-  try{
-    const d=await apiFetch('/admin?col=users&limit=50');
-    if(!d.success) throw new Error(d.message);
-    if(!d.users.length){$('usersTableBody').innerHTML=`<tr><td colspan="6" style="padding:40px;text-align:center;color:var(--faint);font-size:13px;">কোনো user নেই।</td></tr>`;return;}
-    $('usersTableBody').innerHTML=d.users.map((u,i)=>`
-    <tr class="tbl-row">
+══════════════════ */
+async function loadUsers() {
+  G('userTbody').innerHTML = `<tr><td colspan="6" style="padding:48px;text-align:center;"><div class="spin"></div></td></tr>`;
+  try {
+    const d = await apiFetch('/admin?col=users&limit=50');
+    if (!d.success) throw new Error(d.message);
+    if (!d.users.length) {
+      G('userTbody').innerHTML = `<tr><td colspan="6" style="padding:40px;text-align:center;color:var(--faint);font-size:13px;">কোনো user নেই।</td></tr>`;
+      return;
+    }
+    G('userTbody').innerHTML = d.users.map((u,i) => `
+    <tr>
       <td style="color:var(--faint);font-size:12px;">${i+1}</td>
       <td style="font-family:monospace;font-weight:700;font-size:13px;">@${u.username}</td>
       <td style="font-size:13px;">${u.name||'—'}</td>
-      <td><span class="badge ${u.role==='admin'?'badge-admin':'badge-blue'}">${u.role==='admin'?'👑 Admin':'👤 User'}</span></td>
+      <td><span class="badge ${u.role==='admin'?'b-admin':'b-blue'}">${u.role==='admin'?'👑 Admin':'👤 User'}</span></td>
       <td style="font-size:12px;color:var(--faint);">${fmtDate(u.createdAt)}</td>
       <td>
         <div style="display:flex;gap:5px;flex-wrap:wrap;">
-          <button class="action-btn action-edit" onclick='editUser(${JSON.stringify(u)})'>✏️ এডিট</button>
-          <button class="action-btn action-del" onclick="deleteUser('${u._id}')">🗑 মুছুন</button>
+          <button class="act-btn act-edit" onclick='editUser(${JSON.stringify(u)})'>✏️ এডিট</button>
+          <button class="act-btn act-del" onclick="deleteUser('${u._id}')">🗑</button>
         </div>
       </td>
     </tr>`).join('');
-  }catch(err){$('usersTableBody').innerHTML=`<tr><td colspan="6" style="padding:32px;text-align:center;color:#e63946;font-size:13px;">⚠️ ${err.message}</td></tr>`;}
+  } catch(ex) {
+    G('userTbody').innerHTML = `<tr><td colspan="6" style="padding:32px;text-align:center;color:var(--red);font-size:13px;">⚠️ ${ex.message}</td></tr>`;
+  }
 }
-function openUserModal(){
-  $('userModalTitle').textContent='নতুন User যোগ করুন';
-  ['userId','uUsername','uName','uPassword'].forEach(id=>$(id).value='');
-  $('uRole').value='user';$('uUsername').disabled=false;
-  $('uPassLabel').textContent='Password *';$('userFormError').classList.add('hidden');
-  openModal('userModal');
+function openUserModal() {
+  G('userModalTitle').textContent = 'নতুন User যোগ করুন';
+  ['userId','uUser','uName','uPass'].forEach(id => G(id).value = '');
+  G('uRole').value = 'user'; G('uUser').disabled = false;
+  G('uPassLbl').textContent = 'Password *';
+  G('userErr').style.display = 'none'; openModal('userModal');
 }
-function editUser(u){
-  $('userModalTitle').textContent='User তথ্য আপডেট করুন';
-  $('userId').value=u._id;$('uUsername').value=u.username;
-  $('uName').value=u.name||'';$('uPassword').value='';$('uRole').value=u.role||'user';
-  $('uUsername').disabled=true;
-  $('uPassLabel').textContent='নতুন Password (খালি = পরিবর্তন নেই)';
-  $('userFormError').classList.add('hidden');openModal('userModal');
+function editUser(u) {
+  G('userModalTitle').textContent = 'User তথ্য আপডেট করুন';
+  G('userId').value = u._id; G('uUser').value = u.username;
+  G('uName').value = u.name||''; G('uPass').value = ''; G('uRole').value = u.role||'user';
+  G('uUser').disabled = true;
+  G('uPassLbl').textContent = 'নতুন Password (খালি = পরিবর্তন নেই)';
+  G('userErr').style.display = 'none'; openModal('userModal');
 }
-$('userForm').addEventListener('submit',async e=>{
+G('userForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const id=$('userId').value;
-  const body={username:$('uUsername').value,name:$('uName').value,role:$('uRole').value};
-  if($('uPassword').value) body.password=$('uPassword').value;
-  if(!id&&!$('uPassword').value){$('userFormError').textContent='নতুন user-এর জন্য password দিতে হবে।';$('userFormError').classList.remove('hidden');return;}
-  try{
-    const d=id?await apiFetch(`/admin?col=users&id=${id}`,{method:'PUT',body:JSON.stringify(body)})
-              :await apiFetch('/admin?col=users',{method:'POST',body:JSON.stringify(body)});
-    if(!d.success) throw new Error(d.message);
-    toast(id?'✅ User আপডেট হয়েছে':'✅ নতুন User যোগ হয়েছে');
-    closeModal('userModal');loadUsers();
-  }catch(err){$('userFormError').textContent=err.message;$('userFormError').classList.remove('hidden');}
+  const id = G('userId').value;
+  const body = { username:G('uUser').value, name:G('uName').value, role:G('uRole').value };
+  if (G('uPass').value) body.password = G('uPass').value;
+  if (!id && !G('uPass').value) {
+    G('userErr').textContent = 'নতুন user-এর জন্য password দিতে হবে।';
+    G('userErr').style.display = 'block'; return;
+  }
+  try {
+    const d = id
+      ? await apiFetch(`/admin?col=users&id=${id}`, {method:'PUT',  body:JSON.stringify(body)})
+      : await apiFetch('/admin?col=users',           {method:'POST', body:JSON.stringify(body)});
+    if (!d.success) throw new Error(d.message);
+    toast(id ? '✅ User আপডেট হয়েছে' : '✅ নতুন User যোগ হয়েছে');
+    closeModal('userModal'); loadUsers();
+  } catch(ex) { G('userErr').textContent = ex.message; G('userErr').style.display = 'block'; }
 });
-async function deleteUser(id){
-  if(!confirm('এই User-কে মুছে ফেলবেন?')) return;
-  try{
-    const d=await apiFetch(`/admin?col=users&id=${id}`,{method:'DELETE'});
-    if(!d.success) throw new Error(d.message);
-    toast('User মুছে ফেলা হয়েছে।');loadUsers();
-  }catch(err){toast(err.message,'error');}
+async function deleteUser(id) {
+  if (!confirm('এই User-কে মুছে ফেলবেন?')) return;
+  try {
+    const d = await apiFetch(`/admin?col=users&id=${id}`, {method:'DELETE'});
+    if (!d.success) throw new Error(d.message);
+    toast('User মুছে ফেলা হয়েছে।'); loadUsers();
+  } catch(ex) { toast(ex.message, 'error'); }
 }
-
-/* ── Close modals on backdrop ── */
-document.querySelectorAll('.modal-wrap').forEach(m=>{
-  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
-});
 </script>
 </body>
 </html>
